@@ -1,7 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RepositoryUrl>https://github.com/AlexandruIstrate/ProBase</RepositoryUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Copyright />
+    <Authors>Alexandru Istrate</Authors>
+    <Description>This is a test package for ProBase. It does not do anything and it's only use is testing the NuGet system prior to a real release. A working version of this package will be available later on.</Description>
+    <PackageId>ProBase-Test</PackageId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
