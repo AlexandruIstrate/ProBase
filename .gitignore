@@ -4,3 +4,6 @@ src/packages/
 
 src/ProBase/bin/
 src/ProBase/obj/
+
+src/ProBase.Tests/bin/
+src/ProBase.Tests/obj/
