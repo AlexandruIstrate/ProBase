@@ -29,7 +29,8 @@ namespace ProBase.Tests
             MethodBuilder methodBuilder = typeBuilder.DefineMethod(MethodName, MethodAttributes.Public | 
                                                                                MethodAttributes.Final | 
                                                                                MethodAttributes.Virtual);
-            ILGenerator iLGenerator = methodBuilder.GetILGenerator();
+            //ILGenerator iLGenerator = methodBuilder.GetILGenerator();
+            //iLGenerator.Emit(OpCodes.Ret);
         }
     }
 }
