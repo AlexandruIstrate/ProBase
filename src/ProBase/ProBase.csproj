@@ -4,10 +4,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RepositoryUrl>https://github.com/AlexandruIstrate/ProBase</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Copyright />
+    <Copyright>© 2019 Alexandru Istrate</Copyright>
     <Authors>Alexandru Istrate</Authors>
-    <Description>This is a test package for ProBase. It does not do anything and it's only use is testing the NuGet system prior to a real release. A working version of this package will be available later on.</Description>
-    <PackageId>ProBase-Test</PackageId>
+    <Description>ProBase is the new way of accessing databases in C#. Unlike any other strategies like using query strings directly in the code or using an ORM, ProBase alows you to communicate with a database by using the most flexible and safe system - stored procedures. What ProBase adds on top of the classic ADO.NET data primitives is the ability to generate procedure calls based on annotated methods, thus allowing you to call a procedure in the same way you would call a method.</Description>
+    <PackageId>ProBase</PackageId>
+    <PackageProjectUrl>https://github.com/AlexandruIstrate/ProBase</PackageProjectUrl>
+    <PackageTags>Database, SQL, ADO.NET, Data, Procedure, Method, Attribute, Reflection</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="GitVersionTask" Version="5.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
   </ItemGroup>
 
