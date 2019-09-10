@@ -13,6 +13,11 @@ namespace ProBase.Attributes
         /// </summary>
         public string ProcedureName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name of the database schema to use.
+        /// </summary>
+        public string DatabaseSchema { get; set; }
+
         public ProcedureAttribute(string procedureName)
         {
             ProcedureName = procedureName;

@@ -5,6 +5,9 @@ using System.Reflection;
 
 namespace ProBase.Generation.Converters
 {
+    /// <summary>
+    /// Represents a database procedure parameter converter that uses language information to generate database parameters from method parameters.
+    /// </summary>
     internal class ParameterConverter : IParameterConverter
     {
         public DbParameter ConvertParameter(ParameterInfo parameterInfo, object value)

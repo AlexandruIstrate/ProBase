@@ -48,7 +48,7 @@ namespace ProBase.Generation
 
         private void BuildMethodImplementation(MethodInfo methodInfo, TypeBuilder typeBuilder)
         {
-            methodGenerator.GenerateMethod(methodInfo.Name, methodInfo.GetParameters(), methodInfo.ReturnType, typeBuilder);
+            methodGenerator.GenerateMethod(methodInfo, typeBuilder);
         }
 
         private TypeBuilder CreateTypeBuilder(string typeName, ModuleBuilder moduleBuilder)
