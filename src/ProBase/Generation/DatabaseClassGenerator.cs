@@ -14,8 +14,10 @@ namespace ProBase.Generation
 
         public string ClassName { get; set; }
 
-        public DatabaseClassGenerator(IMethodGenerator methodGenerator)
+        public DatabaseClassGenerator(IClassFieldGenerator fieldGenerator, IConstructorGenerator constructorGenerator, IMethodGenerator methodGenerator)
         {
+            this.fieldGenerator = fieldGenerator;
+            this.constructorGenerator = constructorGenerator;
             this.methodGenerator = methodGenerator;
         }
 
@@ -41,8 +43,17 @@ namespace ProBase.Generation
 
             TypeBuilder typeBuilder = CreateTypeBuilder(ClassName, moduleBuilder);
             typeBuilder.AddInterfaceImplementation(interfaceType);
+
+            // Generate the IDatabase field that we use for accessing the database
+            fieldGenerator.GenerateField(null, typeBuilder);
+
+            // Generate a constructor that initializes the IDatabase field
+            constructorGenerator.GenerateDependencyConstructor(null, typeBuilder);
+
+            // Generate implementations for all of the methods defined by the interface
             interfaceType.GetMethods().ToList().ForEach(method => BuildMethodImplementation(method, typeBuilder));
 
+            // Generate the meta-type from the builder
             return typeBuilder.AsType();
         }
 
@@ -66,6 +77,8 @@ namespace ProBase.Generation
             return AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(assemblyName), AssemblyBuilderAccess.Run);
         }
 
-        private IMethodGenerator methodGenerator;
+        private readonly IClassFieldGenerator fieldGenerator;
+        private readonly IConstructorGenerator constructorGenerator;
+        private readonly IMethodGenerator methodGenerator;
     }
 }

@@ -1,7 +1,5 @@
 ﻿using ProBase.Attributes;
-using ProBase.Data;
 using System;
-using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -10,6 +8,11 @@ namespace ProBase.Generation
 {
     internal class DatabaseMethodGenerator : IMethodGenerator
     {
+        public DatabaseMethodGenerator(FieldInfo databaseField)
+        {
+            this.databaseField = databaseField;
+        }
+
         public MethodBuilder GenerateMethod(MethodInfo methodInfo, TypeBuilder typeBuilder)
         {
             ProcedureAttribute procedureAttribute = methodInfo.GetCustomAttribute<ProcedureAttribute>();
@@ -27,12 +30,9 @@ namespace ProBase.Generation
 
         private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, ILGenerator generator)
         {
-            generator.DeclareLocal(typeof(DbParameter));
-            generator.DeclareLocal(typeof(IDatabase));
-
-            generator.Emit(OpCodes.Ldc_I4_0);
-
-            generator.Emit(OpCodes.Newarr);
+            throw new NotImplementedException();
         }
+
+        private readonly FieldInfo databaseField;
     }
 }

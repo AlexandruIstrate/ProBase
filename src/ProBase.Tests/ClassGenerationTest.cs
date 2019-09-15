@@ -1,36 +1,33 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Threading;
+using ProBase.Attributes;
 
 namespace ProBase.Tests
 {
     [TestFixture]
     public class ClassGenerationTest
     {
-        private const string AssemblyName = "TestAssembly";
-        private const string ClassName = "GeneratedObject";
-        private const string MethodName = "TestMethod";
-
         [Test]
-        public void CanGenerateCode()
+        public void CanGenerateInterfaceImplementation()
         {
-            AssemblyName assemblyName = new AssemblyName(AssemblyName);
-            AppDomain appDomain = Thread.GetDomain();
+            Assert.DoesNotThrow(() =>
+            {
+                DatabaseContext databaseContext = new DatabaseContext();
+                IDatabaseTestOperations testOperations = databaseContext.GenerateClass<IDatabaseTestOperations>();
 
-            AssemblyBuilder assemblyBuilder = appDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
-            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(assemblyName.Name);
+                Assert.IsNotNull(testOperations, "The DatabaseContext should return an implementation of the given interface");
 
-            TypeBuilder typeBuilder = moduleBuilder.DefineType(ClassName, TypeAttributes.Public | TypeAttributes.Class);
-            typeBuilder.AddInterfaceImplementation(typeof(IEnumerable<string>));
+                Assert.DoesNotThrow(() =>
+                {
+                    testOperations.Create("Hello, World!");
+                }, "The database operations must be successful");
+            }, "The creation calls must be successful");
+        }
 
-            MethodBuilder methodBuilder = typeBuilder.DefineMethod(MethodName, MethodAttributes.Public | 
-                                                                               MethodAttributes.Final | 
-                                                                               MethodAttributes.Virtual);
-            //ILGenerator iLGenerator = methodBuilder.GetILGenerator();
-            //iLGenerator.Emit(OpCodes.Ret);
+        [DatabaseInterface]
+        public interface IDatabaseTestOperations
+        {
+            [Procedure("dbo.CreateItem")]
+            void Create(string item);
         }
     }
 }

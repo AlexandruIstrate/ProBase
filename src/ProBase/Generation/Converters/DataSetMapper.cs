@@ -8,7 +8,11 @@ namespace ProBase.Generation.Converters
     /// </summary>
     internal class DataSetMapper : IDataMapper
     {
-        public DataSet MappedDataSet { get; set; }
+        public DataSet MappedDataSet
+        {
+            get => mappedDataSet;
+            set => mappedDataSet = value ?? throw new ArgumentNullException(nameof(MappedDataSet));
+        }
 
         public DataSetMapper(DataSet mappedDataSet)
         {
@@ -24,5 +28,7 @@ namespace ProBase.Generation.Converters
         {
             throw new NotImplementedException();
         }
+
+        private DataSet mappedDataSet;
     }
 }
