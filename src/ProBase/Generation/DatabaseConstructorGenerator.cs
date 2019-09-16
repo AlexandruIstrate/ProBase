@@ -8,24 +8,19 @@ namespace ProBase.Generation
 {
     internal class DatabaseConstructorGenerator : IConstructorGenerator
     {
-        public ConstructorBuilder GenerateDefaultConstructor(IDictionary<FieldInfo, ValueType> fieldValues, TypeBuilder typeBuilder)
+        public ConstructorBuilder GenerateDefaultConstructor(IDictionary<Type, ValueType> fieldValues, TypeBuilder typeBuilder)
         {
             return typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
         }
 
-        public ConstructorBuilder GenerateDependencyConstructor(FieldInfo[] fields, TypeBuilder typeBuilder)
+        public ConstructorBuilder GenerateDependencyConstructor(Type[] fields, TypeBuilder typeBuilder)
         {
-            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, GetFieldTypes(fields));
+            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, fields);
             GenerateConstructorInternal(constructorBuilder.GetILGenerator(), fields, typeBuilder.BaseType);
             return constructorBuilder;
         }
 
-        private Type[] GetFieldTypes(FieldInfo[] fields)
-        {
-            return fields.ToList().ConvertAll((field) => field.FieldType).ToArray();
-        }
-
-        private void GenerateConstructorInternal(ILGenerator generator, FieldInfo[] fields, Type baseType)
+        private void GenerateConstructorInternal(ILGenerator generator, Type[] fields, Type baseType)
         {
             // Load the constructor parameters
             for (int i = 0; i < fields.Count(); i++)

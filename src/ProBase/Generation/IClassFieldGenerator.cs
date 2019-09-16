@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using System;
 using System.Reflection.Emit;
 
 namespace ProBase.Generation
@@ -11,9 +11,10 @@ namespace ProBase.Generation
         /// <summary>
         /// Generates a field with the info given, using the <paramref name="typeBuilder"/>.
         /// </summary>
-        /// <param name="fieldInfo">Information for generating thsi field</param>
+        /// <param name="fieldName">The name of the field</param>
+        /// <param name="fieldType">The type of the field</param>
         /// <param name="typeBuilder">The TypeBuilder to use</param>
         /// <returns>A <see cref="System.Reflection.FieldInfo"/> representing the field</returns>
-        FieldBuilder GenerateField(FieldInfo fieldInfo, TypeBuilder typeBuilder);
+        FieldBuilder GenerateField(string fieldName, Type fieldType, TypeBuilder typeBuilder);
     }
 }

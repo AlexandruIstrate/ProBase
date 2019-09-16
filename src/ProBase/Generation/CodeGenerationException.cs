@@ -3,7 +3,7 @@
 namespace ProBase.Generation
 {
     /// <summary>
-    /// Represents an error that occurs during code generation
+    /// Represents an error that occurs during code generation.
     /// </summary>
     public class CodeGenerationException : Exception
     {

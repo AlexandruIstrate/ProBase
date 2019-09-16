@@ -1,13 +1,14 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace ProBase.Generation
 {
     internal class DatabaseFieldGenerator : IClassFieldGenerator
     {
-        public FieldBuilder GenerateField(FieldInfo fieldInfo, TypeBuilder typeBuilder)
+        public FieldBuilder GenerateField(string fieldName, Type fieldType, TypeBuilder typeBuilder)
         {
-            FieldBuilder fieldBuilder = typeBuilder.DefineField(fieldInfo.Name, fieldInfo.FieldType, FieldAttributes.Private);
+            FieldBuilder fieldBuilder = typeBuilder.DefineField(fieldName, fieldType, FieldAttributes.Private);
 
             return fieldBuilder;
         }

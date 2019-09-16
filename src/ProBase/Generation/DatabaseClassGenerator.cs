@@ -1,4 +1,6 @@
 ﻿using ProBase.Attributes;
+using ProBase.Data;
+using ProBase.Utils;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -6,14 +8,32 @@ using System.Reflection.Emit;
 
 namespace ProBase.Generation
 {
+    /// <summary>
+    /// Generates a class for accessing a database.
+    /// </summary>
     internal class DatabaseClassGenerator : IConcreteClassGenerator
     {
-        public string AssemblyName { get; set; }
+        /// <summary>
+        /// Gets the name of the assembly the class will generate into.
+        /// </summary>
+        public string AssemblyName { get; } = TypeNames.GetAssemblyName();
 
-        public string ModuleName { get; set; }
+        /// <summary>
+        /// Gets the name of the module the generated class will use.
+        /// </summary>
+        public string ModuleName { get; }
 
-        public string ClassName { get; set; }
+        /// <summary>
+        /// Gets the name the generated class will use.
+        /// </summary>
+        public string ClassName { get; } = TypeNames.GenerateUniqueTypeName();
 
+        /// <summary>
+        /// Generates the database access class using the given components for code generation.
+        /// </summary>
+        /// <param name="fieldGenerator">A field generator to use for generating the field used to store the object that accesses the database</param>
+        /// <param name="constructorGenerator">A constructor generator used for generating an initializing constructor</param>
+        /// <param name="methodGenerator">A method generator used for generating the method implementations of the class</param>
         public DatabaseClassGenerator(IClassFieldGenerator fieldGenerator, IConstructorGenerator constructorGenerator, IMethodGenerator methodGenerator)
         {
             this.fieldGenerator = fieldGenerator;
@@ -45,10 +65,10 @@ namespace ProBase.Generation
             typeBuilder.AddInterfaceImplementation(interfaceType);
 
             // Generate the IDatabase field that we use for accessing the database
-            fieldGenerator.GenerateField(null, typeBuilder);
+            fieldGenerator.GenerateField("databaseMapper", typeof(IDatabaseMapper), typeBuilder);
 
-            // Generate a constructor that initializes the IDatabase field
-            constructorGenerator.GenerateDependencyConstructor(null, typeBuilder);
+            // Generate a constructor that initializes the IDatabaseMapper field
+            constructorGenerator.GenerateDependencyConstructor(new Type[] { typeof(IDatabaseMapper) }, typeBuilder);
 
             // Generate implementations for all of the methods defined by the interface
             interfaceType.GetMethods().ToList().ForEach(method => BuildMethodImplementation(method, typeBuilder));

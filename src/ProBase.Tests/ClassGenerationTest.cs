@@ -6,22 +6,22 @@ namespace ProBase.Tests
     [TestFixture]
     public class ClassGenerationTest
     {
-        [Test]
-        public void CanGenerateInterfaceImplementation()
-        {
-            Assert.DoesNotThrow(() =>
-            {
-                DatabaseContext databaseContext = new DatabaseContext();
-                IDatabaseTestOperations testOperations = databaseContext.GenerateClass<IDatabaseTestOperations>();
+        //[Test]
+        //public void CanGenerateInterfaceImplementation()
+        //{
+        //    Assert.DoesNotThrow(() =>
+        //    {
+        //        DatabaseContext databaseContext = new DatabaseContext();
+        //        IDatabaseTestOperations testOperations = databaseContext.GenerateClass<IDatabaseTestOperations>();
 
-                Assert.IsNotNull(testOperations, "The DatabaseContext should return an implementation of the given interface");
+        //        Assert.IsNotNull(testOperations, "The DatabaseContext should return an implementation of the given interface");
 
-                Assert.DoesNotThrow(() =>
-                {
-                    testOperations.Create("Hello, World!");
-                }, "The database operations must be successful");
-            }, "The creation calls must be successful");
-        }
+        //        Assert.DoesNotThrow(() =>
+        //        {
+        //            testOperations.Create("Hello, World!");
+        //        }, "The database operations must be successful");
+        //    }, "The creation calls must be successful");
+        //}
 
         [DatabaseInterface]
         public interface IDatabaseTestOperations
