@@ -6,6 +6,9 @@ using System.Reflection.Emit;
 
 namespace ProBase.Generation
 {
+    /// <summary>
+    /// Generates a method body used for calling the database procedures.
+    /// </summary>
     internal class DatabaseMethodGenerator : IMethodGenerator
     {
         public DatabaseMethodGenerator(FieldInfo databaseField)

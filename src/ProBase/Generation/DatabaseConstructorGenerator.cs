@@ -6,6 +6,9 @@ using System.Reflection.Emit;
 
 namespace ProBase.Generation
 {
+    /// <summary>
+    /// Generates a constructor for a database access class.
+    /// </summary>
     internal class DatabaseConstructorGenerator : IConstructorGenerator
     {
         public ConstructorBuilder GenerateDefaultConstructor(IDictionary<Type, ValueType> fieldValues, TypeBuilder typeBuilder)

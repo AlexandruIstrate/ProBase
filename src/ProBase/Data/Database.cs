@@ -1,15 +1,17 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace ProBase.Data
 {
     /// <summary>
-    /// The default implementaion of <see cref="ProBase.Data.IDatabase"/>
+    /// The default implementaion of <see cref="ProBase.Data.IDatabase"/>.
     /// </summary>
     internal class Database : IDatabase
     {
+        /// <summary>
+        /// Gets or sets the connection used for operations.
+        /// </summary>
         public IDbConnection Connection { get; set; }
 
         public Database(IDbConnection connection)
@@ -46,7 +48,6 @@ namespace ProBase.Data
             {
                 DataSet dataSet = new DataSet();
                 dataAdapter.Fill(dataSet);
-
                 return dataSet;
             }
         }
@@ -62,7 +63,6 @@ namespace ProBase.Data
             {
                 DataSet dataSet = new DataSet();
                 dataAdapter.Fill(dataSet);
-
                 return Task.FromResult(dataSet);
             }
         }

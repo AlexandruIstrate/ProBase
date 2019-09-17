@@ -8,9 +8,7 @@ namespace ProBase.Generation
     {
         public FieldBuilder GenerateField(string fieldName, Type fieldType, TypeBuilder typeBuilder)
         {
-            FieldBuilder fieldBuilder = typeBuilder.DefineField(fieldName, fieldType, FieldAttributes.Private);
-
-            return fieldBuilder;
+            return typeBuilder.DefineField(fieldName, fieldType, FieldAttributes.Private | FieldAttributes.InitOnly);
         }
     }
 }

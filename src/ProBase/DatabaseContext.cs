@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProBase.Generation;
+using System;
 using System.Data;
 
 namespace ProBase
@@ -13,6 +14,11 @@ namespace ProBase
         /// </summary>
         public IDbConnection Connection { get; set; }
 
+        public DatabaseContext(IDbConnection connection)
+        {
+            Connection = connection;
+        }
+
         /// <summary>
         /// Generates a class with automatic procedure calls based on method attributes.
         /// </summary>
@@ -20,7 +26,10 @@ namespace ProBase
         /// <returns>An instance of the operations class</returns>
         public T GenerateClass<T>()
         {
-            throw new NotImplementedException();
+            Type generatedType = classGenerator.GenerateClassImplementingInterface(typeof(T));
+            return (T)Activator.CreateInstance(generatedType);
         }
+
+        private readonly IConcreteClassGenerator classGenerator;
     }
 }
