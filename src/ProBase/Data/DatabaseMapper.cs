@@ -1,5 +1,5 @@
-﻿using ProBase.Generation.Converters;
-using System;
+﻿using System;
+using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 
@@ -15,15 +15,29 @@ namespace ProBase.Data
         /// </summary>
         public IDatabase Database { get; set; }
 
-        /// <summary>
-        /// Gets or sets the <see cref="ProBase.Generation.Converters.IDataMapper"/> this mapper uses.
-        /// </summary>
-        public IDataMapper DataMapper { get; set; }
-
-        public DatabaseMapper(IDatabase database, IDataMapper dataMapper)
+        public DatabaseMapper(IDatabase database)
         {
             Database = database;
-            DataMapper = dataMapper;
+        }
+
+        public int ExecuteNonQueryProcedure(string procedureName, params DbParameter[] parameters)
+        {
+            return Database.ExecuteNonQueryProcedure(procedureName, parameters);
+        }
+
+        public Task<int> ExecuteNonQueryProcedureAsync(string procedureName, params DbParameter[] parameters)
+        {
+            return Database.ExecuteNonQueryProcedureAsync(procedureName, parameters);
+        }
+
+        public DataSet ExecuteScalarProcedure(string procedureName, params DbParameter[] parameters)
+        {
+            return Database.ExecuteScalarProcedure(procedureName, parameters);
+        }
+
+        public Task<DataSet> ExecuteScalarProcedureAsync(string procedureName, params DbParameter[] parameters)
+        {
+            return Database.ExecuteScalarProcedureAsync(procedureName, parameters);
         }
 
         public T ExecuteMappedProcedure<T>(string procedureName, params DbParameter[] parameters)

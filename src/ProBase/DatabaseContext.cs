@@ -5,7 +5,7 @@ using System.Data;
 namespace ProBase
 {
     /// <summary>
-    /// Represents the global object that manages operations on a database.
+    /// Represents and object that manages the creation of objects that run operations on databases.
     /// </summary>
     public class DatabaseContext
     {

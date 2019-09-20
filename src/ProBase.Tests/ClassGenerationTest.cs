@@ -27,7 +27,10 @@ namespace ProBase.Tests
         public interface IDatabaseTestOperations
         {
             [Procedure("dbo.CreateItem")]
-            void Create(string item);
+            void Create(object item);
+
+            [Procedure("ReadItem", DatabaseSchema = "dbo")]
+            object Read(int id);
         }
     }
 }

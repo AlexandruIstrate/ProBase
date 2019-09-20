@@ -19,7 +19,7 @@ namespace ProBase.Generation.Converters
             MappedDataSet = mappedDataSet ?? throw new ArgumentNullException(nameof(mappedDataSet));
         }
 
-        public T MapToObject<T>()
+        public T MapToObject<T>() where T : new()
         {
             throw new NotImplementedException();
         }

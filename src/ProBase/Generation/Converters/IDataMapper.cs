@@ -10,7 +10,7 @@
         /// </summary>
         /// <typeparam name="T">The type to map to</typeparam>
         /// <returns>A mapped object</returns>
-        T MapToObject<T>();
+        T MapToObject<T>() where T : new();
 
         /// <summary>
         /// Checks if this object can be mapped to the given type <typeparamref name="T"/>.
