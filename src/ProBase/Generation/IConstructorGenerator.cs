@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace ProBase.Generation
@@ -23,6 +24,6 @@ namespace ProBase.Generation
         /// <param name="fields">An array of the types of the fields that need initialization</param>
         /// <param name="typeBuilder">The TypeBuilder to use</param>
         /// <returns>A builder representing the constructor</returns>
-        ConstructorBuilder GenerateDependencyConstructor(Type[] fields, TypeBuilder typeBuilder);
+        ConstructorBuilder GenerateDependencyConstructor(FieldInfo[] fields, TypeBuilder typeBuilder);
     }
 }

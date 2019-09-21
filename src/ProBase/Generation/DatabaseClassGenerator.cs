@@ -21,12 +21,12 @@ namespace ProBase.Generation
         /// <summary>
         /// Gets the name of the module the generated class will use.
         /// </summary>
-        public string ModuleName { get; }
+        public string ModuleName { get; } = TypeNames.GetModuleName();
 
         /// <summary>
         /// Gets the name the generated class will use.
         /// </summary>
-        public string ClassName { get; } = TypeNames.GenerateUniqueTypeName();
+        public string ClassName { get; } = TypeNames.GenerateUniqueTypeName("GeneratedDatabaseInterface");
 
         /// <summary>
         /// Generates the database access class using the given components for code generation.
@@ -36,17 +36,14 @@ namespace ProBase.Generation
         /// <param name="methodGenerator">A method generator used for generating the method implementations of the class</param>
         public DatabaseClassGenerator(IClassFieldGenerator fieldGenerator, IConstructorGenerator constructorGenerator, IMethodGenerator methodGenerator)
         {
-            this.fieldGenerator = fieldGenerator;
-            this.constructorGenerator = constructorGenerator;
-            this.methodGenerator = methodGenerator;
+            this.fieldGenerator = Preconditions.CheckNotNull(fieldGenerator, nameof(fieldGenerator));
+            this.constructorGenerator = Preconditions.CheckNotNull(constructorGenerator, nameof(constructorGenerator));
+            this.methodGenerator = Preconditions.CheckNotNull(methodGenerator, nameof(methodGenerator));
         }
 
         public Type GenerateClassImplementingInterface(Type interfaceType)
         {
-            if (interfaceType == null)
-            {
-                throw new ArgumentNullException(nameof(interfaceType));
-            }
+            Preconditions.CheckNotNull(interfaceType, nameof(interfaceType));
 
             if (interfaceType.GetCustomAttribute<DatabaseInterfaceAttribute>() == null)
             {
@@ -65,21 +62,21 @@ namespace ProBase.Generation
             typeBuilder.AddInterfaceImplementation(interfaceType);
 
             // Generate the IDatabase field that we use for accessing the database
-            fieldGenerator.GenerateField("databaseMapper", typeof(IDatabaseMapper), typeBuilder);
+            FieldBuilder fieldBuilder = fieldGenerator.GenerateField("procedureMapper", typeof(IProcedureMapper), typeBuilder);
 
             // Generate a constructor that initializes the IDatabaseMapper field
-            constructorGenerator.GenerateDependencyConstructor(new Type[] { typeof(IDatabaseMapper) }, typeBuilder);
+            constructorGenerator.GenerateDependencyConstructor(new FieldInfo[] { fieldBuilder }, typeBuilder);
 
             // Generate implementations for all of the methods defined by the interface
-            interfaceType.GetMethods().ToList().ForEach(method => BuildMethodImplementation(method, typeBuilder));
+            interfaceType.GetMethods().ToList().ForEach(method => BuildMethodImplementation(method, new FieldInfo[] { fieldBuilder }, typeBuilder));
 
             // Generate the meta-type from the builder
             return typeBuilder.AsType();
         }
 
-        private void BuildMethodImplementation(MethodInfo methodInfo, TypeBuilder typeBuilder)
+        private void BuildMethodImplementation(MethodInfo methodInfo, FieldInfo[] classFields, TypeBuilder typeBuilder)
         {
-            methodGenerator.GenerateMethod(methodInfo, typeBuilder);
+            methodGenerator.GenerateMethod(methodInfo, classFields, typeBuilder);
         }
 
         private TypeBuilder CreateTypeBuilder(string typeName, ModuleBuilder moduleBuilder)

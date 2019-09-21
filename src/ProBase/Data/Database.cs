@@ -66,5 +66,10 @@ namespace ProBase.Data
                 return Task.FromResult(dataSet);
             }
         }
+
+        public void Dispose()
+        {
+            Connection.Dispose();
+        }
     }
 }

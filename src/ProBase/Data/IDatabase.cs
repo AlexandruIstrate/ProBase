@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 
@@ -7,7 +8,7 @@ namespace ProBase.Data
     /// <summary>
     /// An abstract representation of the operations supported by a database
     /// </summary>
-    internal interface IDatabase
+    internal interface IDatabase : IDisposable
     {
         /// <summary>
         /// Executes an SQL procedure against the connection and returns the number of rows affected.

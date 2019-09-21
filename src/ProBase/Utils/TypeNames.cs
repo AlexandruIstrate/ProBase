@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace ProBase.Utils
 {
@@ -23,16 +25,26 @@ namespace ProBase.Utils
         /// <returns></returns>
         public static string GetModuleName()
         {
-            throw new NotImplementedException();
+            return Assembly.GetExecutingAssembly().Modules.First().Name;
         }
 
         /// <summary>
         /// Generates an unique type name for use in code generation.
         /// </summary>
         /// <returns></returns>
-        public static string GenerateUniqueTypeName()
+        public static string GenerateUniqueTypeName(string typeName)
         {
-            throw new NotImplementedException();
+            const int length = 8;
+
+            Random random = new Random();
+            StringBuilder nameBuilder = new StringBuilder();
+
+            for (int i = 0; i < length; i++)
+            {
+                nameBuilder.Append((char)random.Next('a', 'z'));
+            }
+
+            return $"{ typeName }_{ nameBuilder.ToString() }";
         }
     }
 }

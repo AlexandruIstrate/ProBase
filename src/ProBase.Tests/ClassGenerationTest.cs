@@ -11,8 +11,8 @@ namespace ProBase.Tests
         //{
         //    Assert.DoesNotThrow(() =>
         //    {
-        //        DatabaseContext databaseContext = new DatabaseContext();
-        //        IDatabaseTestOperations testOperations = databaseContext.GenerateClass<IDatabaseTestOperations>();
+        //        DatabaseContext databaseContext = new DatabaseContext(null);
+        //        IDatabaseTestOperations testOperations = databaseContext.GenerateObject<IDatabaseTestOperations>();
 
         //        Assert.IsNotNull(testOperations, "The DatabaseContext should return an implementation of the given interface");
 

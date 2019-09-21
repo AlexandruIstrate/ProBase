@@ -14,17 +14,12 @@ namespace ProBase.Generation
     /// </summary>
     internal class DatabaseMethodGenerator : IMethodGenerator
     {
-        public DatabaseMethodGenerator(FieldInfo databaseField)
-        {
-            this.databaseField = databaseField;
-        }
-
-        public MethodBuilder GenerateMethod(MethodInfo methodInfo, TypeBuilder typeBuilder)
+        public MethodBuilder GenerateMethod(MethodInfo methodInfo, FieldInfo[] classFields, TypeBuilder typeBuilder)
         {
             ProcedureAttribute procedureAttribute = methodInfo.GetCustomAttribute<ProcedureAttribute>();
             MethodBuilder methodBuilder = typeBuilder.DefineMethod(methodInfo.Name, MethodAttributes.Public, methodInfo.ReturnType, GetParameterTypes(methodInfo.GetParameters()));
 
-            GenerateMethodBody(procedureAttribute.ProcedureName, methodInfo.GetParameters(), methodBuilder.ReturnType, methodBuilder.GetILGenerator());
+            GenerateMethodBody(procedureAttribute.ProcedureName, methodBuilder.ReturnType, classFields, methodBuilder.GetILGenerator());
 
             return methodBuilder;
         }
@@ -34,12 +29,12 @@ namespace ProBase.Generation
             return parameters.ToList().ConvertAll(item => item.ParameterType).ToArray();
         }
 
-        private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, ILGenerator generator)
+        private void GenerateMethodBody(string procedureName, Type returnType, FieldInfo[] fields, ILGenerator generator)
         {
             generator.Emit(OpCodes.Ldarg_0);
 
             // Load the field we use for calling the database procedures
-            generator.Emit(OpCodes.Ldfld, databaseField);
+            generator.Emit(OpCodes.Ldfld, GetProcedureMapperField(fields));
 
             // Load the procedure name
             generator.Emit(OpCodes.Ldstr, procedureName);
@@ -57,7 +52,7 @@ namespace ProBase.Generation
 
         private MethodInfo GetDataMapperMethod(Type returnType)
         {
-            Type mapperType = typeof(IDatabaseMapper);
+            Type mapperType = typeof(IProcedureMapper);
             IEnumerable<MethodInfo> matchingReturnType = mapperType.GetMethods().Where(method => method.ReturnType == returnType);
 
             if (matchingReturnType.Count() == 0)
@@ -68,6 +63,16 @@ namespace ProBase.Generation
             return matchingReturnType.First();
         }
 
-        private readonly FieldInfo databaseField;
+        private FieldInfo GetProcedureMapperField(FieldInfo[] fields)
+        {
+            IEnumerable<FieldInfo> foundFields = fields.Where(field => field.FieldType == typeof(IProcedureMapper));
+
+            if (foundFields.Count() == 0)
+            {
+                throw new CodeGenerationException($"The generated class does not contain a field of type { typeof(IProcedureMapper) }");
+            }
+
+            return foundFields.First();
+        }
     }
 }

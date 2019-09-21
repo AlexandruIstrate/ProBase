@@ -16,14 +16,14 @@ namespace ProBase.Generation
             return typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
         }
 
-        public ConstructorBuilder GenerateDependencyConstructor(Type[] fields, TypeBuilder typeBuilder)
+        public ConstructorBuilder GenerateDependencyConstructor(FieldInfo[] fields, TypeBuilder typeBuilder)
         {
-            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, fields);
+            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, GetFieldTypes(fields));
             GenerateConstructorInternal(constructorBuilder.GetILGenerator(), fields, typeBuilder.BaseType);
             return constructorBuilder;
         }
 
-        private void GenerateConstructorInternal(ILGenerator generator, Type[] fields, Type baseType)
+        private void GenerateConstructorInternal(ILGenerator generator, FieldInfo[] fields, Type baseType)
         {
             // Load the constructor parameters
             for (int i = 0; i < fields.Count(); i++)
@@ -31,7 +31,8 @@ namespace ProBase.Generation
                 generator.Emit(OpCodes.Ldarg, i);
             }
 
-            CallBaseConstructor(generator, baseType);
+            // Call the default base constructor of this class first to ensure the type is constructed properly
+            CallDefaultBaseConstructor(generator, baseType);
 
             for (int i = 0; i < fields.Count(); i++)
             {
@@ -41,17 +42,22 @@ namespace ProBase.Generation
                 // Load the class field
                 generator.Emit(OpCodes.Ldarg, i + fields.Count());
 
-                // Replaced the currently stored field value with the value of the constructor parameter
-                generator.Emit(OpCodes.Stfld, GetType().GetField(fields[i].Name));
+                // Replace the currently stored field value with the value of the constructor parameter
+                generator.Emit(OpCodes.Stfld, fields[i]);
             }
 
             // Return from the constructor
             generator.Emit(OpCodes.Ret);
         }
 
-        private void CallBaseConstructor(ILGenerator generator, Type baseType)
+        private Type[] GetFieldTypes(FieldInfo[] fields)
         {
-            ConstructorInfo defaultConstructor = baseType.GetConstructor(null);
+            return fields.ToList().Select(field => field.FieldType).ToArray();
+        }
+
+        private void CallDefaultBaseConstructor(ILGenerator generator, Type baseType)
+        {
+            ConstructorInfo defaultConstructor = baseType.GetConstructor(new Type[] { });
 
             if (defaultConstructor == null)
             {

@@ -1,4 +1,5 @@
 ﻿using ProBase.Generation;
+using ProBase.Utils;
 using System;
 using System.Data;
 
@@ -16,18 +17,26 @@ namespace ProBase
 
         public DatabaseContext(IDbConnection connection)
         {
-            Connection = connection;
+            Connection = Preconditions.CheckNotNull(connection, nameof(connection));
+            classGenerator = ClassGeneratorFactory.Create();
         }
 
         /// <summary>
-        /// Generates a class with automatic procedure calls based on method attributes.
+        /// Generates an instance of a class with automatic procedure calls based on method attributes.
         /// </summary>
         /// <typeparam name="T">The polymorphic type to generate</typeparam>
-        /// <returns>An instance of the operations class</returns>
-        public T GenerateClass<T>()
+        /// <returns>An instance of the operation class</returns>
+        public T GenerateObject<T>()
         {
-            Type generatedType = classGenerator.GenerateClassImplementingInterface(typeof(T));
-            return (T)Activator.CreateInstance(generatedType);
+            try
+            {
+                Type generatedType = classGenerator.GenerateClassImplementingInterface(typeof(T));
+                return (T)Activator.CreateInstance(generatedType);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         private readonly IConcreteClassGenerator classGenerator;
