@@ -7,7 +7,7 @@ ProBase is the new way of accessing databases in C#. Unlike any other strategies
 ![Main Image](images/Main.png)
 
 ## Example
-Firstly, you need to define a type that maps a set of methods to the database procedures. Because all of the database access logic is handled by ProBase, the type has to be an interface so it only contains the signatures of the methods:
+Firstly, you need to define a type that maps each method to its database procedure counterpart. Because all of the database access logic is handled by ProBase, the type has to be an interface so it only contains the signatures of the methods:
 
 ```csharp
 [DatabaseInterface]

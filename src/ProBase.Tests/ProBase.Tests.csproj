@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Reflection.Emit" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,8 +49,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassGenerationTest.cs" />
-    <Compile Include="PreconditionsTest.cs" />
+    <Compile Include="Api\SqlServerTest.cs" />
+    <Compile Include="Generation\ClassGenerationTest.cs" />
+    <Compile Include="Generation\ConstructorGenerationTest.cs" />
+    <Compile Include="Generation\FieldGenerationTest.cs" />
+    <Compile Include="Generation\IGenerationTestInterface.cs" />
+    <Compile Include="Generation\MethodGenerationTest.cs" />
+    <Compile Include="Utils\PreconditionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

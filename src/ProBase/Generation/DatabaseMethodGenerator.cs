@@ -17,7 +17,7 @@ namespace ProBase.Generation
         public MethodBuilder GenerateMethod(MethodInfo methodInfo, FieldInfo[] classFields, TypeBuilder typeBuilder)
         {
             ProcedureAttribute procedureAttribute = methodInfo.GetCustomAttribute<ProcedureAttribute>();
-            MethodBuilder methodBuilder = typeBuilder.DefineMethod(methodInfo.Name, MethodAttributes.Public, methodInfo.ReturnType, GetParameterTypes(methodInfo.GetParameters()));
+            MethodBuilder methodBuilder = typeBuilder.DefineMethod(methodInfo.Name, MethodAttributes.Public | MethodAttributes.Virtual, methodInfo.ReturnType, GetParameterTypes(methodInfo.GetParameters()));
 
             GenerateMethodBody(procedureAttribute.ProcedureName, methodBuilder.ReturnType, classFields, methodBuilder.GetILGenerator());
 

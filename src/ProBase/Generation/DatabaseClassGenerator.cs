@@ -71,7 +71,7 @@ namespace ProBase.Generation
             interfaceType.GetMethods().ToList().ForEach(method => BuildMethodImplementation(method, new FieldInfo[] { fieldBuilder }, typeBuilder));
 
             // Generate the meta-type from the builder
-            return typeBuilder.AsType();
+            return typeBuilder.CreateTypeInfo();
         }
 
         private void BuildMethodImplementation(MethodInfo methodInfo, FieldInfo[] classFields, TypeBuilder typeBuilder)
