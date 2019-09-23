@@ -10,16 +10,23 @@ using System.Reflection.Emit;
 namespace ProBase.Generation
 {
     /// <summary>
-    /// Generates a method body used for calling the database procedures.
+    /// Provides a way for generating methods used for calling database procedures.
     /// </summary>
     internal class DatabaseMethodGenerator : IMethodGenerator
     {
+        /// <summary>
+        /// Generates a method used for calling the database procedures.
+        /// </summary>
+        /// <param name="methodInfo">The method information</param>
+        /// <param name="classFields">The fields this method has access to</param>
+        /// <param name="typeBuilder">A type builder used for generating the method</param>
+        /// <returns>A builder representing the method</returns>
         public MethodBuilder GenerateMethod(MethodInfo methodInfo, FieldInfo[] classFields, TypeBuilder typeBuilder)
         {
             ProcedureAttribute procedureAttribute = methodInfo.GetCustomAttribute<ProcedureAttribute>();
             MethodBuilder methodBuilder = typeBuilder.DefineMethod(methodInfo.Name, MethodAttributes.Public | MethodAttributes.Virtual, methodInfo.ReturnType, GetParameterTypes(methodInfo.GetParameters()));
 
-            GenerateMethodBody(procedureAttribute.ProcedureName, methodBuilder.ReturnType, classFields, methodBuilder.GetILGenerator());
+            GenerateMethodBody(procedureAttribute.ProcedureName, methodInfo.GetParameters(), methodBuilder.ReturnType, classFields, methodBuilder.GetILGenerator());
 
             return methodBuilder;
         }
@@ -29,7 +36,7 @@ namespace ProBase.Generation
             return parameters.ToList().ConvertAll(item => item.ParameterType).ToArray();
         }
 
-        private void GenerateMethodBody(string procedureName, Type returnType, FieldInfo[] fields, ILGenerator generator)
+        private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, FieldInfo[] fields, ILGenerator generator)
         {
             generator.Emit(OpCodes.Ldarg_0);
 

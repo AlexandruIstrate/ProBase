@@ -19,6 +19,12 @@ namespace ProBase.Data
             Connection = connection;
         }
 
+        /// <summary>
+        /// Executes an SQL procedure against the connection and returns the number of rows affected.
+        /// </summary>
+        /// <param name="procedureName">The name of the procedure to execute</param>
+        /// <param name="parameters">An array containing the parameters to be passed to the procedure</param>
+        /// <returns>The number of rows affected</returns>
         public int ExecuteNonQueryProcedure(string procedureName, params DbParameter[] parameters)
         {
             DbCommand command = null;
@@ -28,6 +34,12 @@ namespace ProBase.Data
             return command.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Asynchronously executes an SQL procedure against the connection and returns the number of rows affected.
+        /// </summary>
+        /// <param name="procedureName">The name of the procedure to execute</param>
+        /// <param name="parameters">An array containing the parameters to be passed to the procedure</param>
+        /// <returns>The number of rows affected</returns>
         public Task<int> ExecuteNonQueryProcedureAsync(string procedureName, params DbParameter[] parameters)
         {
             DbCommand command = null;
@@ -37,6 +49,12 @@ namespace ProBase.Data
             return command.ExecuteNonQueryAsync();
         }
 
+        /// <summary>
+        /// Executes an SQL procedure and returns a <see cref="System.Data.DataSet"/> containing the data returned from the database.
+        /// </summary>
+        /// <param name="procedureName">The name of the procedure to execute</param>
+        /// <param name="parameters">An array containing the parameters to be passed to the procedure</param>
+        /// <returns>A <see cref="System.Data.DataSet"/> containing the data returned from the database</returns>
         public DataSet ExecuteScalarProcedure(string procedureName, params DbParameter[] parameters)
         {
             DbCommand command = null;
@@ -52,6 +70,12 @@ namespace ProBase.Data
             }
         }
 
+        /// <summary>
+        /// Asynchronously executes an SQL procedure and returns a <see cref="System.Data.DataSet"/> containing the data returned from the database.
+        /// </summary>
+        /// <param name="procedureName">The name of the procedure to execute</param>
+        /// <param name="parameters">An array containing the parameters to be passed to the procedure</param>
+        /// <returns>A <see cref="System.Data.DataSet"/> containing the data returned from the database</returns>
         public Task<DataSet> ExecuteScalarProcedureAsync(string procedureName, params DbParameter[] parameters)
         {
             DbCommand command = null;
@@ -67,6 +91,9 @@ namespace ProBase.Data
             }
         }
 
+        /// <summary>
+        /// Disposes this object.
+        /// </summary>
         public void Dispose()
         {
             Connection.Dispose();

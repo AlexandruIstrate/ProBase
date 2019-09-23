@@ -29,7 +29,7 @@ namespace ProBase.Generation
         public string ClassName { get; } = TypeNames.GenerateUniqueTypeName("GeneratedDatabaseInterface");
 
         /// <summary>
-        /// Generates the database access class using the given components for code generation.
+        /// Creates the code generation class using the given components for code generation.
         /// </summary>
         /// <param name="fieldGenerator">A field generator to use for generating the field used to store the object that accesses the database</param>
         /// <param name="constructorGenerator">A constructor generator used for generating an initializing constructor</param>
@@ -41,6 +41,11 @@ namespace ProBase.Generation
             this.methodGenerator = Preconditions.CheckNotNull(methodGenerator, nameof(methodGenerator));
         }
 
+        /// <summary>
+        /// Generates an implementation of the given type.
+        /// </summary>
+        /// <param name="interfaceType">The type to generate the implementation for</param>
+        /// <returns>A generated type</returns>
         public Type GenerateClassImplementingInterface(Type interfaceType)
         {
             Preconditions.CheckNotNull(interfaceType, nameof(interfaceType));

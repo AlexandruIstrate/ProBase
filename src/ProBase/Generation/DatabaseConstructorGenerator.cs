@@ -11,11 +11,23 @@ namespace ProBase.Generation
     /// </summary>
     internal class DatabaseConstructorGenerator : IConstructorGenerator
     {
+        /// <summary>
+        /// Generates a default constructor for the database access class.
+        /// </summary>
+        /// <param name="fieldValues">The types of the parameters and their values</param>
+        /// <param name="typeBuilder">A type builder used for creating the constructor</param>
+        /// <returns>A builder representing the constructor</returns>
         public ConstructorBuilder GenerateDefaultConstructor(IDictionary<Type, ValueType> fieldValues, TypeBuilder typeBuilder)
         {
             return typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
         }
 
+        /// <summary>
+        /// Generates a dependency-inverted constructor for the database access class.
+        /// </summary>
+        /// <param name="fields">The fields this constructor initializes</param>
+        /// <param name="typeBuilder">A type builder used for creating the constructor</param>
+        /// <returns>A builder representing the constructor</returns>
         public ConstructorBuilder GenerateDependencyConstructor(FieldInfo[] fields, TypeBuilder typeBuilder)
         {
             ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, GetFieldTypes(fields));
