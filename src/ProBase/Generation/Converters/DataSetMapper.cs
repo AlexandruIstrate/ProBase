@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProBase.Utils;
+using System;
 using System.Data;
 
 namespace ProBase.Generation.Converters
@@ -8,27 +9,36 @@ namespace ProBase.Generation.Converters
     /// </summary>
     internal class DataSetMapper : IDataMapper
     {
-        public DataSet MappedDataSet
+        /// <summary>
+        /// Tests if the given <see cref="System.Data.DataSet"/> object can be mapped to the given type.
+        /// </summary>
+        /// <typeparam name="T">The type to check the mapping for</typeparam>
+        /// <param name="obj">The object to check</param>
+        /// <returns>True if the mapping succeeds, false otherwise</returns>
+        public bool CanBeRepresentedAs<T>(object obj)
         {
-            get => mappedDataSet;
-            set => mappedDataSet = value ?? throw new ArgumentNullException(nameof(MappedDataSet));
-        }
+            DataSet dataSet = Preconditions.CheckIsType<DataSet>(obj, nameof(obj));
 
-        public DataSetMapper(DataSet mappedDataSet)
-        {
-            MappedDataSet = mappedDataSet ?? throw new ArgumentNullException(nameof(mappedDataSet));
-        }
-
-        public T MapToObject<T>() where T : new()
-        {
             throw new NotImplementedException();
         }
 
-        public bool CanBeRepresentedAs<T>()
+        /// <summary>
+        /// Maps a given <see cref="System.Data.DataSet"/> to a type.
+        /// </summary>
+        /// <typeparam name="T">The type to map to</typeparam>
+        /// <param name="obj">The object to map</param>
+        /// <returns>A mapped object</returns>
+        public T MapToObject<T>(object obj) where T : new()
         {
+            DataSet dataSet = Preconditions.CheckIsType<DataSet>(obj, nameof(obj));
+
+            // TODO: Support compound types
+            foreach (DataColumn column in dataSet.Tables[0].Columns)
+            {
+                
+            }
+
             throw new NotImplementedException();
         }
-
-        private DataSet mappedDataSet;
     }
 }

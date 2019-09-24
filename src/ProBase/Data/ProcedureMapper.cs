@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ProBase.Generation;
+using ProBase.Generation.Converters;
+using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 
@@ -11,30 +13,29 @@ namespace ProBase.Data
     {
         public ProcedureMapper(DbConnection connection) : base(connection)
         {
+            dataMapper = MapperFactory.Create(DataMapperType.DataSet);
         }
 
-        /// <summary>
-        /// Runs the given procedure and maps its result to the type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type to map to</typeparam>
-        /// <param name="procedureName">The name of the procedure to call</param>
-        /// <param name="parameters">The parameters to pass into the procedure</param>
-        /// <returns>The mapped type</returns>
-        public T ExecuteMappedProcedure<T>(string procedureName, params DbParameter[] parameters)
+        public T ExecuteMappedProcedure<T>(string procedureName, params DbParameter[] parameters) where T : new()
         {
-            throw new NotImplementedException();
+            return MapProcedure<T>(ExecuteScalarProcedure(procedureName, parameters));
         }
 
-        /// <summary>
-        /// Asynchronously runs the given procedure and maps its result to the type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type to map to</typeparam>
-        /// <param name="procedureName">The name of the procedure to call</param>
-        /// <param name="parameters">The parameters to pass into the procedure</param>
-        /// <returns>The mapped type</returns>
-        public Task<T> ExecuteMappedProcedureAsync<T>(string procedureName, params DbParameter[] parameters)
+        public async Task<T> ExecuteMappedProcedureAsync<T>(string procedureName, params DbParameter[] parameters) where T : new()
         {
-            throw new NotImplementedException();
+            return MapProcedure<T>(await ExecuteScalarProcedureAsync(procedureName, parameters));
         }
+
+        private T MapProcedure<T>(DataSet dataSet) where T : new()
+        {
+            if (!dataMapper.CanBeRepresentedAs<T>(dataSet))
+            {
+                throw new CodeGenerationException("The given type's properties do not match the DataSet columns");
+            }
+
+            return dataMapper.MapToObject<T>(dataSet);
+        }
+
+        private readonly IDataMapper dataMapper;
     }
 }

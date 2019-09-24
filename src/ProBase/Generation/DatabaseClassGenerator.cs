@@ -1,5 +1,6 @@
 ﻿using ProBase.Attributes;
 using ProBase.Data;
+using ProBase.Generation.Converters;
 using ProBase.Utils;
 using System;
 using System.Linq;
@@ -67,13 +68,13 @@ namespace ProBase.Generation
             typeBuilder.AddInterfaceImplementation(interfaceType);
 
             // Generate the IDatabase field that we use for accessing the database
-            FieldBuilder fieldBuilder = fieldGenerator.GenerateField("procedureMapper", typeof(IProcedureMapper), typeBuilder);
+            FieldBuilder procedureMapper = fieldGenerator.GenerateField("procedureMapper", typeof(IProcedureMapper), typeBuilder);
 
             // Generate a constructor that initializes the IDatabaseMapper field
-            constructorGenerator.GenerateDependencyConstructor(new FieldInfo[] { fieldBuilder }, typeBuilder);
+            constructorGenerator.GenerateDependencyConstructor(new FieldInfo[] { procedureMapper }, typeBuilder);
 
             // Generate implementations for all of the methods defined by the interface
-            interfaceType.GetMethods().ToList().ForEach(method => BuildMethodImplementation(method, new FieldInfo[] { fieldBuilder }, typeBuilder));
+            interfaceType.GetMethods().ToList().ForEach(method => BuildMethodImplementation(method, new FieldInfo[] { procedureMapper }, typeBuilder));
 
             // Generate the meta-type from the builder
             return typeBuilder.CreateTypeInfo();

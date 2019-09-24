@@ -23,7 +23,7 @@ namespace ProBase.Tests.Api
         private SqlConnection CreateConnection()
         {
             SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder();
-            connectionStringBuilder.InitialCatalog = "";
+            connectionStringBuilder.InitialCatalog = "Address here";
 
             return new SqlConnection(connectionStringBuilder.ToString());
         }

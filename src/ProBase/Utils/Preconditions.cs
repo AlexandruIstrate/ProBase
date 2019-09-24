@@ -25,6 +25,23 @@ namespace ProBase.Utils
         }
 
         /// <summary>
+        /// Checks if a given argument is of the supplied type.
+        /// </summary>
+        /// <typeparam name="T">The type to check against</typeparam>
+        /// <param name="obj">The object to check</param>
+        /// <param name="parameterName">The name of the parameter</param>
+        /// <returns>The casted object</returns>
+        internal static T CheckIsType<T>(object obj, string parameterName)
+        {
+            if (!(obj is T))
+            {
+                throw new ArgumentException("The parameter is not of the type required", parameterName);
+            }
+
+            return (T)obj;
+        }
+
+        /// <summary>
         /// Checks if a given argument is in the given range.
         /// </summary>
         /// <param name="paramName">The name of the parameter</param>
