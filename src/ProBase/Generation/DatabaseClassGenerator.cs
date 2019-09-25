@@ -69,12 +69,13 @@ namespace ProBase.Generation
 
             // Generate the IDatabase field that we use for accessing the database
             FieldBuilder procedureMapper = fieldGenerator.GenerateField("procedureMapper", typeof(IProcedureMapper), typeBuilder);
+            FieldBuilder dataMapper = fieldGenerator.GenerateField("dataMapper", typeof(IDataMapper), typeBuilder);
 
             // Generate a constructor that initializes the IDatabaseMapper field
-            constructorGenerator.GenerateDependencyConstructor(new FieldInfo[] { procedureMapper }, typeBuilder);
+            constructorGenerator.GenerateDependencyConstructor(new FieldInfo[] { procedureMapper, dataMapper }, typeBuilder);
 
             // Generate implementations for all of the methods defined by the interface
-            interfaceType.GetMethods().ToList().ForEach(method => BuildMethodImplementation(method, new FieldInfo[] { procedureMapper }, typeBuilder));
+            interfaceType.GetMethods().ToList().ForEach(method => BuildMethodImplementation(method, new FieldInfo[] { procedureMapper, dataMapper }, typeBuilder));
 
             // Generate the meta-type from the builder
             return typeBuilder.CreateTypeInfo();

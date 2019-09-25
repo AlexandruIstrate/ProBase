@@ -41,7 +41,7 @@ namespace ProBase.Generation
             generator.Emit(OpCodes.Ldarg_0);
 
             // Load the field we use for calling the database procedures
-            generator.Emit(OpCodes.Ldfld, GetProcedureMapperField(fields));
+            generator.Emit(OpCodes.Ldfld, GetField<IProcedureMapper>("procedureMapper", fields));
 
             // Load the procedure name
             generator.Emit(OpCodes.Ldstr, procedureName);
@@ -70,16 +70,29 @@ namespace ProBase.Generation
             return matchingReturnType.First();
         }
 
-        private FieldInfo GetProcedureMapperField(FieldInfo[] fields)
+        private FieldInfo GetField<T>(string fieldName, IEnumerable<FieldInfo> fields)
         {
-            IEnumerable<FieldInfo> foundFields = fields.Where(field => field.FieldType == typeof(IProcedureMapper));
+            IEnumerable<FieldInfo> typedFields = fields.Where(field => field.FieldType == typeof(T));
 
-            if (foundFields.Count() == 0)
+            if (typedFields.Count() == 0)
             {
-                throw new CodeGenerationException($"The generated class does not contain a field of type { typeof(IProcedureMapper) }");
+                throw new CodeGenerationException($"The generated class does not contain a field of type { nameof(T) }");
             }
 
-            return foundFields.First();
+            // Realistically, there can only be one field with this name
+            IEnumerable<FieldInfo> namedFields = typedFields.Where(field => field.Name == fieldName);
+
+            if (namedFields.Count() == 0)
+            {
+                throw new CodeGenerationException($"Cannot find a field named { fieldName }");
+            }
+
+            if (namedFields.Count() > 1)
+            {
+                throw new CodeGenerationException($"Multiple fields with the name { fieldName } found");
+            }
+
+            return namedFields.First();
         }
     }
 }

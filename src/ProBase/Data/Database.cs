@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Data.Common;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ProBase.Data
@@ -12,9 +13,17 @@ namespace ProBase.Data
         /// <summary>
         /// Gets or sets the connection used for operations.
         /// </summary>
-        public IDbConnection Connection { get; set; }
+        public DbConnection Connection
+        {
+            get => connection;
+            set
+            {
+                connection = value;
+                providerFactory = GetProviderFactory(value);
+            }
+        }
 
-        public Database(IDbConnection connection)
+        public Database(DbConnection connection)
         {
             Connection = connection;
         }
@@ -27,7 +36,7 @@ namespace ProBase.Data
         /// <returns>The number of rows affected</returns>
         public int ExecuteNonQueryProcedure(string procedureName, params DbParameter[] parameters)
         {
-            DbCommand command = null;
+            DbCommand command = providerFactory.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = procedureName;
             command.Parameters.AddRange(parameters);
@@ -42,7 +51,7 @@ namespace ProBase.Data
         /// <returns>The number of rows affected</returns>
         public Task<int> ExecuteNonQueryProcedureAsync(string procedureName, params DbParameter[] parameters)
         {
-            DbCommand command = null;
+            DbCommand command = providerFactory.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = procedureName;
             command.Parameters.AddRange(parameters);
@@ -57,12 +66,12 @@ namespace ProBase.Data
         /// <returns>A <see cref="System.Data.DataSet"/> containing the data returned from the database</returns>
         public DataSet ExecuteScalarProcedure(string procedureName, params DbParameter[] parameters)
         {
-            DbCommand command = null;
+            DbCommand command = providerFactory.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = procedureName;
             command.Parameters.AddRange(parameters);
 
-            using (DataAdapter dataAdapter = null)
+            using (DataAdapter dataAdapter = providerFactory.CreateDataAdapter())
             {
                 DataSet dataSet = new DataSet();
                 dataAdapter.Fill(dataSet);
@@ -78,12 +87,12 @@ namespace ProBase.Data
         /// <returns>A <see cref="System.Data.DataSet"/> containing the data returned from the database</returns>
         public Task<DataSet> ExecuteScalarProcedureAsync(string procedureName, params DbParameter[] parameters)
         {
-            DbCommand command = null;
+            DbCommand command = providerFactory.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = procedureName;
             command.Parameters.AddRange(parameters);
 
-            using (DataAdapter dataAdapter = null)
+            using (DataAdapter dataAdapter = providerFactory.CreateDataAdapter())
             {
                 DataSet dataSet = new DataSet();
                 dataAdapter.Fill(dataSet);
@@ -98,5 +107,15 @@ namespace ProBase.Data
         {
             Connection.Dispose();
         }
+
+        private DbProviderFactory GetProviderFactory(DbConnection connection)
+        {
+            FieldInfo factoryField = connection.GetType().GetField("DbProviderFactory", BindingFlags.NonPublic | BindingFlags.Instance);
+            return (DbProviderFactory)factoryField.GetValue(connection);
+        }
+
+        private DbConnection connection;
+
+        private DbProviderFactory providerFactory;
     }
 }
