@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using ProBase.Utils;
+using System.Data;
 using System.Data.Common;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace ProBase.Data
             get => connection;
             set
             {
-                connection = value;
+                connection = Preconditions.CheckNotNull(value, nameof(Connection));
                 providerFactory = GetProviderFactory(value);
             }
         }
@@ -110,7 +111,7 @@ namespace ProBase.Data
 
         private DbProviderFactory GetProviderFactory(DbConnection connection)
         {
-            FieldInfo factoryField = connection.GetType().GetField("DbProviderFactory", BindingFlags.NonPublic | BindingFlags.Instance);
+            PropertyInfo factoryField = connection.GetType().GetProperty("DbProviderFactory", BindingFlags.NonPublic | BindingFlags.Instance);
             return (DbProviderFactory)factoryField.GetValue(connection);
         }
 
