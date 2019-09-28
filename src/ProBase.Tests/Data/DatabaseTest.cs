@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using ProBase.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace ProBase.Tests.Data
@@ -9,7 +8,7 @@ namespace ProBase.Tests.Data
     public class DatabaseTest
     {
         [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public void GeneralSetUp()
         {
             database = new Database(CreateConnection());
         }
@@ -24,7 +23,7 @@ namespace ProBase.Tests.Data
         //}
 
         [OneTimeTearDown]
-        public void OneTimeTearDown()
+        public void GeneralTearDown()
         {
             database.Dispose();
         }

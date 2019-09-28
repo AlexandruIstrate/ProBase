@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Api\SqlServerTest.cs" />
     <Compile Include="Data\DatabaseTest.cs" />
+    <Compile Include="Data\ProcedureMapper.cs" />
     <Compile Include="Generation\ClassGenerationTest.cs" />
     <Compile Include="Generation\ConstructorGenerationTest.cs" />
     <Compile Include="Generation\FieldGenerationTest.cs" />
