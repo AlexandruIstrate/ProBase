@@ -14,21 +14,23 @@ namespace ProBase.Tests.Generation
             Assert.DoesNotThrow(() =>
             {
                 fieldGenerator = new DatabaseFieldGenerator();
-            }, "The creation of the field generator must be successful");
+            },
+            "The creation of the field generator must be successful");
         }
 
-        //[Test]
-        //public void CanGenerateField()
-        //{
-        //    Assert.DoesNotThrow(() =>
-        //    {
-        //        fieldGenerator.GenerateField("testField", typeof(string), GetTypeBuilder());
-        //    }, "The creation of the field must be successful");
-        //}
+        [Test]
+        public void CanGenerateField()
+        {
+            Assert.DoesNotThrow(() =>
+            {
+                fieldGenerator.GenerateField("testField", typeof(string), GetTypeBuilder());
+            },
+            "The creation of the field must be successful");
+        }
 
         private TypeBuilder GetTypeBuilder()
         {
-            throw new NotImplementedException();
+            return GenerationUtils.GetTypeBuilder(typeof(IGenerationTestInterface));
         }
 
         private IClassFieldGenerator fieldGenerator;

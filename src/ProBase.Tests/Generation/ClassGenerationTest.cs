@@ -7,11 +7,9 @@ namespace ProBase.Tests.Generation
     [TestFixture]
     public class ClassGenerationTest
     {
-        [Test]
-        public void CanCreateClassInstance()
+        [OneTimeSetUp]
+        public void GeneralSetUp()
         {
-            IConcreteClassGenerator classGenerator = null;
-
             Assert.DoesNotThrow(() =>
             {
                 classGenerator = ClassGeneratorFactory.Create();
@@ -24,7 +22,6 @@ namespace ProBase.Tests.Generation
         [Test]
         public void CanGenerateInterfaceImplementation()
         {
-            IConcreteClassGenerator classGenerator = ClassGeneratorFactory.Create();
             Type generatedType = null;
 
             Assert.DoesNotThrow(() =>
@@ -35,5 +32,7 @@ namespace ProBase.Tests.Generation
 
             Assert.NotNull(generatedType, "The generator must return a non-null value");
         }
+
+        private IConcreteClassGenerator classGenerator;
     }
 }

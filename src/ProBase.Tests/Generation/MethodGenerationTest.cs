@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
 using ProBase.Data;
 using ProBase.Generation;
-using ProBase.Utils;
-using System;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -11,11 +9,9 @@ namespace ProBase.Tests.Generation
     [TestFixture]
     public class MethodGenerationTest
     {
-        [Test]
-        public void CanCreateMethodGenerator()
+        [OneTimeSetUp]
+        public void GeneralSetup()
         {
-            IMethodGenerator methodGenerator = null;
-
             Assert.DoesNotThrow(() =>
             {
                 methodGenerator = new DatabaseMethodGenerator();
@@ -26,15 +22,13 @@ namespace ProBase.Tests.Generation
         [Test]
         public void CanGenerateMethodImplementation()
         {
-            IMethodGenerator methodGenerator = new DatabaseMethodGenerator();
-
             foreach (MethodInfo method in typeof(IGenerationTestInterface).GetMethods())
             {
                 MethodBuilder methodBuilder = null;
 
                 Assert.DoesNotThrow(() =>
                 {
-                    TypeBuilder typeBuilder = GetTypeBuilder(typeof(IGenerationTestInterface));
+                    TypeBuilder typeBuilder = GetTypeBuilder();
                     methodBuilder = methodGenerator.GenerateMethod(method, new FieldInfo[] { GetDatabaseMapperField(typeBuilder) }, typeBuilder);
                 },
                 "The method generation must be successful");
@@ -43,20 +37,16 @@ namespace ProBase.Tests.Generation
             }
         }
 
-        private TypeBuilder GetTypeBuilder(Type interfaceType)
+        private TypeBuilder GetTypeBuilder()
         {
-            AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(TypeNames.GetAssemblyName()), AssemblyBuilderAccess.Run);
-            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(TypeNames.GetModuleName());
-
-            TypeBuilder typeBuilder = moduleBuilder.DefineType(TypeNames.GenerateUniqueTypeName("TestType"), TypeAttributes.Public | TypeAttributes.Class);
-            typeBuilder.AddInterfaceImplementation(interfaceType);
-
-            return typeBuilder;
+            return GenerationUtils.GetTypeBuilder(typeof(IGenerationTestInterface));
         }
 
         private FieldInfo GetDatabaseMapperField(TypeBuilder typeBuilder)
         {
             return typeBuilder.DefineField("procedureMapper", typeof(IProcedureMapper), FieldAttributes.Private | FieldAttributes.InitOnly);
         }
+
+        private IMethodGenerator methodGenerator;
     }
 }
