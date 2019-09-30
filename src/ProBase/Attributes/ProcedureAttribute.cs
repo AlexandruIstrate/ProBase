@@ -18,9 +18,35 @@ namespace ProBase.Attributes
         /// </summary>
         public string DatabaseSchema { get; set; }
 
+        /// <summary>
+        /// Gets or sets the type of procedure.
+        /// </summary>
+        public ProcedureType ProcedureType { get; set; }
+
         public ProcedureAttribute(string procedureName)
         {
             ProcedureName = procedureName;
         }
+    }
+
+    /// <summary>
+    /// Indicates the type of a procedure.
+    /// </summary>
+    public enum ProcedureType
+    {
+        /// <summary>
+        /// The type of this procedure will be automatically deduced.
+        /// </summary>
+        Automatic,
+
+        /// <summary>
+        /// This procedure returns a value.
+        /// </summary>
+        Scalar,
+
+        /// <summary>
+        /// This procedure does not have a result but returns the number of rows affected.
+        /// </summary>
+        NonQuery
     }
 }

@@ -53,6 +53,12 @@ namespace ProBase.Generation
             // Call the procedure using the coresponding virtual method
             generator.Emit(OpCodes.Callvirt, GetDataMapperMethod(returnType));
 
+            // If the method returns a value, then remove it from the stack after the call
+            if (returnType != typeof(void))
+            {
+                generator.Emit(OpCodes.Pop);
+            }
+
             // Return from the method
             generator.Emit(OpCodes.Ret);
         }

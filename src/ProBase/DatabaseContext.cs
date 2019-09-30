@@ -1,5 +1,6 @@
 ﻿using ProBase.Data;
 using ProBase.Generation;
+using ProBase.Generation.Converters;
 using ProBase.Utils;
 using System;
 using System.Data.Common;
@@ -32,7 +33,9 @@ namespace ProBase
             try
             {
                 Type generatedType = classGenerator.GenerateClassImplementingInterface(typeof(T));
-                return (T)Activator.CreateInstance(generatedType, ProcedureMapperFactory.Create(Connection));
+                return (T)Activator.CreateInstance(generatedType, ProcedureMapperFactory.Create(Connection));//, 
+                                                                  //ParameterConverterFactory.Create(),
+                                                                  //DataMapperFactory.Create(DataMapperType.DataSet));
             }
             catch (Exception e)
             {

@@ -5,7 +5,7 @@ namespace ProBase.Generation.Converters
     /// <summary>
     /// Provides a way for creating instances of <see cref="ProBase.Generation.Converters.IDataMapper"/>.
     /// </summary>
-    internal class MapperFactory
+    internal static class DataMapperFactory
     {
         /// <summary>
         /// Creates an instance of <see cref="ProBase.Generation.Converters.IDataMapper"/>.

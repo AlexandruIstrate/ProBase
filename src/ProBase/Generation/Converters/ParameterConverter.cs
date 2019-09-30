@@ -1,4 +1,5 @@
 ﻿using ProBase.Attributes;
+using ProBase.Utils;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
@@ -12,6 +13,8 @@ namespace ProBase.Generation.Converters
     {
         public DbParameter ConvertParameter(ParameterInfo parameterInfo, object value)
         {
+            Preconditions.CheckNotNull(parameterInfo, nameof(parameterInfo));
+
             DbParameter dbParameter = null;
             dbParameter.ParameterName = GetParameterName(parameterInfo);
             dbParameter.Direction = GetParameterDirection(parameterInfo);
@@ -21,7 +24,7 @@ namespace ProBase.Generation.Converters
 
         private string GetParameterName(ParameterInfo parameterInfo)
         {
-            return parameterInfo.GetCustomAttribute<ParameterAttribute>()?.ProcedureParameterName ?? parameterInfo.Name;
+            return parameterInfo.GetCustomAttribute<ParameterAttribute>()?.ParameterName ?? parameterInfo.Name;
         }
 
         private ParameterDirection GetParameterDirection(ParameterInfo parameterInfo)

@@ -67,18 +67,27 @@ namespace ProBase.Generation
             TypeBuilder typeBuilder = CreateTypeBuilder(ClassName, moduleBuilder);
             typeBuilder.AddInterfaceImplementation(interfaceType);
 
-            // Generate the IDatabase field that we use for accessing the database
-            FieldBuilder procedureMapper = fieldGenerator.GenerateField("procedureMapper", typeof(IProcedureMapper), typeBuilder);
-            //FieldBuilder dataMapper = fieldGenerator.GenerateField("dataMapper", typeof(IDataMapper), typeBuilder);
+            // Generate the fields that we need for accessing the database and for converting data
+            FieldBuilder[] fields = GenerateFields(typeBuilder);
 
             // Generate a constructor that initializes the IDatabaseMapper field
-            constructorGenerator.GenerateDependencyConstructor(new FieldInfo[] { procedureMapper /*, dataMapper */ }, typeBuilder);
+            constructorGenerator.GenerateDependencyConstructor(fields, typeBuilder);
 
             // Generate implementations for all of the methods defined by the interface
-            interfaceType.GetMethods().ToList().ForEach(method => BuildMethodImplementation(method, new FieldInfo[] { procedureMapper  /*, dataMapper */ }, typeBuilder));
+            interfaceType.GetMethods().ToList().ForEach(method => BuildMethodImplementation(method, fields, typeBuilder));
 
             // Generate the meta-type from the builder
             return typeBuilder.CreateTypeInfo();
+        }
+
+        private FieldBuilder[] GenerateFields(TypeBuilder typeBuilder)
+        {
+            return new FieldBuilder[]
+            {
+                fieldGenerator.GenerateField(GenerationConstants.ProcedureMapperFieldName, typeof(IProcedureMapper), typeBuilder),
+                //fieldGenerator.GenerateField(GenerationConstants.ParameterConverterFieldName, typeof(IParameterConverter), typeBuilder),
+                //fieldGenerator.GenerateField(GenerationConstants.DataMapperFieldName, typeof(IDataMapper), typeBuilder)
+            };
         }
 
         private void BuildMethodImplementation(MethodInfo methodInfo, FieldInfo[] classFields, TypeBuilder typeBuilder)

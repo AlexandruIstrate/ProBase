@@ -13,7 +13,7 @@ namespace ProBase.Data
     {
         public ProcedureMapper(DbConnection connection) : base(connection)
         {
-            dataMapper = MapperFactory.Create(DataMapperType.DataSet);
+            dataMapper = DataMapperFactory.Create(DataMapperType.DataSet);
         }
 
         public T ExecuteMappedProcedure<T>(string procedureName, params DbParameter[] parameters) where T : new()

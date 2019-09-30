@@ -18,7 +18,6 @@ namespace ProBase.Generation.Converters
         public bool CanBeRepresentedAs<T>(object obj)
         {
             DataSet dataSet = Preconditions.CheckIsType<DataSet>(obj, nameof(obj));
-
             throw new NotImplementedException();
         }
 
@@ -30,14 +29,8 @@ namespace ProBase.Generation.Converters
         /// <returns>A mapped object</returns>
         public T MapToObject<T>(object obj) where T : new()
         {
-            DataSet dataSet = Preconditions.CheckIsType<DataSet>(obj, nameof(obj));
-
             // TODO: Support compound types
-            foreach (DataColumn column in dataSet.Tables[0].Columns)
-            {
-                
-            }
-
+            DataSet dataSet = Preconditions.CheckIsType<DataSet>(obj, nameof(obj));
             throw new NotImplementedException();
         }
     }
