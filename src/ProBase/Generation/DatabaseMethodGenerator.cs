@@ -1,5 +1,6 @@
 ﻿using ProBase.Attributes;
 using ProBase.Data;
+using ProBase.Generation.Operations;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -14,6 +15,15 @@ namespace ProBase.Generation
     /// </summary>
     internal class DatabaseMethodGenerator : IMethodGenerator
     {
+        /// <summary>
+        /// Creates an instance using the given <see cref="ProBase.Generation.Operations.IArrayGenerator"/> for generating the parameter array.
+        /// </summary>
+        /// <param name="arrayGenerator">The array generator to use</param>
+        public DatabaseMethodGenerator(IArrayGenerator arrayGenerator)
+        {
+            this.arrayGenerator = arrayGenerator;
+        }
+
         /// <summary>
         /// Generates a method used for calling the database procedures.
         /// </summary>
@@ -38,6 +48,10 @@ namespace ProBase.Generation
 
         private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, FieldInfo[] fields, ILGenerator generator)
         {
+            // Generate the parameter array
+            arrayGenerator.Generate(parameters, generator);
+
+            // Load this object
             generator.Emit(OpCodes.Ldarg_0);
 
             // Load the field we use for calling the database procedures
@@ -45,15 +59,14 @@ namespace ProBase.Generation
 
             // Load the procedure name
             generator.Emit(OpCodes.Ldstr, procedureName);
-            generator.Emit(OpCodes.Ldc_I4, 0);
 
-            // Create an array of parameters
-            generator.Emit(OpCodes.Newarr, typeof(DbParameter));
+            // Load the parameter array as a local
+            generator.Emit(OpCodes.Ldloc, parameters.Length);
 
             // Call the procedure using the coresponding virtual method
             generator.Emit(OpCodes.Callvirt, GetDataMapperMethod(returnType));
 
-            // If the method returns a value, then remove it from the stack after the call
+            // If the method returns a value, then pop it from the stack after the call
             if (returnType != typeof(void))
             {
                 generator.Emit(OpCodes.Pop);
@@ -100,5 +113,7 @@ namespace ProBase.Generation
 
             return namedFields.First();
         }
+
+        private readonly IArrayGenerator arrayGenerator;
     }
 }

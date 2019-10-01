@@ -85,8 +85,7 @@ namespace ProBase.Generation
             return new FieldBuilder[]
             {
                 fieldGenerator.GenerateField(GenerationConstants.ProcedureMapperFieldName, typeof(IProcedureMapper), typeBuilder),
-                //fieldGenerator.GenerateField(GenerationConstants.ParameterConverterFieldName, typeof(IParameterConverter), typeBuilder),
-                //fieldGenerator.GenerateField(GenerationConstants.DataMapperFieldName, typeof(IDataMapper), typeBuilder)
+                fieldGenerator.GenerateField(GenerationConstants.DataMapperFieldName, typeof(IDataMapper), typeBuilder)
             };
         }
 

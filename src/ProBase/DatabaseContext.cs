@@ -33,15 +33,17 @@ namespace ProBase
             try
             {
                 Type generatedType = classGenerator.GenerateClassImplementingInterface(typeof(T));
-                return (T)Activator.CreateInstance(generatedType, ProcedureMapperFactory.Create(Connection));//, 
-                                                                  //ParameterConverterFactory.Create(),
-                                                                  //DataMapperFactory.Create(DataMapperType.DataSet));
+                return (T)Activator.CreateInstance(generatedType, GetProcedureMapper(), GetDataMapper());
             }
             catch (Exception e)
             {
                 throw new OperationMappingException("The database operations class could not be created", e);
             }
         }
+
+
+        private IProcedureMapper GetProcedureMapper() => ProcedureMapperFactory.Create(Connection);
+        private IDataMapper GetDataMapper() => DataMapperFactory.Create(DataMapperType.DataSet);
 
         private readonly IConcreteClassGenerator classGenerator;
     }

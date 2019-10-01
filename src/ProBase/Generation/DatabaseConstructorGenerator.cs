@@ -37,24 +37,18 @@ namespace ProBase.Generation
 
         private void GenerateConstructorInternal(ILGenerator generator, FieldInfo[] fields, Type baseType)
         {
-            // Load the constructor parameters
-            for (int i = 0; i < fields.Count(); i++)
-            { 
-                generator.Emit(OpCodes.Ldarg, i);
-            }
-
             // Call the default base constructor of this class first to ensure the type is constructed properly
             CallDefaultBaseConstructor(generator, baseType);
 
             for (int i = 0; i < fields.Count(); i++)
             {
-                // Load the constructor parameter
-                generator.Emit(OpCodes.Ldarg, i);
+                // Load the reference to this object
+                generator.Emit(OpCodes.Ldarg, 0);
 
-                // Load the class field
-                generator.Emit(OpCodes.Ldarg, i + fields.Count());
+                // Load the current constructor parameter
+                generator.Emit(OpCodes.Ldarg, i + 1);
 
-                // Replace the currently stored field value with the value of the constructor parameter
+                // Replaced the value stored in the current field with the value of the parameter
                 generator.Emit(OpCodes.Stfld, fields[i]);
             }
 
@@ -69,6 +63,9 @@ namespace ProBase.Generation
 
         private void CallDefaultBaseConstructor(ILGenerator generator, Type baseType)
         {
+            // Load the reference to this object
+            generator.Emit(OpCodes.Ldarg, 0);
+
             ConstructorInfo defaultConstructor = baseType.GetConstructor(new Type[] { });
 
             if (defaultConstructor == null)
@@ -76,6 +73,7 @@ namespace ProBase.Generation
                 throw new CodeGenerationException("The base type does not have a default constructor");
             }
 
+            // Call the default base constructor
             generator.Emit(OpCodes.Call, defaultConstructor);
         }
     }
