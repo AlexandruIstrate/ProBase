@@ -49,7 +49,7 @@ namespace ProBase.Generation
         private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, FieldInfo[] fields, ILGenerator generator)
         {
             // Generate the parameter array
-            arrayGenerator.Generate(parameters, generator);
+            //arrayGenerator.Generate(parameters, generator);
 
             // Load this object
             generator.Emit(OpCodes.Ldarg_0);
@@ -65,6 +65,9 @@ namespace ProBase.Generation
 
             // Call the procedure using the coresponding virtual method
             generator.Emit(OpCodes.Callvirt, GetDataMapperMethod(returnType));
+
+            // Generate the procedure call
+            //procedureCallGenerator.Generate(returnType, generator);
 
             // If the method returns a value, then pop it from the stack after the call
             if (returnType != typeof(void))
@@ -115,5 +118,6 @@ namespace ProBase.Generation
         }
 
         private readonly IArrayGenerator arrayGenerator;
+        private readonly IMethodCallGenerator procedureCallGenerator;
     }
 }

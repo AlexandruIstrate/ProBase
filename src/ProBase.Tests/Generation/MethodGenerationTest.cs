@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using ProBase.Data;
 using ProBase.Generation;
+using ProBase.Generation.Converters;
+using ProBase.Generation.Operations;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -14,7 +16,7 @@ namespace ProBase.Tests.Generation
         {
             Assert.DoesNotThrow(() =>
             {
-                methodGenerator = new DatabaseMethodGenerator();
+                methodGenerator = new DatabaseMethodGenerator(new ParameterArrayGenerator(new ParameterConverter()));
             },
             "The creation of the method generator must be successful");
         }

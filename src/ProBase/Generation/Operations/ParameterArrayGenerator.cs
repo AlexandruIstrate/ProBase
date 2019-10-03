@@ -10,13 +10,13 @@ namespace ProBase.Generation.Operations
     /// <summary>
     /// Generates an array of parameters used for calling database procedures.
     /// </summary>
-    internal class DbParameterArrayGenerator : IArrayGenerator
+    internal class ParameterArrayGenerator : IArrayGenerator
     {
         /// <summary>
         /// Creates an instance of this class using the given <see cref="ProBase.Generation.Converters.IParameterConverter"/> for converting the method parameters to database parameters.
         /// </summary>
         /// <param name="parameterConverter">The converter used for converting method parameters</param>
-        public DbParameterArrayGenerator(IParameterConverter parameterConverter)
+        public ParameterArrayGenerator(IParameterConverter parameterConverter)
         {
             this.parameterConverter = parameterConverter;
         }

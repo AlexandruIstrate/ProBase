@@ -15,7 +15,7 @@ namespace ProBase.Generation.Converters
         {
             Preconditions.CheckNotNull(parameterInfo, nameof(parameterInfo));
 
-            DbParameter dbParameter = null;
+            DbParameter dbParameter = providerFactory.CreateParameter();
             dbParameter.ParameterName = GetParameterName(parameterInfo);
             dbParameter.Direction = GetParameterDirection(parameterInfo);
             dbParameter.Value = value;
@@ -41,5 +41,7 @@ namespace ProBase.Generation.Converters
 
             return ParameterDirection.Input;
         }
+
+        private readonly DbProviderFactory providerFactory;
     }
 }
