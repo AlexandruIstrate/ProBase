@@ -11,6 +11,11 @@ namespace ProBase.Generation.Converters
     /// </summary>
     internal class ParameterConverter : IParameterConverter
     {
+        public ParameterConverter(DbProviderFactory providerFactory)
+        {
+            this.providerFactory = providerFactory;
+        }
+
         public DbParameter ConvertParameter(ParameterInfo parameterInfo, object value)
         {
             Preconditions.CheckNotNull(parameterInfo, nameof(parameterInfo));

@@ -30,15 +30,15 @@ namespace ProBase
         /// <returns>An instance implementing the passed in interface type</returns>
         public T GenerateObject<T>()
         {
-            try
-            {
+            //try
+            //{
                 Type generatedType = classGenerator.GenerateClassImplementingInterface(typeof(T));
                 return (T)Activator.CreateInstance(generatedType, GetProcedureMapper(), GetDataMapper());
-            }
-            catch (Exception e)
-            {
-                throw new OperationMappingException("The database operations class could not be created", e);
-            }
+            //}
+            //catch (Exception e)
+            //{
+                //throw new OperationMappingException("The database operations class could not be created", e);
+            //}
         }
 
 

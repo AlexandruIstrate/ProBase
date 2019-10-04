@@ -19,9 +19,10 @@ namespace ProBase.Generation
         /// Creates an instance using the given <see cref="ProBase.Generation.Operations.IArrayGenerator"/> for generating the parameter array.
         /// </summary>
         /// <param name="arrayGenerator">The array generator to use</param>
-        public DatabaseMethodGenerator(IArrayGenerator arrayGenerator)
+        public DatabaseMethodGenerator(IArrayGenerator arrayGenerator, IMethodCallGenerator procedureCallGenerator)
         {
             this.arrayGenerator = arrayGenerator;
+            this.procedureCallGenerator = procedureCallGenerator;
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace ProBase.Generation
         private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, FieldInfo[] fields, ILGenerator generator)
         {
             // Generate the parameter array
-            //arrayGenerator.Generate(parameters, generator);
+            arrayGenerator.Generate(parameters, generator);
 
             // Load this object
             generator.Emit(OpCodes.Ldarg_0);
@@ -67,7 +68,7 @@ namespace ProBase.Generation
             generator.Emit(OpCodes.Callvirt, GetDataMapperMethod(returnType));
 
             // Generate the procedure call
-            //procedureCallGenerator.Generate(returnType, generator);
+            procedureCallGenerator.Generate(returnType, generator);
 
             // If the method returns a value, then pop it from the stack after the call
             if (returnType != typeof(void))

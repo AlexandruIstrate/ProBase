@@ -1,4 +1,6 @@
-﻿using ProBase.Generation.Converters;
+﻿using System;
+using System.Data.Common;
+using ProBase.Generation.Converters;
 using ProBase.Generation.Operations;
 
 namespace ProBase.Generation
@@ -15,7 +17,12 @@ namespace ProBase.Generation
 
         public static IConcreteClassGenerator Create()
         {
-            return new DatabaseClassGenerator(new DatabaseFieldGenerator(), new DatabaseConstructorGenerator(), new DatabaseMethodGenerator(new ParameterArrayGenerator(new ParameterConverter())));
+            return new DatabaseClassGenerator(new DatabaseFieldGenerator(), new DatabaseConstructorGenerator(), GetMethodGenerator());
+        }
+
+        private static IMethodGenerator GetMethodGenerator()
+        {
+            return new DatabaseMethodGenerator(new ParameterArrayGenerator(new ParameterInfoConverter()), new ProcedureCallGenerator());
         }
     }
 }

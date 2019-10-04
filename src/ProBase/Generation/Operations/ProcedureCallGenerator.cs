@@ -53,7 +53,17 @@ namespace ProBase.Generation.Operations
             return GetMethod(nameof(IProcedureMapper.ExecuteMappedProcedure));
         }
 
-        private MethodInfo GetMethod(string methodName) => GetMapperType().GetMethod(methodName);
+        private MethodInfo GetMethod(string methodName)
+        {
+            MethodInfo methodInfo = GetMapperType().GetMethod(methodName);
+
+            if (methodInfo == null)
+            {
+                return GetMapperType().GetInterface(nameof(IDatabase)).GetMethod(methodName);
+            }
+
+            return methodInfo;
+        }
 
         private Type GetMapperType() => typeof(IProcedureMapper);
     }

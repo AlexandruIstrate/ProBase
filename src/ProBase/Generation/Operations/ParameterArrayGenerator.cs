@@ -30,6 +30,9 @@ namespace ProBase.Generation.Operations
                 // Create the parameter
                 CreateParameter(localIndex: i, generator);
 
+                // Set the name for this parameter
+                SetParameterName(variableIndex: i, databaseParameter.ParameterName, generator);
+
                 // Set the direction for this parameter
                 SetParameterDirection(variableIndex: i, databaseParameter.Direction, generator);
 
@@ -53,6 +56,18 @@ namespace ProBase.Generation.Operations
 
             // Unload this object from the stack
             generator.Emit(OpCodes.Stloc, localIndex);
+        }
+
+        private void SetParameterName(int variableIndex, string name, ILGenerator generator)
+        {
+            // Load the variable at the given index
+            generator.Emit(OpCodes.Ldloc, variableIndex);
+
+            // Load the parameter name
+            generator.Emit(OpCodes.Ldstr, name);
+
+            // Call the setter for the name
+            generator.Emit(OpCodes.Callvirt, GetSetMethod(typeof(DbParameter), nameof(DbParameter.ParameterName)));
         }
 
         private void SetParameterDirection(int variableIndex, ParameterDirection parameterDirection, ILGenerator generator)

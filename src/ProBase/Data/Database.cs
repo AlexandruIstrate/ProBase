@@ -1,7 +1,6 @@
 ﻿using ProBase.Utils;
 using System.Data;
 using System.Data.Common;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ProBase.Data
@@ -20,7 +19,7 @@ namespace ProBase.Data
             set
             {
                 connection = Preconditions.CheckNotNull(value, nameof(Connection));
-                providerFactory = GetProviderFactory(value);
+                providerFactory = value.GetProviderFactory();
             }
         }
 
@@ -106,13 +105,7 @@ namespace ProBase.Data
         /// </summary>
         public void Dispose()
         {
-            Connection.Dispose();
-        }
-
-        private DbProviderFactory GetProviderFactory(DbConnection connection)
-        {
-            PropertyInfo factoryField = connection.GetType().GetProperty("DbProviderFactory", BindingFlags.NonPublic | BindingFlags.Instance);
-            return (DbProviderFactory)factoryField.GetValue(connection);
+            connection.Dispose();
         }
 
         private DbConnection connection;
