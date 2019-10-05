@@ -10,7 +10,7 @@ namespace ProBase
     /// <summary>
     /// Represents and object that manages the creation of objects that run operations on databases.
     /// </summary>
-    public class DatabaseContext
+    public class DatabaseContext : IDatabaseContext
     {
         /// <summary>
         /// Gets or sets the connection object for this database.
@@ -30,15 +30,15 @@ namespace ProBase
         /// <returns>An instance implementing the passed in interface type</returns>
         public T GenerateObject<T>()
         {
-            //try
-            //{
+            try
+            {
                 Type generatedType = classGenerator.GenerateClassImplementingInterface(typeof(T));
                 return (T)Activator.CreateInstance(generatedType, GetProcedureMapper(), GetDataMapper());
-            //}
-            //catch (Exception e)
-            //{
-                //throw new OperationMappingException("The database operations class could not be created", e);
-            //}
+            }
+            catch (Exception e)
+            {
+                throw new OperationMappingException("The database operations class could not be created", e);
+            }
         }
 
 

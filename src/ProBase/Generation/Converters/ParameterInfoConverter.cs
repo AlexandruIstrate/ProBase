@@ -61,7 +61,7 @@ namespace ProBase.Generation.Converters
 
             public override void ResetDbType()
             {
-                throw new NotImplementedException("This type only provides parameter information");
+                throw new NotSupportedException("This type only provides parameter information");
             }
         }
     }

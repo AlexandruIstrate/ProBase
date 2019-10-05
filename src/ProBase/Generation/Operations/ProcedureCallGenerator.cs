@@ -18,15 +18,7 @@ namespace ProBase.Generation.Operations
         /// <param name="generator">The generator to use</param>
         public void Generate(Type resultType, ILGenerator generator)
         {
-            MethodInfo procedureMethod = GetMapperMethod(resultType);
-
-            // If the method is generic then handle the generic parameter appropriately
-            if (procedureMethod.IsGenericMethod)
-            {
-
-            }
-
-            generator.Emit(OpCodes.Call, procedureMethod);
+            generator.Emit(OpCodes.Call, GetMapperMethod(resultType));
         }
 
         private MethodInfo GetMapperMethod(Type returnType)
