@@ -12,7 +12,7 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                DatabaseContext databaseContext = new DatabaseContext(CreateConnection());
+                DbContext databaseContext = new DbContext(CreateConnection());
                 IDatabaseTestOperations testOperations = databaseContext.GenerateObject<IDatabaseTestOperations>();
 
                 Assert.IsNotNull(testOperations, "The DatabaseContext should return an implementation of the given interface");
@@ -30,7 +30,7 @@ namespace ProBase.Tests.Api
             return new SqlConnection(connectionStringBuilder.ToString());
         }
 
-        [DatabaseInterface]
+        [DbInterface]
         public interface IDatabaseTestOperations
         {
             [Procedure("dbo.CreateItem")]

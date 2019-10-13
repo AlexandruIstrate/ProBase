@@ -2,7 +2,7 @@
 
 namespace ProBase.Tests.Generation
 {
-    [DatabaseInterface]
+    [DbInterface]
     public interface IGenerationTestInterface
     {
         [Procedure("TestProcedure")]

@@ -17,12 +17,12 @@ namespace ProBase.Generation
 
         public static IConcreteClassGenerator Create()
         {
-            return new DatabaseClassGenerator(new DatabaseFieldGenerator(), new DatabaseConstructorGenerator(), GetMethodGenerator());
+            return new DbClassGenerator(new DbFieldGenerator(), new DbConstructorGenerator(), GetMethodGenerator());
         }
 
         private static IMethodGenerator GetMethodGenerator()
         {
-            return new DatabaseMethodGenerator(new ParameterArrayGenerator(new ParameterInfoConverter()), new ProcedureCallGenerator());
+            return new DbMethodGenerator(new ParameterArrayGenerator(new ParameterInfoConverter()), new ProcedureCallGenerator());
         }
     }
 }

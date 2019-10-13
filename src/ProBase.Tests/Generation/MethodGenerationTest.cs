@@ -16,7 +16,7 @@ namespace ProBase.Tests.Generation
         {
             Assert.DoesNotThrow(() =>
             {
-                methodGenerator = new DatabaseMethodGenerator(new ParameterArrayGenerator(new ParameterInfoConverter()), new ProcedureCallGenerator());
+                methodGenerator = new DbMethodGenerator(new ParameterArrayGenerator(new ParameterInfoConverter()), new ProcedureCallGenerator());
             },
             "The creation of the method generator must be successful");
         }

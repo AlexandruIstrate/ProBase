@@ -15,7 +15,7 @@ namespace ProBase.Tests.Generation
         {
             Assert.DoesNotThrow(() =>
             {
-                constructorGenerator = new DatabaseConstructorGenerator();
+                constructorGenerator = new DbConstructorGenerator();
             },
             "The creation of the constuctor generator must be successful");
         }

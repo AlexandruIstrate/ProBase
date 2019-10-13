@@ -7,7 +7,7 @@ namespace ProBase.Generation
     /// <summary>
     /// Provides a way for generating fields inside a database access class.
     /// </summary>
-    internal class DatabaseFieldGenerator : IClassFieldGenerator
+    internal class DbFieldGenerator : IClassFieldGenerator
     {
         /// <summary>
         /// Generates the field inside the datab

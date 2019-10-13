@@ -6,7 +6,7 @@ namespace ProBase.Attributes
     /// Specifies that a certain interface can be used to map database procedures. This class cannot be inherited.
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false)]
-    public sealed class DatabaseInterfaceAttribute : Attribute
+    public sealed class DbInterfaceAttribute : Attribute
     {
     }
 }

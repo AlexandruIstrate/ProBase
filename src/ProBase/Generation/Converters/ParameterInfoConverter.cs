@@ -1,5 +1,4 @@
-﻿using ProBase.Attributes;
-using System;
+﻿using System;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
@@ -21,33 +20,16 @@ namespace ProBase.Generation.Converters
         {
             DbParameterInfo dbParameter = new DbParameterInfo
             {
-                ParameterName = GetParameterName(parameterInfo),
-                Direction = GetParameterDirection(parameterInfo),
+                ParameterName = parameterInfo.GetDbParameterName(),
+                Direction = parameterInfo.GetDbParameterDirection(),
                 Value = value
             };
             return dbParameter;
         }
 
-        private string GetParameterName(ParameterInfo parameterInfo)
-        {
-            return parameterInfo.GetCustomAttribute<ParameterAttribute>()?.ParameterName ?? parameterInfo.Name;
-        }
-
-        private ParameterDirection GetParameterDirection(ParameterInfo parameterInfo)
-        {
-            if (parameterInfo.IsOut)
-            {
-                return ParameterDirection.Output;
-            }
-
-            if (parameterInfo.ParameterType.IsByRef)
-            {
-                return ParameterDirection.InputOutput;
-            }
-
-            return ParameterDirection.Input;
-        }
-
+        /// <summary>
+        /// An implementation of <see cref="System.Data.Common.DbParameter"/> that only provides properties and no operations.
+        /// </summary>
         private class DbParameterInfo : DbParameter
         {
             public override DbType DbType { get; set; }
@@ -59,10 +41,7 @@ namespace ProBase.Generation.Converters
             public override bool SourceColumnNullMapping { get; set; }
             public override object Value { get; set; }
 
-            public override void ResetDbType()
-            {
-                throw new NotSupportedException("This type only provides parameter information");
-            }
+            public override void ResetDbType() => throw new NotSupportedException("This type only provides parameter information");
         }
     }
 }

@@ -12,7 +12,7 @@ namespace ProBase.Generation
     /// <summary>
     /// Generates a class for accessing a database.
     /// </summary>
-    internal class DatabaseClassGenerator : IConcreteClassGenerator
+    internal class DbClassGenerator : IConcreteClassGenerator
     {
         /// <summary>
         /// Gets the name of the assembly the class will generate into.
@@ -35,7 +35,7 @@ namespace ProBase.Generation
         /// <param name="fieldGenerator">A field generator to use for generating the field used to store the object that accesses the database</param>
         /// <param name="constructorGenerator">A constructor generator used for generating an initializing constructor</param>
         /// <param name="methodGenerator">A method generator used for generating the method implementations of the class</param>
-        public DatabaseClassGenerator(IClassFieldGenerator fieldGenerator, IConstructorGenerator constructorGenerator, IMethodGenerator methodGenerator)
+        public DbClassGenerator(IClassFieldGenerator fieldGenerator, IConstructorGenerator constructorGenerator, IMethodGenerator methodGenerator)
         {
             this.fieldGenerator = Preconditions.CheckNotNull(fieldGenerator, nameof(fieldGenerator));
             this.constructorGenerator = Preconditions.CheckNotNull(constructorGenerator, nameof(constructorGenerator));
@@ -51,9 +51,9 @@ namespace ProBase.Generation
         {
             Preconditions.CheckNotNull(interfaceType, nameof(interfaceType));
 
-            if (interfaceType.GetCustomAttribute<DatabaseInterfaceAttribute>() == null)
+            if (interfaceType.GetCustomAttribute<DbInterfaceAttribute>() == null)
             {
-                throw new ArgumentException("The type provided must be marked with the DatabaseInterface attribute", nameof(interfaceType));
+                throw new ArgumentException($"The type provided must be marked with the { nameof(DbInterfaceAttribute) } attribute", nameof(interfaceType));
             }
 
             return GenerateInternal(interfaceType);

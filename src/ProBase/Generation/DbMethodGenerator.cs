@@ -12,13 +12,13 @@ namespace ProBase.Generation
     /// <summary>
     /// Provides a way for generating methods used for calling database procedures.
     /// </summary>
-    internal class DatabaseMethodGenerator : IMethodGenerator
+    internal class DbMethodGenerator : IMethodGenerator
     {
         /// <summary>
         /// Creates an instance using the given <see cref="ProBase.Generation.Operations.IArrayGenerator"/> for generating the parameter array.
         /// </summary>
         /// <param name="arrayGenerator">The array generator to use</param>
-        public DatabaseMethodGenerator(IArrayGenerator arrayGenerator, IMethodCallGenerator procedureCallGenerator)
+        public DbMethodGenerator(IArrayGenerator arrayGenerator, IMethodCallGenerator procedureCallGenerator)
         {
             this.arrayGenerator = arrayGenerator;
             this.procedureCallGenerator = procedureCallGenerator;

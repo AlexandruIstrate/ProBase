@@ -13,7 +13,7 @@ namespace ProBase.Tests.Generation
         {
             Assert.DoesNotThrow(() =>
             {
-                fieldGenerator = new DatabaseFieldGenerator();
+                fieldGenerator = new DbFieldGenerator();
             },
             "The creation of the field generator must be successful");
         }

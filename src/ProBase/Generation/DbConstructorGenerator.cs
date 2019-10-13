@@ -9,7 +9,7 @@ namespace ProBase.Generation
     /// <summary>
     /// Generates a constructor for a database access class.
     /// </summary>
-    internal class DatabaseConstructorGenerator : IConstructorGenerator
+    internal class DbConstructorGenerator : IConstructorGenerator
     {
         /// <summary>
         /// Generates a default constructor for the database access class.

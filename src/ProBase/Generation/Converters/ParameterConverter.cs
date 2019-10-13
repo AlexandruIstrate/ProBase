@@ -1,6 +1,4 @@
-﻿using ProBase.Attributes;
-using ProBase.Utils;
-using System.Data;
+﻿using ProBase.Utils;
 using System.Data.Common;
 using System.Reflection;
 
@@ -21,30 +19,10 @@ namespace ProBase.Generation.Converters
             Preconditions.CheckNotNull(parameterInfo, nameof(parameterInfo));
 
             DbParameter dbParameter = providerFactory.CreateParameter();
-            dbParameter.ParameterName = GetParameterName(parameterInfo);
-            dbParameter.Direction = GetParameterDirection(parameterInfo);
+            dbParameter.ParameterName = parameterInfo.GetDbParameterName();
+            dbParameter.Direction = parameterInfo.GetDbParameterDirection();
             dbParameter.Value = value;
             return dbParameter;
-        }
-
-        private string GetParameterName(ParameterInfo parameterInfo)
-        {
-            return parameterInfo.GetCustomAttribute<ParameterAttribute>()?.ParameterName ?? parameterInfo.Name;
-        }
-
-        private ParameterDirection GetParameterDirection(ParameterInfo parameterInfo)
-        {
-            if (parameterInfo.IsOut)
-            {
-                return ParameterDirection.Output;
-            }
-
-            if (parameterInfo.ParameterType.IsByRef)
-            {
-                return ParameterDirection.InputOutput;
-            }
-
-            return ParameterDirection.Input;
         }
 
         private readonly DbProviderFactory providerFactory;
