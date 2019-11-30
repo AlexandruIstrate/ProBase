@@ -10,14 +10,14 @@ namespace ProBase
     /// <summary>
     /// Represents and object that manages the creation of objects that run operations on databases.
     /// </summary>
-    public class DbContext : IDbContext
+    public class GenerationContext : IGenerationContext
     {
         /// <summary>
         /// Gets or sets the connection object for this database.
         /// </summary>
         public DbConnection Connection { get; set; }
 
-        public DbContext(DbConnection connection)
+        public GenerationContext(DbConnection connection)
         {
             Connection = Preconditions.CheckNotNull(connection, nameof(connection));
             classGenerator = ClassGeneratorFactory.Create();

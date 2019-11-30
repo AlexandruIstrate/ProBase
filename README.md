@@ -29,13 +29,13 @@ interface IDatabaseOperations
 
 In the snippet above, you can see that there are a bunch of attributes declared. The one applied to the interface (```DbInterface```) specifies that the interface is to be used for interfacing with a database. This is a required attribute and must be present on any interface you want to use with ProBase. The attributes applied to each method are ```Procedure``` attributes which specify how a certain method maps to a procedure. In the example above you can see that the argument passed into the attribute constructor is the name of the procedure this method maps to.
 
-Once we have our mappings set up, we can create an instance of this interface on which we can call the actual methods. For this we need to create a ```DbContext``` object passing in a ```DbConnection``` to the constructor. With the object created, we can invoke the ```GenerateObject``` method that takes in the type of the operations class and returns an instance of that class with all of the database access logic implemented for us:
+Once we have our mappings set up, we can create an instance of this interface on which we can call the actual methods. For this we need to create a ```GenerationContext``` object passing in a ```DbConnection``` to the constructor. With the object created, we can invoke the ```GenerateObject``` method that takes in the type of the operations class and returns an instance of that class with all of the database access logic implemented for us:
 
 ```csharp
 SqlConnection connection = new SqlConnection(connectionString);
 
-DbContext databaseContext = new DbContext(connection);
-IDatabaseOperations operations = databaseContext.GenerateObject<IDatabaseOperations>();
+GenerationContext context = new GenerationContext(connection);
+IDatabaseOperations operations = context.GenerateObject<IDatabaseOperations>();
 ```
 
 With the ```IDatabaseOperations``` object created we can begin calling methods which in turn will call the database procedures they are bound to:
