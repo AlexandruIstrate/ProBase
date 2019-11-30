@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents and object that manages the creation of objects that run operations on databases.
     /// </summary>
-    public interface IDbContext
+    public interface IGenerationContext
     {
         /// <summary>
         /// Generates an instance of a class with automatic procedure calls based on method attributes.

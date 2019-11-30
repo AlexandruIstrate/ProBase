@@ -12,7 +12,7 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                DbContext databaseContext = new DbContext(CreateConnection());
+                GenerationContext databaseContext = new GenerationContext(CreateConnection());
                 IDatabaseTestOperations testOperations = databaseContext.GenerateObject<IDatabaseTestOperations>();
 
                 Assert.IsNotNull(testOperations, "The DatabaseContext should return an implementation of the given interface");
