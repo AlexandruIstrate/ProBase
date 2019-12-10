@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace ProBase.Utils
 {
@@ -34,17 +33,7 @@ namespace ProBase.Utils
         /// <returns></returns>
         public static string GenerateUniqueTypeName(string typeName)
         {
-            const int length = 8;
-
-            Random random = new Random();
-            StringBuilder nameBuilder = new StringBuilder();
-
-            for (int i = 0; i < length; i++)
-            {
-                nameBuilder.Append((char)random.Next('a', 'z'));
-            }
-
-            return $"{ typeName }_{ nameBuilder.ToString() }";
+            return typeName + Guid.NewGuid().ToString();
         }
     }
 }

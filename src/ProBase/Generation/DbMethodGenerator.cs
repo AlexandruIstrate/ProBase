@@ -54,7 +54,7 @@ namespace ProBase.Generation
             // Load this object
             generator.Emit(OpCodes.Ldarg_0);
 
-            // Load the field we use for calling the database procedures
+            // Load the field we use for calling the database procedure
             generator.Emit(OpCodes.Ldfld, GetField<IProcedureMapper>(GenerationConstants.ProcedureMapperFieldName, fields));
 
             // Load the procedure name
