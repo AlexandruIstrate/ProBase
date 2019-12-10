@@ -70,7 +70,7 @@ namespace ProBase.Generation
             // Generate the fields that we need for accessing the database and for converting data
             FieldBuilder[] fields = GenerateFields(typeBuilder);
 
-            // Generate a constructor that initializes the IDatabaseMapper field
+            // Generate a constructor that initializes the fields for the class
             constructorGenerator.GenerateDependencyConstructor(fields, typeBuilder);
 
             // Generate implementations for all of the methods defined by the interface
