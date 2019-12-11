@@ -36,7 +36,25 @@ namespace ProBase.Generation
             ProcedureAttribute procedureAttribute = methodInfo.GetCustomAttribute<ProcedureAttribute>();
             MethodBuilder methodBuilder = typeBuilder.DefineMethod(methodInfo.Name, MethodAttributes.Public | MethodAttributes.Virtual, methodInfo.ReturnType, GetParameterTypes(methodInfo.GetParameters()));
 
-            GenerateMethodBody(procedureAttribute.ProcedureName, methodInfo.GetParameters(), methodBuilder.ReturnType, classFields, methodBuilder.GetILGenerator());
+            if (procedureAttribute.ProcedureType == ProcedureType.Automatic)
+            {
+                GenerateMethodBody(
+                    procedureAttribute.ProcedureName,
+                    methodInfo.GetParameters(),
+                    methodBuilder.ReturnType,
+                    classFields,
+                    methodBuilder.GetILGenerator());
+            }
+            else
+            {
+                GenerateMethodBody(
+                    procedureAttribute.ProcedureName,
+                    methodInfo.GetParameters(),
+                    methodBuilder.ReturnType,
+                    procedureAttribute.ProcedureType,
+                    classFields,
+                    methodBuilder.GetILGenerator());
+            }
 
             return methodBuilder;
         }
@@ -65,6 +83,36 @@ namespace ProBase.Generation
 
             // Generate the procedure call
             procedureCallGenerator.Generate(returnType, generator);
+
+            // If the method returns a value, then pop it from the stack after the call
+            if (returnType != typeof(void))
+            {
+                generator.Emit(OpCodes.Pop);
+            }
+
+            // Return from the method
+            generator.Emit(OpCodes.Ret);
+        }
+
+        private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, ProcedureType procedureType, FieldInfo[] fields, ILGenerator generator)
+        {
+            // Generate the parameter array
+            arrayGenerator.Generate(parameters, generator);
+
+            // Load this object
+            generator.Emit(OpCodes.Ldarg_0);
+
+            // Load the field we use for calling the database procedure
+            generator.Emit(OpCodes.Ldfld, GetField<IProcedureMapper>(GenerationConstants.ProcedureMapperFieldName, fields));
+
+            // Load the procedure name
+            generator.Emit(OpCodes.Ldstr, procedureName);
+
+            // Load the parameter array as a local
+            generator.Emit(OpCodes.Ldloc, parameters.Length);
+
+            // Generate the procedure call
+            procedureCallGenerator.Generate(procedureType, generator);
 
             // If the method returns a value, then pop it from the stack after the call
             if (returnType != typeof(void))

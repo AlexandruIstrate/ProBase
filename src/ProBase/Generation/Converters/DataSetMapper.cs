@@ -1,6 +1,9 @@
-﻿using ProBase.Utils;
+﻿using ProBase.Attributes;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Reflection;
 
 namespace ProBase.Generation.Converters
 {
@@ -9,28 +12,32 @@ namespace ProBase.Generation.Converters
     /// </summary>
     internal class DataSetMapper : IDataMapper
     {
-        /// <summary>
-        /// Tests if the given <see cref="System.Data.DataSet"/> object can be mapped to the given type.
-        /// </summary>
-        /// <typeparam name="T">The type to check the mapping for</typeparam>
-        /// <param name="obj">The object to check</param>
-        /// <returns>True if the mapping succeeds, false otherwise</returns>
-        public bool CanBeRepresentedAs<T>(object obj)
+        public TEntity Map<TEntity>(DataRow row) where TEntity : class, new()
         {
-            //DataSet dataSet = Preconditions.CheckIsType<DataSet>(obj, nameof(obj));
-            throw new NotImplementedException();
+            // Step 1 - Get the Column Names
+            List<string> columnNames = row.Table.Columns
+                                                .Cast<DataColumn>()
+                                                .Select(c => c.ColumnName)
+                                                .ToList();
+
+            // Step 2 - Get the Properties
+            List<PropertyInfo> properties = typeof(TEntity).GetProperties()
+                                                           .Where(p => p.GetCustomAttributes(typeof(ColumnAttribute), true).Any())
+                                                           .ToList();
+
+            // Step 3 - Map the data
+            TEntity entity = new TEntity();
+
+            foreach (PropertyInfo property in properties)
+            {
+                PropertyMapper.Map(typeof(TEntity), row, property, entity);
+            }
+
+            return entity;
         }
 
-        /// <summary>
-        /// Maps a given <see cref="System.Data.DataSet"/> to a type.
-        /// </summary>
-        /// <typeparam name="T">The type to map to</typeparam>
-        /// <param name="obj">The object to map</param>
-        /// <returns>A mapped object</returns>
-        public T MapToObject<T>(object obj) where T : new()
+        public IEnumerable<T> Map<T>(DataTable table) where T : class, new()
         {
-            // TODO: Support compound types
-            //DataSet dataSet = Preconditions.CheckIsType<DataSet>(obj, nameof(obj));
             throw new NotImplementedException();
         }
     }

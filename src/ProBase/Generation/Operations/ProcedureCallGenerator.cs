@@ -56,12 +56,13 @@ namespace ProBase.Generation.Operations
             switch (procedureType)
             {
                 case ProcedureType.Automatic:
-                    throw new NotImplementedException();
+                    throw new NotSupportedException("The method used for this call must be deduced automatically");
                 case ProcedureType.Scalar:
                     return GetMethod(nameof(IProcedureMapper.ExecuteScalarProcedure));
                 case ProcedureType.NonQuery:
-                default:
                     return GetMethod(nameof(IProcedureMapper.ExecuteNonQueryProcedure));
+                default:
+                    throw new NotSupportedException("The given procedure type is not supported");
             }
         }
 
