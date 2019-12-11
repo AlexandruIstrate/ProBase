@@ -1,24 +1,27 @@
-﻿namespace ProBase.Generation.Converters
+﻿using System.Collections.Generic;
+using System.Data;
+
+namespace ProBase.Generation.Converters
 {
     /// <summary>
-    /// Represents an object whose properties can be mapped to another type.
+    /// Provides operations for mapping database primitives to objects.
     /// </summary>
     internal interface IDataMapper
     {
         /// <summary>
-        /// Maps this object to an object of the given type <typeparamref name="T"/>.
+        /// Maps a row to an object.
         /// </summary>
-        /// <typeparam name="T">The type to map to</typeparam>
-        /// <param name="obj">The object to map</param>
-        /// <returns>A mapped object</returns>
-        T MapToObject<T>(object obj) where T : new();
+        /// <typeparam name="TEntity">The type of the object to map to</typeparam>
+        /// <param name="row">The row entry to use</param>
+        /// <returns>The mapped object</returns>
+        TEntity Map<TEntity>(DataRow row) where TEntity : class, new();
 
         /// <summary>
-        /// Checks if this object can be mapped to the given type <typeparamref name="T"/>.
+        /// Maps a table to an enumeration of objects.
         /// </summary>
-        /// <typeparam name="T">The type to test the maping for</typeparam>
-        /// /// <param name="obj">The object to check the mapping for</param>
-        /// <returns>True if the type can be mapped, false otherwise</returns>
-        bool CanBeRepresentedAs<T>(object obj);
+        /// <typeparam name="TEntity">The type of the object to map to</typeparam>
+        /// <param name="table"></param>
+        /// <returns>An enumeration of mapped objects</returns>
+        IEnumerable<TEntity> Map<TEntity>(DataTable table) where TEntity : class, new();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ProBase.Generation;
 using ProBase.Generation.Converters;
+using System;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -28,12 +29,7 @@ namespace ProBase.Data
 
         private T MapProcedure<T>(DataSet dataSet) where T : new()
         {
-            if (!dataMapper.CanBeRepresentedAs<T>(dataSet))
-            {
-                throw new CodeGenerationException("The given type's properties do not match the DataSet columns");
-            }
-
-            return dataMapper.MapToObject<T>(dataSet);
+            throw new NotImplementedException();
         }
 
         private readonly IDataMapper dataMapper;
