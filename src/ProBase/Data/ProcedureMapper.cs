@@ -1,6 +1,6 @@
-﻿using ProBase.Generation;
-using ProBase.Generation.Converters;
+﻿using ProBase.Generation.Converters;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -28,6 +28,11 @@ namespace ProBase.Data
         }
 
         private T MapProcedure<T>(DataSet dataSet) where T : new()
+        {
+            throw new NotImplementedException();
+        }
+        
+        private IEnumerable<T> MapProcedureEnumerable<T>(DataSet dataSet) where T : new()
         {
             throw new NotImplementedException();
         }
