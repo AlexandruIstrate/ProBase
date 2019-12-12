@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace ProBase.Data
@@ -16,7 +17,7 @@ namespace ProBase.Data
         /// <param name="parameters">The parameters to pass into the procedure</param>
         /// <returns>The mapped type</returns>
         T ExecuteMappedProcedure<T>(string procedureName, params DbParameter[] parameters) where T : new();
-
+        
         /// <summary>
         /// Asynchronously runs the given procedure and maps its result to the type <typeparamref name="T"/>.
         /// </summary>
