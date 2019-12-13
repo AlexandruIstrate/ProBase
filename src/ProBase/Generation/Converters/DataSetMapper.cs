@@ -21,7 +21,7 @@ namespace ProBase.Generation.Converters
 
             // Step 2 - Get the Properties
             List<PropertyInfo> properties = typeof(TEntity).GetProperties()
-                                                           .Where(p => p.GetCustomAttributes(typeof(ColumnAttribute), true).Any())
+                                                           .Where(p => p.GetCustomAttributes(typeof(ColumnAttribute), inherit: true).Any())
                                                            .ToList();
 
             // Step 3 - Map the data
@@ -45,7 +45,7 @@ namespace ProBase.Generation.Converters
 
             // Step 2 - Get the Property Data Names
             List<PropertyInfo> properties = typeof(TEntity).GetProperties()
-                                                           .Where(p => p.GetCustomAttributes(typeof(ColumnAttribute), true).Any())
+                                                           .Where(p => p.GetCustomAttributes(typeof(ColumnAttribute), inherit: true).Any())
                                                            .ToList();
 
             // Step 3 - Map the data

@@ -11,7 +11,15 @@ namespace ProBase.Generation.Converters
     {
         public static void Map(Type type, DataRow row, PropertyInfo prop, object entity)
         {
-            throw new NotImplementedException();
+            foreach (DataColumn column in row.Table.Columns)
+            {
+                ParsePrimitive(prop, entity, row[column.ColumnName]);
+            }
+        }
+
+        private static void ParsePrimitive(PropertyInfo prop, object entity, object value)
+        {
+            prop.SetValue(entity, value, index: null);
         }
     }
 }
