@@ -12,5 +12,19 @@ namespace ProBase.Attributes
         /// The name of the column this property maps to.
         /// </summary>
         public string ColumnName { get; set; }
+
+        /// <summary>
+        /// Whether the name of this column is case sensitive or not.
+        /// </summary>
+        public bool CaseSensitive { get; set; }
+
+        /// <summary>
+        /// Initializes an instance of this class with the given column name;
+        /// </summary>
+        /// <param name="columnName">The column name</param>
+        public ColumnAttribute(string columnName)
+        {
+            ColumnName = columnName;
+        }
     }
 }

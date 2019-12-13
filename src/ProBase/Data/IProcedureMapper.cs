@@ -16,7 +16,7 @@ namespace ProBase.Data
         /// <param name="procedureName">The name of the procedure to call</param>
         /// <param name="parameters">The parameters to pass into the procedure</param>
         /// <returns>The mapped type</returns>
-        T ExecuteMappedProcedure<T>(string procedureName, params DbParameter[] parameters) where T : new();
+        T ExecuteMappedProcedure<T>(string procedureName, params DbParameter[] parameters) where T : class, new();
         
         /// <summary>
         /// Asynchronously runs the given procedure and maps its result to the type <typeparamref name="T"/>.
@@ -25,6 +25,6 @@ namespace ProBase.Data
         /// <param name="procedureName">The name of the procedure to call</param>
         /// <param name="parameters">The parameters to pass into the procedure</param>
         /// <returns>The mapped type</returns>
-        Task<T> ExecuteMappedProcedureAsync<T>(string procedureName, params DbParameter[] parameters) where T : new();
+        Task<T> ExecuteMappedProcedureAsync<T>(string procedureName, params DbParameter[] parameters) where T : class, new();
     }
 }
