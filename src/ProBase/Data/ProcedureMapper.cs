@@ -19,7 +19,7 @@ namespace ProBase.Data
 
         public T ExecuteMappedProcedure<T>(string procedureName, params DbParameter[] parameters) where T : class, new()
         {
-            if (typeof(T).IsEnumerable())
+            if (typeof(T).IsType(typeof(IEnumerable<T>)))
             {
                 return (T)MapProcedureEnumerable<T>(ExecuteScalarProcedure(procedureName, parameters));
             }
@@ -29,7 +29,7 @@ namespace ProBase.Data
 
         public async Task<T> ExecuteMappedProcedureAsync<T>(string procedureName, params DbParameter[] parameters) where T : class, new()
         {
-            if (typeof(T).IsEnumerable())
+            if (typeof(T).IsType(typeof(IEnumerable<T>)))
             {
                 return (T)MapProcedureEnumerable<T>(await ExecuteScalarProcedureAsync(procedureName, parameters));
             }

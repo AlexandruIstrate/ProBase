@@ -11,6 +11,12 @@ namespace ProBase.Generation.Converters
     /// </summary>
     internal class DataSetMapper : IDataMapper
     {
+        /// <summary>
+        /// Maps a <see cref="System.Data.DataRow"/> to an object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the object</typeparam>
+        /// <param name="row">The row</param>
+        /// <returns>The mapped object</returns>
         public TEntity Map<TEntity>(DataRow row) where TEntity : class, new()
         {
             // Step 1 - Get the Column Names
@@ -26,15 +32,18 @@ namespace ProBase.Generation.Converters
 
             // Step 3 - Map the data
             TEntity entity = new TEntity();
-
-            foreach (PropertyInfo property in properties)
-            {
-                PropertyMapper.Map(typeof(TEntity), row, property, entity);
-            }
+            
+            PropertyMapper.Map(typeof(TEntity), row, entity);
 
             return entity;
         }
 
+        /// <summary>
+        /// Maps a <see cref="System.Data.DataTable"/> to an <see cref="System.Collections.Generic.IEnumerable{T}"/> of objects.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the objects</typeparam>
+        /// <param name="table">The table</param>
+        /// <returns>The mapped enumeration</returns>
         public IEnumerable<TEntity> Map<TEntity>(DataTable table) where TEntity : class, new()
         {
             // Step 1 - Get the Column Names
@@ -55,10 +64,7 @@ namespace ProBase.Generation.Converters
             {
                 TEntity entity = new TEntity();
 
-                foreach (PropertyInfo property in properties)
-                {
-                    PropertyMapper.Map(typeof(TEntity), row, property, entity);
-                }
+                PropertyMapper.Map(typeof(TEntity), row, entity);
 
                 entities.Add(entity);
             }

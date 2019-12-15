@@ -38,6 +38,7 @@ namespace ProBase.Generation
 
             if (procedureAttribute.ProcedureType == ProcedureType.Automatic)
             {
+                // If the procedure type is Automatic, then let the generator figure out its type.
                 GenerateMethodBody(
                     procedureAttribute.ProcedureName,
                     methodInfo.GetParameters(),
@@ -47,6 +48,7 @@ namespace ProBase.Generation
             }
             else
             {
+                // Otherwise, pass in the procedure type
                 GenerateMethodBody(
                     procedureAttribute.ProcedureName,
                     methodInfo.GetParameters(),
@@ -66,20 +68,7 @@ namespace ProBase.Generation
 
         private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, FieldInfo[] fields, ILGenerator generator)
         {
-            // Generate the parameter array
-            arrayGenerator.Generate(parameters, generator);
-
-            // Load this object
-            generator.Emit(OpCodes.Ldarg_0);
-
-            // Load the field we use for calling the database procedure
-            generator.Emit(OpCodes.Ldfld, GetField<IProcedureMapper>(GenerationConstants.ProcedureMapperFieldName, fields));
-
-            // Load the procedure name
-            generator.Emit(OpCodes.Ldstr, procedureName);
-
-            // Load the parameter array as a local
-            generator.Emit(OpCodes.Ldloc, parameters.Length);
+            PrepareParameters(procedureName, parameters, fields, generator);
 
             // Generate the procedure call
             procedureCallGenerator.Generate(returnType, generator);
@@ -96,6 +85,23 @@ namespace ProBase.Generation
 
         private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, ProcedureType procedureType, FieldInfo[] fields, ILGenerator generator)
         {
+            PrepareParameters(procedureName, parameters, fields, generator);
+
+            // Generate the procedure call
+            procedureCallGenerator.Generate(procedureType, generator);
+
+            // If the method returns a value, then pop it from the stack after the call
+            if (returnType != typeof(void))
+            {
+                generator.Emit(OpCodes.Pop);
+            }
+
+            // Return from the method
+            generator.Emit(OpCodes.Ret);
+        }
+
+        private void PrepareParameters(string procedureName, ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
+        {
             // Generate the parameter array
             arrayGenerator.Generate(parameters, generator);
 
@@ -110,18 +116,6 @@ namespace ProBase.Generation
 
             // Load the parameter array as a local
             generator.Emit(OpCodes.Ldloc, parameters.Length);
-
-            // Generate the procedure call
-            procedureCallGenerator.Generate(procedureType, generator);
-
-            // If the method returns a value, then pop it from the stack after the call
-            if (returnType != typeof(void))
-            {
-                generator.Emit(OpCodes.Pop);
-            }
-
-            // Return from the method
-            generator.Emit(OpCodes.Ret);
         }
 
         private FieldInfo GetField<T>(string fieldName, IEnumerable<FieldInfo> fields)

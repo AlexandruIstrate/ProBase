@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 
 namespace ProBase.Generation.Converters
@@ -7,19 +9,51 @@ namespace ProBase.Generation.Converters
     /// <summary>
     /// Maps values to primitive types;
     /// </summary>
-    internal class PropertyMapper
+    internal class PropertyMapper : IPropertyMapper
     {
-        public static void Map(Type type, DataRow row, PropertyInfo prop, object entity)
+        /// <summary>
+        /// Maps the values of a <see cref="System.Data.DataRow"/> to a type's properties.
+        /// </summary>
+        /// <param name="type">The type</param>
+        /// <param name="row">The DataRow</param>
+        /// <param name="entity">The object value</param>
+        /// <param name="ignoreColumnCase">Whether to ignore the casing of the column name</param>
+        public void Map<TEntity>(DataRow row, object entity, bool ignoreColumnCase = false) where TEntity : new()
         {
-            foreach (DataColumn column in row.Table.Columns)
+            PropertyInfo[] properties = typeof(TEntity).GetProperties(ignoreColumnCase ? BindingFlags.IgnoreCase : BindingFlags.Default);
+
+            foreach (PropertyInfo property in properties)
             {
-                ParsePrimitive(prop, entity, row[column.ColumnName]);
+                IEnumerable<DataColumn> columns = row.Table.Columns
+                                                           .Cast<DataColumn>()
+                                                           .Where(c => c.ColumnName == property.Name);
+
+                if (columns.Count() == 0)
+                {
+                    // If the property is not a value type, then set its value to null
+                    if (!property.GetType().IsValueType)
+                    {
+                        property.SetValue(entity, null);
+                        continue;
+                    }
+
+                    throw new Exception("Column not found");
+                }
+
+                property.SetValue(entity, columns.First());
             }
         }
 
-        private static void ParsePrimitive(PropertyInfo prop, object entity, object value)
+        private void HandleNullValue<T>(PropertyInfo property, object entity)
         {
-            prop.SetValue(entity, value, index: null);
+            if (property.GetType().IsValueType)
+            {
+                property.SetValue(entity, value: null);
+            }
+            else
+            {
+                property.SetValue(entity, default(T));
+            }
         }
     }
 }
