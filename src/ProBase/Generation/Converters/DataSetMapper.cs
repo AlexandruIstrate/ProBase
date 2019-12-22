@@ -11,6 +11,11 @@ namespace ProBase.Generation.Converters
     /// </summary>
     internal class DataSetMapper : IDataMapper
     {
+        public DataSetMapper(IPropertyMapper propertyMapper)
+        {
+            this.propertyMapper = propertyMapper;
+        }
+
         /// <summary>
         /// Maps a <see cref="System.Data.DataRow"/> to an object.
         /// </summary>
@@ -32,8 +37,7 @@ namespace ProBase.Generation.Converters
 
             // Step 3 - Map the data
             TEntity entity = new TEntity();
-            
-            PropertyMapper.Map(typeof(TEntity), row, entity);
+            propertyMapper.Map<TEntity>(row, entity);
 
             return entity;
         }
@@ -63,13 +67,14 @@ namespace ProBase.Generation.Converters
             foreach (DataRow row in table.Rows)
             {
                 TEntity entity = new TEntity();
-
-                PropertyMapper.Map(typeof(TEntity), row, entity);
+                propertyMapper.Map<TEntity>(row, entity);
 
                 entities.Add(entity);
             }
 
             return entities;
         }
+
+        private readonly IPropertyMapper propertyMapper;
     }
 }

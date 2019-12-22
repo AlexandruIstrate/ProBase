@@ -17,7 +17,7 @@ namespace ProBase.Generation.Converters
             switch (type)
             {
                 case DataMapperType.DataSet:
-                    return new DataSetMapper();
+                    return new DataSetMapper(new PropertyMapper());
                 default:
                     throw new NotSupportedException("The factory does not support the given type");
             }
