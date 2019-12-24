@@ -14,7 +14,6 @@ namespace ProBase.Generation.Converters
         /// <param name="type">The type</param>
         /// <param name="row">The DataRow</param>
         /// <param name="entity">The object value</param>
-        /// <param name="ignoreColumnCase">Whether to ignore the casing of the column name</param>
-        void Map<TEntity>(DataRow row, object entity, bool ignoreColumnCase = false) where TEntity: new();
+        void Map<TEntity>(DataRow row, object entity) where TEntity: new();
     }
 }

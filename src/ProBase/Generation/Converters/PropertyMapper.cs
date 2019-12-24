@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProBase.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -17,31 +18,35 @@ namespace ProBase.Generation.Converters
         /// <param name="type">The type</param>
         /// <param name="row">The DataRow</param>
         /// <param name="entity">The object value</param>
-        /// <param name="ignoreColumnCase">Whether to ignore the casing of the column name</param>
-        public void Map<TEntity>(DataRow row, object entity, bool ignoreColumnCase = false) where TEntity : new()
+        public void Map<TEntity>(DataRow row, object entity) where TEntity : new()
         {
-            PropertyInfo[] properties = typeof(TEntity).GetProperties(ignoreColumnCase ? BindingFlags.IgnoreCase : BindingFlags.Default);
+            PropertyInfo[] properties = typeof(TEntity).GetProperties();
 
             foreach (PropertyInfo property in properties)
             {
-                IEnumerable<DataColumn> columns = row.Table.Columns
-                                                           .Cast<DataColumn>()
-                                                           .Where(c => c.ColumnName == property.Name);
-
-                if (columns.Count() == 0)
-                {
-                    // If the property is not a value type, then set its value to null
-                    if (!property.GetType().IsValueType)
-                    {
-                        property.SetValue(entity, null);
-                        continue;
-                    }
-
-                    throw new Exception("Column not found");
-                }
-
-                property.SetValue(entity, columns.First());
+                SetPropertyValue<TEntity>(property, row, entity);
             }
+        }
+
+        private void SetPropertyValue<T>(PropertyInfo property, DataRow row, object entity)
+        {
+            ColumnAttribute columnAttribute = property.GetCustomAttribute<ColumnAttribute>();
+
+            string propertyName = columnAttribute?.ColumnName ?? property.Name;
+            bool caseSensitive = columnAttribute?.CaseSensitive ?? false;
+
+            IEnumerable<DataColumn> columns = row.Table.Columns
+                                                       .Cast<DataColumn>()
+                                                       .Where(c => c.ColumnName.Equals(propertyName, GetComparisonType(caseSensitive)));
+
+            // No column could be found
+            if (columns.Count() == 0)
+            {
+                // Handle the null value of the property
+                HandleNullValue<T>(property, entity);
+            }
+
+            property.SetValue(entity, columns.First());
         }
 
         private void HandleNullValue<T>(PropertyInfo property, object entity)
@@ -55,5 +60,7 @@ namespace ProBase.Generation.Converters
                 property.SetValue(entity, default(T));
             }
         }
+
+        private StringComparison GetComparisonType(bool caseSensitive) => caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
     }
 }
