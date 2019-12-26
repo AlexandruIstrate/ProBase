@@ -55,6 +55,8 @@
     <Compile Include="Data\ProcedureMapperTest.cs" />
     <Compile Include="Generation\ClassGenerationTest.cs" />
     <Compile Include="Generation\ConstructorGenerationTest.cs" />
+    <Compile Include="Generation\Converters\DataSetMapperTest.cs" />
+    <Compile Include="Generation\Converters\PropertyMapperTest.cs" />
     <Compile Include="Generation\FieldGenerationTest.cs" />
     <Compile Include="Generation\GenerationUtils.cs" />
     <Compile Include="Generation\IGenerationTestInterface.cs" />
@@ -71,6 +73,7 @@
       <Name>ProBase</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
