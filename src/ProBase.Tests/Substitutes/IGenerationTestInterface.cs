@@ -1,6 +1,6 @@
 ﻿using ProBase.Attributes;
 
-namespace ProBase.Tests.Generation
+namespace ProBase.Tests.Substitutes
 {
     [DbInterface]
     public interface IGenerationTestInterface

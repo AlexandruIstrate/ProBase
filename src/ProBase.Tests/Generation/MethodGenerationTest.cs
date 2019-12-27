@@ -3,6 +3,7 @@ using ProBase.Data;
 using ProBase.Generation;
 using ProBase.Generation.Converters;
 using ProBase.Generation.Operations;
+using ProBase.Tests.Substitutes;
 using System.Reflection;
 using System.Reflection.Emit;
 

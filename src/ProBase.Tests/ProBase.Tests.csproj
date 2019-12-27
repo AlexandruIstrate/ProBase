@@ -41,6 +41,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Reflection.Emit" />
+    <Reference Include="System.Reflection.Emit.ILGeneration" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -59,8 +60,12 @@
     <Compile Include="Generation\Converters\PropertyMapperTest.cs" />
     <Compile Include="Generation\FieldGenerationTest.cs" />
     <Compile Include="Generation\GenerationUtils.cs" />
-    <Compile Include="Generation\IGenerationTestInterface.cs" />
+    <Compile Include="Generation\Operations\ParameterArrayGeneratorTest.cs" />
+    <Compile Include="Generation\Operations\ProcedureCallGeneratorTest.cs" />
+    <Compile Include="Substitutes\FamousWriter.cs" />
+    <Compile Include="Substitutes\IGenerationTestInterface.cs" />
     <Compile Include="Generation\MethodGenerationTest.cs" />
+    <Compile Include="Substitutes\SubstituteFactory.cs" />
     <Compile Include="Utils\PreconditionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

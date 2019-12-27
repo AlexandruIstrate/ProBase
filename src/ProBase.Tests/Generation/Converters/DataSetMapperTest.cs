@@ -1,48 +1,66 @@
 ﻿using NUnit.Framework;
 using ProBase.Generation.Converters;
-using System;
+using ProBase.Tests.Substitutes;
+using System.Collections.Generic;
 using System.Data;
-using System.Text;
+using System.Linq;
 
 namespace ProBase.Tests.Generation.Converters
 {
-    [Ignore("Not finished")]
     [TestFixture]
     public class DataSetMapperTest
     {
+        [OneTimeSetUp]
+        public void Setup()
+        {
+            dataSetMapper = new DataSetMapper(new PropertyMapper());
+        }
+
         [Test]
         public void CanMapDataRow()
         {
-            DataRow dataRow = CreateDataRow();
+            DataRow dataRow = SubstituteFactory.CreateDataRow(testWriter);
 
             Assert.DoesNotThrow(() =>
             {
-                dataSetMapper.Map<StringBuilder>(dataRow);
+                FamousWriter writer = dataSetMapper.Map<FamousWriter>(dataRow);
+
+                Assert.NotNull(writer, "The mapping must return a non-null value");
+
+                Assert.NotNull(writer.FirstName, "The FirstName must be not-null");
+                Assert.NotNull(writer.LastName, "The LastName must be not-null");
+
+                Assert.AreEqual(testWriter.FirstName, writer.FirstName, "The FirstName must be equal to the row's value");
+                Assert.AreEqual(testWriter.LastName, writer.LastName, "The LastName must be equal to the row's value");
+                Assert.AreEqual(testWriter.Age, writer.Age, "The Age must be equal to the row's value");
             },
-            "The map operation must be successful");
+            "The map operation on the DataRow must be successful");
         }
 
         [Test]
         public void CanMapDataTable()
         {
-            DataTable dataTable = CreateDataTable();
+            DataTable dataTable = SubstituteFactory.CreateDataTable(SubstituteFactory.CreateWriterList());
 
             Assert.DoesNotThrow(() =>
             {
-                dataSetMapper.Map<StringBuilder>(dataTable);
+                IEnumerable<FamousWriter> writers = dataSetMapper.Map<FamousWriter>(dataTable);
+
+                Assert.NotNull(writers, "The mapping must return a non-null value");
+                Assert.Greater(arg1: writers.Count(), arg2: 0, "The mapping must return a non-empty Enumerable");
+
+                foreach (FamousWriter writer in writers)
+                {
+                    Assert.NotNull(writer, "The value in the Enumerable must not be null");
+
+                    Assert.NotNull(writer.FirstName, "The FirstName must be not-null");
+                    Assert.NotNull(writer.LastName, "The LastName must be not-null");
+                }
             },
-            "The map operation must be successful");
+            "The map operation on the DataTable must be successful");
         }
 
-        private DataRow CreateDataRow()
-        {
-            throw new NotImplementedException();
-        }
-
-        private DataTable CreateDataTable()
-        {
-            throw new NotImplementedException();
-        }
+        private readonly FamousWriter testWriter = SubstituteFactory.CreateWriter();
 
         private DataSetMapper dataSetMapper;
     }

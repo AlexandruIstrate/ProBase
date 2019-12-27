@@ -42,14 +42,27 @@ namespace ProBase.Generation.Converters
             // No column could be found
             if (columns.Count() == 0)
             {
-                // Handle the null value of the property
-                HandleNullValue<T>(property, entity);
+                // Handle the missing value of the property
+                HandleMissingValue<T>(property, entity);
+
+                return;
             }
 
-            property.SetValue(entity, columns.First());
+            object value = row[columns.First()];
+
+            // The value in the DataRow is DBNull, meaning no value
+            if (value.GetType() == typeof(DBNull))
+            {
+                // Set the value of the property to null
+                property.SetValue(entity, null);
+
+                return;
+            }
+
+            property.SetValue(entity, value);
         }
 
-        private void HandleNullValue<T>(PropertyInfo property, object entity)
+        private void HandleMissingValue<T>(PropertyInfo property, object entity)
         {
             if (property.GetType().IsValueType)
             {
