@@ -73,14 +73,7 @@ namespace ProBase.Generation
             // Generate the procedure call
             procedureCallGenerator.Generate(returnType, generator);
 
-            // If the method returns a value, then pop it from the stack after the call
-            if (returnType != typeof(void))
-            {
-                generator.Emit(OpCodes.Pop);
-            }
-
-            // Return from the method
-            generator.Emit(OpCodes.Ret);
+            ReturnFromMethod(returnType, generator);
         }
 
         private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, ProcedureType procedureType, FieldInfo[] fields, ILGenerator generator)
@@ -90,6 +83,11 @@ namespace ProBase.Generation
             // Generate the procedure call
             procedureCallGenerator.Generate(procedureType, generator);
 
+            ReturnFromMethod(returnType, generator);
+        }
+
+        private static void ReturnFromMethod(Type returnType, ILGenerator generator)
+        {
             // If the method returns a value, then pop it from the stack after the call
             if (returnType != typeof(void))
             {
