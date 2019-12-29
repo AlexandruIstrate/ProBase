@@ -11,7 +11,7 @@ namespace ProBase.Tests.Data
     public class DatabaseTest
     {
         [OneTimeSetUp]
-        public void GeneralSetUp()
+        public void Setup()
         {
             database = new Database(CreateConnection());
         }
@@ -65,7 +65,7 @@ namespace ProBase.Tests.Data
         }
 
         [OneTimeTearDown]
-        public void GeneralTearDown()
+        public void TearDown()
         {
             database.Dispose();
         }
@@ -76,6 +76,6 @@ namespace ProBase.Tests.Data
             return new SqlConnection(connectionBuilder.ToString());
         }
 
-        private IDatabase database;
+        private Database database;
     }
 }

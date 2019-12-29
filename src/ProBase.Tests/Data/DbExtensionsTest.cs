@@ -9,7 +9,7 @@ namespace ProBase.Tests.Data
     public class DbExtensionsTest
     {
         [OneTimeSetUp]
-        public void GeneralSetUp()
+        public void Setup()
         {
             connection = new SqlConnection();
         }
@@ -29,7 +29,7 @@ namespace ProBase.Tests.Data
         }
 
         [OneTimeTearDown]
-        public void GeneralTearDown()
+        public void TearDown()
         {
             connection.Dispose();
         }

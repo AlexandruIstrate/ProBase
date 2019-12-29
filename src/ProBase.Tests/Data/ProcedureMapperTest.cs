@@ -10,9 +10,15 @@ namespace ProBase.Tests.Data
     public class ProcedureMapperTest
     {
         [OneTimeSetUp]
-        public void GeneralSetUp()
+        public void Setup()
         {
             procedureMapper = new ProcedureMapper(GetConnection());
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            procedureMapper.Dispose();
         }
 
         [Test]
@@ -50,7 +56,7 @@ namespace ProBase.Tests.Data
 
         private const string ProcedureName = "procedure";
 
-        private IProcedureMapper procedureMapper;
+        private ProcedureMapper procedureMapper;
 
         internal class MappedType
         {
