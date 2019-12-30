@@ -1,6 +1,9 @@
 ﻿using NUnit.Framework;
 using ProBase.Attributes;
+using ProBase.Tests.Properties;
+using System.Data;
 using System.Data.SqlClient;
+using System.Reflection;
 
 namespace ProBase.Tests.Api
 {
@@ -16,15 +19,23 @@ namespace ProBase.Tests.Api
                 IDatabaseTestOperations testOperations = databaseContext.GenerateObject<IDatabaseTestOperations>();
 
                 Assert.IsNotNull(testOperations, "The DatabaseContext should return an implementation of the given interface");
+
+                DataSet students = testOperations.Read();
             },
             "The creation calls must be successful");
         }
 
         private SqlConnection CreateConnection()
         {
+            Settings config = Settings.Default;
+
             SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
             {
-                InitialCatalog = "Address here"
+                ApplicationName = Assembly.GetExecutingAssembly().GetName().Name,
+                DataSource = config.ServerAddress,
+                InitialCatalog = config.DatabaseName,
+                UserID = config.Username,
+                Password = config.Password
             };
 
             return new SqlConnection(connectionStringBuilder.ToString());
@@ -33,11 +44,15 @@ namespace ProBase.Tests.Api
         [DbInterface]
         public interface IDatabaseTestOperations
         {
-            [Procedure("dbo.CreateItem")]
-            void Create(object item);
+            [Procedure("dbo.EleviCreate")]
+            void Create([Parameter("Prenume")] string firstName,
+                        [Parameter("Nume")] string lastName,
+                        [Parameter("Sex")] char gender,
+                        [Parameter("Varsta")] int age,
+                        [Parameter("Clasa")] int grade);
 
-            [Procedure("ReadItem", DatabaseSchema = "dbo")]
-            object Read(int id);
+            [Procedure("dbo.EleviRead")]
+            DataSet Read();
         }
     }
 }

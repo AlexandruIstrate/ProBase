@@ -62,15 +62,26 @@
     <Compile Include="Generation\GenerationUtils.cs" />
     <Compile Include="Generation\Operations\ParameterArrayGeneratorTest.cs" />
     <Compile Include="Generation\Operations\ProcedureCallGeneratorTest.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Substitutes\FamousWriter.cs" />
     <Compile Include="Substitutes\IGenerationTestInterface.cs" />
     <Compile Include="Generation\MethodGenerationTest.cs" />
+    <Compile Include="Substitutes\Student.cs" />
     <Compile Include="Substitutes\SubstituteFactory.cs" />
     <Compile Include="Utils\PreconditionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ProBase\ProBase.csproj">
