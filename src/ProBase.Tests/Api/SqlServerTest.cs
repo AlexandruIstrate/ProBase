@@ -19,8 +19,6 @@ namespace ProBase.Tests.Api
                 IDatabaseTestOperations testOperations = databaseContext.GenerateObject<IDatabaseTestOperations>();
 
                 Assert.IsNotNull(testOperations, "The DatabaseContext should return an implementation of the given interface");
-
-                DataSet students = testOperations.Read();
             },
             "The creation calls must be successful");
         }
