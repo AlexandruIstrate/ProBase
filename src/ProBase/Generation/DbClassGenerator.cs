@@ -27,7 +27,7 @@ namespace ProBase.Generation
         /// <summary>
         /// Gets the name the generated class will use.
         /// </summary>
-        public string ClassName { get; } = TypeNames.GenerateUniqueTypeName("GeneratedDatabaseInterface");
+        public string ClassName { get; } = "GeneratedDatabaseInterface";
 
         /// <summary>
         /// Creates the code generation class using the given components for code generation.
