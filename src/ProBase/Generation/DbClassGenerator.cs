@@ -3,6 +3,7 @@ using ProBase.Data;
 using ProBase.Generation.Converters;
 using ProBase.Utils;
 using System;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -22,12 +23,12 @@ namespace ProBase.Generation
         /// <summary>
         /// Gets the name of the module the generated class will use.
         /// </summary>
-        public string ModuleName { get; } = TypeNames.GetModuleName();
+        public string ModuleName { get; } = "GeneratedModule";
 
         /// <summary>
         /// Gets the name the generated class will use.
         /// </summary>
-        public string ClassName { get; } = "GeneratedDatabaseInterface";
+        public string ClassName { get; } = TypeNames.GenerateFullClassName("GeneratedDatabaseInterface");
 
         /// <summary>
         /// Creates the code generation class using the given components for code generation.
@@ -84,8 +85,8 @@ namespace ProBase.Generation
         {
             return new FieldBuilder[]
             {
-                fieldGenerator.GenerateField(GenerationConstants.ProcedureMapperFieldName, typeof(IProcedureMapper), typeBuilder),
-                fieldGenerator.GenerateField(GenerationConstants.DataMapperFieldName, typeof(IDataMapper), typeBuilder)
+                fieldGenerator.GenerateField(GenerationConstants.ProviderFactoryFieldName, typeof(DbProviderFactory), typeBuilder),
+                fieldGenerator.GenerateField(GenerationConstants.ProcedureMapperFieldName, typeof(IProcedureMapper), typeBuilder)
             };
         }
 

@@ -33,7 +33,7 @@ namespace ProBase
             try
             {
                 Type generatedType = classGenerator.GenerateClassImplementingInterface(typeof(T));
-                return (T)Activator.CreateInstance(generatedType, GetProcedureMapper(), GetDataMapper());
+                return (T)Activator.CreateInstance(generatedType, GetProviderFactory(), GetProcedureMapper());
             }
             catch (Exception e)
             {
@@ -43,7 +43,7 @@ namespace ProBase
 
 
         private IProcedureMapper GetProcedureMapper() => ProcedureMapperFactory.Create(Connection);
-        private IDataMapper GetDataMapper() => DataMapperFactory.Create(DataMapperType.DataSet);
+        private DbProviderFactory GetProviderFactory() => Connection.GetProviderFactory();
 
         private readonly IConcreteClassGenerator classGenerator;
     }

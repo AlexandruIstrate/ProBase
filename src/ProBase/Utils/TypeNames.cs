@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace ProBase.Utils
 {
@@ -19,21 +17,13 @@ namespace ProBase.Utils
         }
 
         /// <summary>
-        /// Gets the name of the current module.
+        /// Generates a name for a class prefixing the current assembly's name.
         /// </summary>
-        /// <returns></returns>
-        public static string GetModuleName()
+        /// <param name="className">The name of the class</param>
+        /// <returns>A full class name, including the assembly name</returns>
+        public static string GenerateFullClassName(string className)
         {
-            return Assembly.GetExecutingAssembly().Modules.First().Name;
-        }
-
-        /// <summary>
-        /// Generates an unique type name for use in code generation.
-        /// </summary>
-        /// <returns></returns>
-        public static string GenerateUniqueTypeName(string typeName)
-        {
-            return typeName + Guid.NewGuid().ToString();
+            return $"{ GetAssemblyName() }.{ className }";
         }
     }
 }
