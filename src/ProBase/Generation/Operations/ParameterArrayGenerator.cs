@@ -21,47 +21,56 @@ namespace ProBase.Generation.Operations
             this.parameterConverter = parameterConverter;
         }
 
-        public void Generate(ParameterInfo[] parameters, ILGenerator generator)
+        public LocalBuilder Generate(ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
         {
+            // Get the provider factory field
+            FieldInfo providerFactory = GeneratedClass.GetField<DbProviderFactory>(fields, GenerationConstants.ProviderFactoryFieldName);
+
             for (int i = 0; i < parameters.Length; i++)
             {
                 DbParameter databaseParameter = parameterConverter.ConvertParameter(parameters[i], value: null);
 
                 // Create the parameter
-                CreateParameter(localIndex: i, generator);
+                LocalBuilder parameterBuilder = CreateParameter(providerFactory, generator);
 
                 // Set the name for this parameter
-                SetParameterName(variableIndex: i, databaseParameter.ParameterName, generator);
+                SetParameterName(parameterBuilder, databaseParameter.ParameterName, generator);
 
                 // Set the direction for this parameter
-                SetParameterDirection(variableIndex: i, databaseParameter.Direction, generator);
+                SetParameterDirection(parameterBuilder, databaseParameter.Direction, generator);
 
                 // Set the parameter value
-                SetParameterValue(variableIndex: i, valueIndex: i + 1, generator);
+                SetParameterValue(parameterBuilder, valueIndex: i + 1, generator);
             }
 
-            CreateArray(typeof(DbParameter), parameters.Length, generator);
+            // Create the array
+            return CreateArray(typeof(DbParameter[]), parameters.Length, generator);
         }
 
-        private void CreateParameter(int localIndex, ILGenerator generator)
+        private LocalBuilder CreateParameter(FieldInfo providerFactory, ILGenerator generator)
         {
+            // Declare the variable
+            LocalBuilder localBuilder = generator.DeclareLocal(typeof(DbParameter));
+
             // Load this object to the stack
             generator.Emit(OpCodes.Ldarg, 0);
 
             // Loads the field used for creating the parameter onto the stack
-            generator.Emit(OpCodes.Ldfld, GetParameterFactoryType());
+            generator.Emit(OpCodes.Ldfld, providerFactory);
 
             // Calls the creation method on the field
             generator.Emit(OpCodes.Callvirt, GetParameterCreationMethod());
 
             // Unload this object from the stack
-            generator.Emit(OpCodes.Stloc, localIndex);
+            generator.Emit(OpCodes.Stloc, localBuilder);
+
+            return localBuilder;
         }
 
-        private void SetParameterName(int variableIndex, string name, ILGenerator generator)
+        private void SetParameterName(LocalBuilder parameterBuilder, string name, ILGenerator generator)
         {
             // Load the variable at the given index
-            generator.Emit(OpCodes.Ldloc, variableIndex);
+            generator.Emit(OpCodes.Ldloc, parameterBuilder);
 
             // Load the parameter name
             generator.Emit(OpCodes.Ldstr, name);
@@ -70,10 +79,10 @@ namespace ProBase.Generation.Operations
             generator.Emit(OpCodes.Callvirt, GetSetMethod(typeof(DbParameter), nameof(DbParameter.ParameterName)));
         }
 
-        private void SetParameterDirection(int variableIndex, ParameterDirection parameterDirection, ILGenerator generator)
+        private void SetParameterDirection(LocalBuilder parameterBuilder, ParameterDirection parameterDirection, ILGenerator generator)
         {
             // Load the local variable associated with this parameter
-            generator.Emit(OpCodes.Ldloc, variableIndex);
+            generator.Emit(OpCodes.Ldloc, parameterBuilder);
 
             // Load the parameter direction
             generator.Emit(OpCodes.Ldc_I4, (int)parameterDirection);
@@ -82,10 +91,10 @@ namespace ProBase.Generation.Operations
             generator.Emit(OpCodes.Callvirt, GetSetMethod(typeof(DbParameter), nameof(DbParameter.Direction)));
         }
 
-        private void SetParameterValue(int variableIndex, int valueIndex, ILGenerator generator)
+        private void SetParameterValue(LocalBuilder parameterBuilder, int valueIndex, ILGenerator generator)
         {
             // Load the local variable associated with this parameter
-            generator.Emit(OpCodes.Ldloc, variableIndex);
+            generator.Emit(OpCodes.Ldloc, parameterBuilder);
 
             // Load the argument that this parameter gets its value from
             generator.Emit(OpCodes.Ldarg, valueIndex);
@@ -94,33 +103,38 @@ namespace ProBase.Generation.Operations
             generator.Emit(OpCodes.Callvirt, GetSetMethod(typeof(DbParameter), nameof(DbParameter.Value)));
         }
 
-        private void CreateArray(Type type, int length, ILGenerator generator)
+        private LocalBuilder CreateArray(Type type, int length, ILGenerator generator)
         {
-            // Load the array size
+            LocalBuilder localBuilder = generator.DeclareLocal(type);
+
+            // Load the array size onto the evaluation stack
             generator.Emit(OpCodes.Ldc_I4, length);
 
             // Create the array
-            generator.Emit(OpCodes.Newarr, type);
+            generator.Emit(OpCodes.Newobj, GetArrayConstructor(type));
+
+            // Store the newly created value into the local
+            generator.Emit(OpCodes.Stloc, localBuilder);
+
+            // Load the array local
+            generator.Emit(OpCodes.Ldloc, length);
 
             for (int i = 0; i < length; i++)
             {
-                // Duplicate the local variable
+                // Copy the parameter
                 generator.Emit(OpCodes.Dup);
 
-                // Load the array index
+                // Load the array index onto the stack
                 generator.Emit(OpCodes.Ldc_I4, i);
 
-                // Load the current local variable
+                // Loads the local parameter at index
                 generator.Emit(OpCodes.Ldloc, i);
 
-                // Replace the array argument with the local argument
+                // Set the array element at index to the current local value
                 generator.Emit(OpCodes.Stelem_Ref);
             }
-        }
 
-        private Type GetParameterFactoryType()
-        {
-            return typeof(DbProviderFactory);
+            return localBuilder;
         }
 
         private MethodInfo GetParameterCreationMethod()
@@ -132,6 +146,8 @@ namespace ProBase.Generation.Operations
         {
             return type.GetProperty(propertyName).GetSetMethod();
         }
+
+        private ConstructorInfo GetArrayConstructor(Type arrayType) => arrayType.GetConstructor(new[] { typeof(int) });
 
         private readonly IParameterConverter parameterConverter;
     }

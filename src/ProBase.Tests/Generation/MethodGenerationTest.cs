@@ -9,6 +9,7 @@ using System.Reflection.Emit;
 
 namespace ProBase.Tests.Generation
 {
+    [Ignore("Not finished")]
     [TestFixture]
     public class MethodGenerationTest
     {
@@ -40,15 +41,9 @@ namespace ProBase.Tests.Generation
             }
         }
 
-        private TypeBuilder GetTypeBuilder()
-        {
-            return GenerationUtils.GetTypeBuilder(typeof(IGenerationTestInterface));
-        }
+        private TypeBuilder GetTypeBuilder() => GenerationUtils.GetTypeBuilder(typeof(IGenerationTestInterface));
 
-        private FieldInfo GetDatabaseMapperField(TypeBuilder typeBuilder)
-        {
-            return typeBuilder.DefineField("procedureMapper", typeof(IProcedureMapper), FieldAttributes.Private | FieldAttributes.InitOnly);
-        }
+        private FieldInfo GetDatabaseMapperField(TypeBuilder typeBuilder) => GeneratedClass.GetField<IProcedureMapper>(typeBuilder.GetFields(), GenerationConstants.ProcedureMapperFieldName);
 
         private IMethodGenerator methodGenerator;
     }

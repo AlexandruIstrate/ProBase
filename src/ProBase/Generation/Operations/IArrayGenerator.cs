@@ -12,7 +12,9 @@ namespace ProBase.Generation.Operations
         /// Generates an array.
         /// </summary>
         /// <param name="parameters">The parameters passed into the method</param>
+        /// <param name="fields">The fields of the generated class</param>
         /// <param name="generator">The generator to use for generating MSIL instructions</param>
-        void Generate(ParameterInfo[] parameters, ILGenerator generator);
+        /// <returns>The local builder associated with the array</returns>
+        LocalBuilder Generate(ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator);
     }
 }

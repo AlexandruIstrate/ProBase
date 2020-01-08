@@ -33,7 +33,7 @@ namespace ProBase
             try
             {
                 Type generatedType = classGenerator.GenerateClassImplementingInterface(typeof(T));
-                return (T)Activator.CreateInstance(generatedType, GetProviderFactory(), GetProcedureMapper());
+                return (T)Activator.CreateInstance(generatedType, GetProcedureMapper(), GetProviderFactory());
             }
             catch (Exception e)
             {

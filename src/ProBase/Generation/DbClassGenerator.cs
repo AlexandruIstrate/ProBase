@@ -23,12 +23,12 @@ namespace ProBase.Generation
         /// <summary>
         /// Gets the name of the module the generated class will use.
         /// </summary>
-        public string ModuleName { get; } = "GeneratedModule";
+        public string ModuleName { get; } = "CodeGeneration";
 
         /// <summary>
         /// Gets the name the generated class will use.
         /// </summary>
-        public string ClassName { get; } = TypeNames.GenerateFullClassName("GeneratedDatabaseInterface");
+        public string ClassName { get; } = "GeneratedDatabaseInterface";
 
         /// <summary>
         /// Creates the code generation class using the given components for code generation.
@@ -85,8 +85,8 @@ namespace ProBase.Generation
         {
             return new FieldBuilder[]
             {
-                fieldGenerator.GenerateField(GenerationConstants.ProviderFactoryFieldName, typeof(DbProviderFactory), typeBuilder),
-                fieldGenerator.GenerateField(GenerationConstants.ProcedureMapperFieldName, typeof(IProcedureMapper), typeBuilder)
+                fieldGenerator.GenerateField(GenerationConstants.ProcedureMapperFieldName, typeof(IProcedureMapper), typeBuilder),
+                fieldGenerator.GenerateField(GenerationConstants.ProviderFactoryFieldName, typeof(DbProviderFactory), typeBuilder)
             };
         }
 

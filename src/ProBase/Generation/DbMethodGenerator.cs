@@ -101,19 +101,19 @@ namespace ProBase.Generation
         private void PrepareParameters(string procedureName, ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
         {
             // Generate the parameter array
-            arrayGenerator.Generate(parameters, generator);
+            LocalBuilder arrayBuilder = arrayGenerator.Generate(parameters, fields, generator);
 
             // Load this object
             generator.Emit(OpCodes.Ldarg_0);
 
             // Load the field we use for calling the database procedure
-            generator.Emit(OpCodes.Ldfld, GetField<IProcedureMapper>(GenerationConstants.ProcedureMapperFieldName, fields));
+            generator.Emit(OpCodes.Ldfld, GeneratedClass.GetField<IProcedureMapper>(fields, GenerationConstants.ProcedureMapperFieldName));
 
             // Load the procedure name
             generator.Emit(OpCodes.Ldstr, procedureName);
 
             // Load the parameter array as a local
-            generator.Emit(OpCodes.Ldloc, parameters.Length);
+            generator.Emit(OpCodes.Ldloc, arrayBuilder);
         }
 
         private FieldInfo GetField<T>(string fieldName, IEnumerable<FieldInfo> fields)
