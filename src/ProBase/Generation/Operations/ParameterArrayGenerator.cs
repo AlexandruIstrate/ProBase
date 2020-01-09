@@ -53,7 +53,7 @@ namespace ProBase.Generation.Operations
             LocalBuilder localBuilder = generator.DeclareLocal(typeof(DbParameter));
 
             // Load this object to the stack
-            generator.Emit(OpCodes.Ldarg, 0);
+            generator.Emit(OpCodes.Ldarg_0);
 
             // Loads the field used for creating the parameter onto the stack
             generator.Emit(OpCodes.Ldfld, providerFactory);
@@ -116,13 +116,10 @@ namespace ProBase.Generation.Operations
             // Store the newly created value into the local
             generator.Emit(OpCodes.Stloc, localBuilder);
 
-            // Load the array local
-            generator.Emit(OpCodes.Ldloc, length);
-
             for (int i = 0; i < length; i++)
             {
-                // Copy the parameter
-                generator.Emit(OpCodes.Dup);
+                // Load the local array
+                generator.Emit(OpCodes.Ldloc, localBuilder);
 
                 // Load the array index onto the stack
                 generator.Emit(OpCodes.Ldc_I4, i);
