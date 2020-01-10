@@ -43,7 +43,7 @@ namespace ProBase.Generation
             for (int i = 0; i < fields.Count(); i++)
             {
                 // Load the reference to this object
-                generator.Emit(OpCodes.Ldarg, 0);
+                generator.Emit(OpCodes.Ldarg_0);
 
                 // Load the current constructor parameter
                 generator.Emit(OpCodes.Ldarg, i + 1);
@@ -64,7 +64,7 @@ namespace ProBase.Generation
         private void CallDefaultBaseConstructor(ILGenerator generator, Type baseType)
         {
             // Load the reference to this object
-            generator.Emit(OpCodes.Ldarg, 0);
+            generator.Emit(OpCodes.Ldarg_0);
 
             ConstructorInfo defaultConstructor = baseType.GetConstructor(new Type[] { });
 

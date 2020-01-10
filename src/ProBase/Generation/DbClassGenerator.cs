@@ -1,6 +1,5 @@
 ﻿using ProBase.Attributes;
 using ProBase.Data;
-using ProBase.Generation.Converters;
 using ProBase.Utils;
 using System;
 using System.Data.Common;
@@ -23,12 +22,12 @@ namespace ProBase.Generation
         /// <summary>
         /// Gets the name of the module the generated class will use.
         /// </summary>
-        public string ModuleName { get; } = "CodeGeneration";
+        public string ModuleName { get; } = GenerationConstants.GeneratedModuleName;
 
         /// <summary>
         /// Gets the name the generated class will use.
         /// </summary>
-        public string ClassName { get; } = "GeneratedDatabaseInterface";
+        public string ClassName { get; } = GenerationConstants.GeneratedClassName;
 
         /// <summary>
         /// Creates the code generation class using the given components for code generation.

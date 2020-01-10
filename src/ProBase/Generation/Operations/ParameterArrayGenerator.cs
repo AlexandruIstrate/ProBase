@@ -76,7 +76,7 @@ namespace ProBase.Generation.Operations
             generator.Emit(OpCodes.Ldstr, name);
 
             // Call the setter for the name
-            generator.Emit(OpCodes.Callvirt, GetSetMethod(typeof(DbParameter), nameof(DbParameter.ParameterName)));
+            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetPropertySetMethod<DbParameter>(nameof(DbParameter.ParameterName)));
         }
 
         private void SetParameterDirection(LocalBuilder parameterBuilder, ParameterDirection parameterDirection, ILGenerator generator)
@@ -88,7 +88,7 @@ namespace ProBase.Generation.Operations
             generator.Emit(OpCodes.Ldc_I4, (int)parameterDirection);
 
             // Call the setter for the direction
-            generator.Emit(OpCodes.Callvirt, GetSetMethod(typeof(DbParameter), nameof(DbParameter.Direction)));
+            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Direction)));
         }
 
         private void SetParameterValue(LocalBuilder parameterBuilder, int valueIndex, ILGenerator generator)
@@ -100,7 +100,7 @@ namespace ProBase.Generation.Operations
             generator.Emit(OpCodes.Ldarg, valueIndex);
 
             // Call the set method on the Value property
-            generator.Emit(OpCodes.Callvirt, GetSetMethod(typeof(DbParameter), nameof(DbParameter.Value)));
+            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Value)));
         }
 
         private LocalBuilder CreateArray(Type type, int length, ILGenerator generator)
@@ -137,11 +137,6 @@ namespace ProBase.Generation.Operations
         private MethodInfo GetParameterCreationMethod()
         {
             return typeof(DbProviderFactory).GetMethod(nameof(DbProviderFactory.CreateParameter));
-        }
-
-        private MethodInfo GetSetMethod(Type type, string propertyName)
-        {
-            return type.GetProperty(propertyName).GetSetMethod();
         }
 
         private ConstructorInfo GetArrayConstructor(Type arrayType) => arrayType.GetConstructor(new[] { typeof(int) });
