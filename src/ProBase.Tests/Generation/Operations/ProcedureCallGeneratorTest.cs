@@ -3,6 +3,7 @@ using ProBase.Attributes;
 using ProBase.Generation.Operations;
 using ProBase.Tests.Substitutes;
 using System;
+using System.Data;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -18,40 +19,29 @@ namespace ProBase.Tests.Generation.Operations
         }
 
         [Test]
-        public void CanGenerateBasedOnReturnType()
-        {
-
-        }
-        
-        [Test]
-        public void CanGenerateBasedOnProcedureTypeScalar()
+        public void CanGenerateScalarMethod()
         {
             Assert.DoesNotThrow(() =>
             {
-                procedureCallGenerator.Generate(ProcedureType.Scalar, CreateScalarMethod());
-            });
+                procedureCallGenerator.Generate(typeof(DataSet), ProcedureType.Automatic, CreateScalarMethod());
+            },
+            "The scalar call must be generated successfuly");
         }
 
         [Test]
-        public void CanGenerateBasedOnProcedureTypeNonQuery()
+        public void CanGenerateNonQueryMethod()
         {
             Assert.DoesNotThrow(() =>
             {
-                procedureCallGenerator.Generate(ProcedureType.NonQuery, CreateNonQueryMethod());
-            });
-        }
-
-        private ILGenerator CreateTestMethod()
-        {
-            TypeBuilder typeBuilder = GenerationUtils.GetTypeBuilder(typeof(IGenerationTestInterface));
-            MethodBuilder methodBuilder = typeBuilder.DefineMethod("TestMethod", MethodAttributes.Public, typeof(void), new Type[0]);
-            return methodBuilder.GetILGenerator();
+                procedureCallGenerator.Generate(typeof(int), ProcedureType.Automatic, CreateNonQueryMethod());
+            },
+            "The non query call must be generated successfuly");
         }
 
         private ILGenerator CreateScalarMethod()
         {
             TypeBuilder typeBuilder = GenerationUtils.GetTypeBuilder(typeof(IGenerationTestInterface));
-            MethodBuilder methodBuilder = typeBuilder.DefineMethod("ScalarMethod", MethodAttributes.Public, typeof(void), new Type[0]);
+            MethodBuilder methodBuilder = typeBuilder.DefineMethod("ScalarMethod", MethodAttributes.Public, typeof(DataSet), new Type[0]);
             return methodBuilder.GetILGenerator();
         }
 

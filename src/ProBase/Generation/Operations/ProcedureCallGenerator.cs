@@ -13,18 +13,14 @@ namespace ProBase.Generation.Operations
     internal class ProcedureCallGenerator : IMethodCallGenerator
     {
         /// <summary>
-        /// Generates the database procedure call.
+        /// Generates a method call based on the return type of the procedure.
         /// </summary>
-        /// <param name="resultType">The result type of the method</param>
-        /// <param name="generator">The generator to use</param>
-        public void Generate(Type resultType, ILGenerator generator)
+        /// <param name="resultType">The type the method should return</param>
+        /// <param name="procedureType">The type of the procedure</param>
+        /// <param name="generator">The generator used for code generation</param>
+        public void Generate(Type resultType, ProcedureType procedureType, ILGenerator generator)
         {
             generator.Emit(OpCodes.Call, GetMapperMethod(resultType));
-        }
-
-        public void Generate(ProcedureType procedureType, ILGenerator generator)
-        {
-            generator.Emit(OpCodes.Call, GetMapperMethod(procedureType));
         }
 
         private MethodInfo GetMapperMethod(Type returnType)
@@ -49,21 +45,6 @@ namespace ProBase.Generation.Operations
 
             // If the return type is a custom type, then it must be mapped from a DataSet
             return GetMethod(nameof(IProcedureMapper.ExecuteMappedProcedure));
-        }
-
-        private MethodInfo GetMapperMethod(ProcedureType procedureType)
-        {
-            switch (procedureType)
-            {
-                case ProcedureType.Automatic:
-                    throw new NotSupportedException("The method used for this call must be deduced automatically");
-                case ProcedureType.Scalar:
-                    return GetMethod(nameof(IProcedureMapper.ExecuteScalarProcedure));
-                case ProcedureType.NonQuery:
-                    return GetMethod(nameof(IProcedureMapper.ExecuteNonQueryProcedure));
-                default:
-                    throw new NotSupportedException("The given procedure type is not supported");
-            }
         }
 
         private MethodInfo GetMethod(string methodName)

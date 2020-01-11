@@ -36,27 +36,7 @@ namespace ProBase.Generation
             ProcedureAttribute procedureAttribute = methodInfo.GetCustomAttribute<ProcedureAttribute>();
             MethodBuilder methodBuilder = typeBuilder.DefineMethod(methodInfo.Name, MethodAttributes.Public | MethodAttributes.Virtual, methodInfo.ReturnType, GetParameterTypes(methodInfo.GetParameters()));
 
-            if (procedureAttribute.ProcedureType == ProcedureType.Automatic)
-            {
-                // If the procedure type is Automatic, then let the generator figure out its type.
-                GenerateMethodBody(
-                    procedureAttribute.ProcedureName,
-                    methodInfo.GetParameters(),
-                    methodBuilder.ReturnType,
-                    classFields,
-                    methodBuilder.GetILGenerator());
-            }
-            else
-            {
-                // Otherwise, pass in the procedure type
-                GenerateMethodBody(
-                    procedureAttribute.ProcedureName,
-                    methodInfo.GetParameters(),
-                    methodBuilder.ReturnType,
-                    procedureAttribute.ProcedureType,
-                    classFields,
-                    methodBuilder.GetILGenerator());
-            }
+            GenerateMethodBody(procedureAttribute.ProcedureName, methodInfo.GetParameters(), methodBuilder.ReturnType, procedureAttribute.ProcedureType, classFields, methodBuilder.GetILGenerator());
 
             return methodBuilder;
         }
@@ -66,22 +46,12 @@ namespace ProBase.Generation
             return parameters.ToList().ConvertAll(item => item.ParameterType).ToArray();
         }
 
-        private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, FieldInfo[] fields, ILGenerator generator)
-        {
-            PrepareParameters(procedureName, parameters, fields, generator);
-
-            // Generate the procedure call
-            procedureCallGenerator.Generate(returnType, generator);
-
-            ReturnFromMethod(returnType, generator);
-        }
-
         private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, ProcedureType procedureType, FieldInfo[] fields, ILGenerator generator)
         {
             PrepareParameters(procedureName, parameters, fields, generator);
 
             // Generate the procedure call
-            procedureCallGenerator.Generate(procedureType, generator);
+            procedureCallGenerator.Generate(returnType, procedureType, generator);
 
             ReturnFromMethod(returnType, generator);
         }
