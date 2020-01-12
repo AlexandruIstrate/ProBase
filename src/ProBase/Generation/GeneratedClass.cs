@@ -36,6 +36,11 @@ namespace ProBase.Generation
             return namedField;
         }
 
+        public static MethodInfo GetMethod<T>(string name)
+        {
+            return typeof(T).GetMethod(name);
+        }
+
         /// <summary>
         /// Gets the get method for a property of a class by name.
         /// </summary>

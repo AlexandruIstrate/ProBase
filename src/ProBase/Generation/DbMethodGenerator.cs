@@ -53,17 +53,11 @@ namespace ProBase.Generation
             // Generate the procedure call
             procedureCallGenerator.Generate(returnType, procedureType, generator);
 
-            ReturnFromMethod(returnType, generator);
+            ReturnFromMethod(generator);
         }
 
-        private static void ReturnFromMethod(Type returnType, ILGenerator generator)
+        private static void ReturnFromMethod(ILGenerator generator)
         {
-            // If the method returns a value, then pop it from the stack after the call
-            if (returnType != typeof(void))
-            {
-                generator.Emit(OpCodes.Pop);
-            }
-
             // Return from the method
             generator.Emit(OpCodes.Ret);
         }
