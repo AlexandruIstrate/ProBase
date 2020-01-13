@@ -35,22 +35,27 @@ namespace ProBase.Generation.Call
 
             if (resultType == typeof(DataSet))
             {
-                ReturnDataSet();
+                ReturnDataSet(generator);
             }
             else
             {
-                MapResults(resultType);
+                MapResults(resultType, generator);
             }
+
+            // Return from the method
+            generator.Emit(OpCodes.Ret);
         }
 
-        private void ReturnDataSet()
+        private void ReturnDataSet(ILGenerator generator)
         {
-
+            // Call the procedure returning a DataSet
+            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetMethod<IProcedureMapper>(nameof(IProcedureMapper.ExecuteScalarProcedure)));
         }
 
-        private void MapResults(Type mapType)
+        private void MapResults(Type mapType, ILGenerator generator)
         {
-
+            // Call the procedure mapping the type
+            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetMethod<IProcedureMapper>(nameof(IProcedureMapper.ExecuteMappedProcedure)).MakeGenericMethod(mapType));
         }
     }
 }

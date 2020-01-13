@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace ProBase.Generation
+namespace ProBase.Generation.Class
 {
     /// <summary>
     /// Generates a class for accessing a database.

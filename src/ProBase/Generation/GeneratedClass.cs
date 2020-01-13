@@ -23,22 +23,28 @@ namespace ProBase.Generation
 
             if (typedFields.Count() == 0)
             {
-                throw new CodeGenerationException($"The generated class does not contain any fields of type { nameof(T) }");
+                throw new Exception($"The generated class does not contain any fields of type { nameof(T) }");
             }
 
             FieldInfo namedField = typedFields.ToList().Find(field => field.Name == fieldName);
 
             if (namedField == null)
             {
-                throw new CodeGenerationException($"Could not find a field with name { fieldName }");
+                throw new Exception($"Could not find a field with name { fieldName }");
             }
 
             return namedField;
         }
 
+        /// <summary>
+        /// Retrieves information about a method in a specified type.
+        /// </summary>
+        /// <typeparam name="T">The type to look in for the method</typeparam>
+        /// <param name="name">The name of the method</param>
+        /// <returns>Information about the method</returns>
         public static MethodInfo GetMethod<T>(string name)
         {
-            return typeof(T).GetMethod(name);
+            return typeof(T).GetMethod(name, BindingFlags.Public | BindingFlags.NonPublic);
         }
 
         /// <summary>

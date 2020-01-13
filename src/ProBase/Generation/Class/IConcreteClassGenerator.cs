@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProBase.Generation
+namespace ProBase.Generation.Class
 {
     /// <summary>
     /// Defines an operation for generating a concrete class implementing an interface.

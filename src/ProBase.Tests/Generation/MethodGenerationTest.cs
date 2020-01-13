@@ -1,8 +1,9 @@
 ﻿using NUnit.Framework;
 using ProBase.Data;
 using ProBase.Generation;
+using ProBase.Generation.Class;
 using ProBase.Generation.Converters;
-using ProBase.Generation.Operations;
+using ProBase.Generation.Method;
 using ProBase.Tests.Substitutes;
 using System.Reflection;
 using System.Reflection.Emit;

@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using ProBase.Generation;
+using ProBase.Generation.Class;
 using ProBase.Tests.Substitutes;
 using System;
 using System.Collections.Generic;

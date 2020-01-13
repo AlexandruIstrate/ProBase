@@ -1,7 +1,7 @@
 ﻿using ProBase.Generation.Converters;
-using ProBase.Generation.Operations;
+using ProBase.Generation.Method;
 
-namespace ProBase.Generation
+namespace ProBase.Generation.Class
 {
     /// <summary>
     /// Provides a way for creating instances of <see cref="ProBase.Generation.IConcreteClassGenerator"/>.

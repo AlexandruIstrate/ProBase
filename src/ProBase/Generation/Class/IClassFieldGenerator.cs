@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection.Emit;
 
-namespace ProBase.Generation
+namespace ProBase.Generation.Class
 {
     /// <summary>
     /// Defines an operation for generating a class field with the given options.

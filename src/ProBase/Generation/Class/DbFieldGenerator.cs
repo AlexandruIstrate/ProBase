@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace ProBase.Generation
+namespace ProBase.Generation.Class
 {
     /// <summary>
     /// Provides a way for generating fields inside a database access class.

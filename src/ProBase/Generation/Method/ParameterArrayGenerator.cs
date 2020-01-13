@@ -5,7 +5,7 @@ using System.Data.Common;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace ProBase.Generation.Operations
+namespace ProBase.Generation.Method
 {
     /// <summary>
     /// Generates an array of parameters used for calling database procedures.

@@ -1,13 +1,13 @@
 ﻿using ProBase.Attributes;
 using ProBase.Data;
-using ProBase.Generation.Operations;
+using ProBase.Generation.Method;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace ProBase.Generation
+namespace ProBase.Generation.Class
 {
     /// <summary>
     /// Provides a way for generating methods used for calling database procedures.
@@ -48,10 +48,10 @@ namespace ProBase.Generation
 
         private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, ProcedureType procedureType, FieldInfo[] fields, ILGenerator generator)
         {
-            PrepareParameters(procedureName, parameters, fields, generator);
+            LocalBuilder arrayBuilder = PrepareParameters(procedureName, parameters, fields, generator);
 
             // Generate the procedure call
-            procedureCallGenerator.Generate(returnType, procedureType, generator);
+            procedureCallGenerator.Generate(procedureName, returnType, procedureType, arrayBuilder, fields, generator);
 
             ReturnFromMethod(generator);
         }
@@ -62,7 +62,7 @@ namespace ProBase.Generation
             generator.Emit(OpCodes.Ret);
         }
 
-        private void PrepareParameters(string procedureName, ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
+        private LocalBuilder PrepareParameters(string procedureName, ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
         {
             // Generate the parameter array
             LocalBuilder arrayBuilder = arrayGenerator.Generate(parameters, fields, generator);
@@ -78,6 +78,8 @@ namespace ProBase.Generation
 
             // Load the parameter array as a local
             generator.Emit(OpCodes.Ldloc, arrayBuilder);
+
+            return arrayBuilder;
         }
 
         private FieldInfo GetField<T>(string fieldName, IEnumerable<FieldInfo> fields)

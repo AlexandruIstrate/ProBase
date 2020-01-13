@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
 
-namespace ProBase.Generation.Operations
+namespace ProBase.Generation.Method
 {
     /// <summary>
     /// Provides a way of generating an array based on method parameters.

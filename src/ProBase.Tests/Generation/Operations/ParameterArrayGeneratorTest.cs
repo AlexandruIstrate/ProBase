@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using ProBase.Generation.Converters;
-using ProBase.Generation.Operations;
+using ProBase.Generation.Method;
 using ProBase.Tests.Substitutes;
 using System;
 using System.Reflection;

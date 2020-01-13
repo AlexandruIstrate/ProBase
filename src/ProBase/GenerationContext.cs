@@ -1,6 +1,6 @@
 ﻿using ProBase.Data;
 using ProBase.Generation;
-using ProBase.Generation.Converters;
+using ProBase.Generation.Class;
 using ProBase.Utils;
 using System;
 using System.Data.Common;
