@@ -44,7 +44,7 @@ namespace ProBase.Generation
         /// <returns>Information about the method</returns>
         public static MethodInfo GetMethod<T>(string name)
         {
-            return typeof(T).GetMethod(name, BindingFlags.Public | BindingFlags.NonPublic);
+            return typeof(T).GetMethod(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
         }
 
         /// <summary>

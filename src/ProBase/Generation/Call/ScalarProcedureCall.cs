@@ -49,13 +49,16 @@ namespace ProBase.Generation.Call
         private void ReturnDataSet(ILGenerator generator)
         {
             // Call the procedure returning a DataSet
-            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetMethod<IProcedureMapper>(nameof(IProcedureMapper.ExecuteScalarProcedure)));
+            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetMethod<IProcedureMapper>(ScalarProcedureMethodName));
         }
 
         private void MapResults(Type mapType, ILGenerator generator)
         {
             // Call the procedure mapping the type
-            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetMethod<IProcedureMapper>(nameof(IProcedureMapper.ExecuteMappedProcedure)).MakeGenericMethod(mapType));
+            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetMethod<IProcedureMapper>(MappedProcedureMethodName).MakeGenericMethod(mapType));
         }
+
+        private const string ScalarProcedureMethodName = nameof(IProcedureMapper.ExecuteScalarProcedure);
+        private const string MappedProcedureMethodName = nameof(IProcedureMapper.ExecuteMappedProcedure);
     }
 }

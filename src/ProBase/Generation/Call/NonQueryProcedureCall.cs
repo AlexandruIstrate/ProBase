@@ -33,7 +33,9 @@ namespace ProBase.Generation.Call
             generator.Emit(OpCodes.Ldloc, parameterArray);
 
             // Call the method
-            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetMethod<IProcedureMapper>(nameof(IProcedureMapper.ExecuteNonQueryProcedure)));
+            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetMethod<IProcedureMapper>(MethodName));
         }
+
+        private const string MethodName = nameof(IProcedureMapper.ExecuteNonQueryProcedure);
     }
 }
