@@ -23,7 +23,7 @@ namespace ProBase.Generation
 
             if (typedFields.Count() == 0)
             {
-                throw new Exception($"The generated class does not contain any fields of type { nameof(T) }");
+                throw new Exception($"The generated class does not contain any fields of type { typeof(T).FullName }");
             }
 
             FieldInfo namedField = typedFields.ToList().Find(field => field.Name == fieldName);
@@ -44,7 +44,31 @@ namespace ProBase.Generation
         /// <returns>Information about the method</returns>
         public static MethodInfo GetMethod<T>(string name)
         {
-            return typeof(T).GetMethod(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            Type type = typeof(T);
+
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.Instance;
+
+            // Search class for the method
+            MethodInfo classMethod = type.GetMethod(name, flags);
+
+            if (classMethod != null)
+            {
+                return classMethod;
+            }
+
+            // Search interfaces for the method
+            foreach (Type interf in type.GetInterfaces())
+            {
+                foreach (MethodInfo method in interf.GetMethods(flags))
+                {
+                    if (method.Name == name)
+                    {
+                        return method;
+                    }
+                }
+            }
+
+            return null;
         }
 
         /// <summary>

@@ -6,7 +6,7 @@ namespace ProBase.Data
     /// <summary>
     /// Provides a way to map a procedure's result to a given data type.
     /// </summary>
-    internal interface IProcedureMapper : IDatabase
+    public /*internal*/ interface IProcedureMapper : IDatabase
     {
         /// <summary>
         /// Runs the given procedure and maps its result to the type <typeparamref name="T"/>.

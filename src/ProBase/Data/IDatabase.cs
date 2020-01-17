@@ -8,7 +8,7 @@ namespace ProBase.Data
     /// <summary>
     /// An abstract representation of the operations supported by a database
     /// </summary>
-    internal interface IDatabase : IDisposable
+    public /*internal*/ interface IDatabase : IDisposable
     {
         /// <summary>
         /// Executes an SQL procedure against the connection and returns the number of rows affected.

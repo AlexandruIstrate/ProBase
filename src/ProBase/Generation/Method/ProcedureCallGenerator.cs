@@ -23,7 +23,7 @@ namespace ProBase.Generation.Method
         public void Generate(string procedureName, Type resultType, ProcedureType procedureType, LocalBuilder parameterArray, FieldInfo[] fields, ILGenerator generator)
         {
             IProcedureCall procedureCall = ProcedureCallFactory.Create(procedureType, resultType);
-            procedureCall.Call(procedureName, resultType, parameterArray, fields, generator);
+            procedureCall.Call(procedureName, resultType, generator);
         }
     }
 }

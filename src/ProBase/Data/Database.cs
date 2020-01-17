@@ -1,4 +1,5 @@
 ﻿using ProBase.Utils;
+using System;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -36,11 +37,25 @@ namespace ProBase.Data
         /// <returns>The number of rows affected</returns>
         public int ExecuteNonQueryProcedure(string procedureName, params DbParameter[] parameters)
         {
-            DbCommand command = providerFactory.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = procedureName;
-            command.Parameters.AddRange(parameters);
-            return command.ExecuteNonQuery();
+            try
+            {
+                Connection.Open();
+
+                DbCommand command = providerFactory.CreateCommand();
+                command.Connection = Connection;
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = procedureName;
+                command.Parameters.AddRange(parameters);
+                return command.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
         }
 
         /// <summary>
@@ -49,13 +64,27 @@ namespace ProBase.Data
         /// <param name="procedureName">The name of the procedure to execute</param>
         /// <param name="parameters">An array containing the parameters to be passed to the procedure</param>
         /// <returns>The number of rows affected</returns>
-        public Task<int> ExecuteNonQueryProcedureAsync(string procedureName, params DbParameter[] parameters)
+        public async Task<int> ExecuteNonQueryProcedureAsync(string procedureName, params DbParameter[] parameters)
         {
-            DbCommand command = providerFactory.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = procedureName;
-            command.Parameters.AddRange(parameters);
-            return command.ExecuteNonQueryAsync();
+            try
+            {
+                await Connection.OpenAsync();
+
+                DbCommand command = providerFactory.CreateCommand();
+                command.Connection = Connection;
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = procedureName;
+                command.Parameters.AddRange(parameters);
+                return await command.ExecuteNonQueryAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
         }
 
         /// <summary>
@@ -66,16 +95,35 @@ namespace ProBase.Data
         /// <returns>A <see cref="System.Data.DataSet"/> containing the data returned from the database</returns>
         public DataSet ExecuteScalarProcedure(string procedureName, params DbParameter[] parameters)
         {
-            DbCommand command = providerFactory.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = procedureName;
-            command.Parameters.AddRange(parameters);
-
-            using (DataAdapter dataAdapter = providerFactory.CreateDataAdapter())
+            try
             {
-                DataSet dataSet = new DataSet();
-                dataAdapter.Fill(dataSet);
-                return dataSet;
+                Connection.Open();
+
+                using (DbCommand command = providerFactory.CreateCommand())
+                {
+                    command.Connection = Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = procedureName;
+                    command.Parameters.AddRange(parameters);
+
+                    DataSet dataSet = new DataSet();
+
+                    using (DbDataAdapter dataAdapter = providerFactory.CreateDataAdapter())
+                    {
+                        dataAdapter.SelectCommand = command;
+                        dataAdapter.Fill(dataSet);
+                    }
+
+                    return dataSet;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
             }
         }
 
@@ -85,18 +133,37 @@ namespace ProBase.Data
         /// <param name="procedureName">The name of the procedure to execute</param>
         /// <param name="parameters">An array containing the parameters to be passed to the procedure</param>
         /// <returns>A <see cref="System.Data.DataSet"/> containing the data returned from the database</returns>
-        public Task<DataSet> ExecuteScalarProcedureAsync(string procedureName, params DbParameter[] parameters)
+        public async Task<DataSet> ExecuteScalarProcedureAsync(string procedureName, params DbParameter[] parameters)
         {
-            DbCommand command = providerFactory.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = procedureName;
-            command.Parameters.AddRange(parameters);
-
-            using (DataAdapter dataAdapter = providerFactory.CreateDataAdapter())
+            try
             {
-                DataSet dataSet = new DataSet();
-                dataAdapter.Fill(dataSet);
-                return Task.FromResult(dataSet);
+                await Connection.OpenAsync();
+
+                using (DbCommand command = providerFactory.CreateCommand())
+                {
+                    command.Connection = Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = procedureName;
+                    command.Parameters.AddRange(parameters);
+
+                    DataSet dataSet = new DataSet();
+
+                    using (DbDataAdapter dataAdapter = providerFactory.CreateDataAdapter())
+                    {
+                        dataAdapter.SelectCommand = command;
+                        dataAdapter.Fill(dataSet);
+                    }
+
+                    return dataSet;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
             }
         }
 
@@ -109,7 +176,6 @@ namespace ProBase.Data
         }
 
         private DbConnection connection;
-
         private DbProviderFactory providerFactory;
     }
 }
