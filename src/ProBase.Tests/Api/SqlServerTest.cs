@@ -3,11 +3,11 @@ using ProBase.Attributes;
 using ProBase.Tests.Properties;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace ProBase.Tests.Api
 {
+    [Ignore("Database infrastructure not set up")]
     [TestFixture]
     public class SqlServerTest
     {

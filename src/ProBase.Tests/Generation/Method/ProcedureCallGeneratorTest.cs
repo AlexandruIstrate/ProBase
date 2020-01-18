@@ -7,7 +7,7 @@ using System.Data;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace ProBase.Tests.Generation.Operations
+namespace ProBase.Tests.Generation.Method
 {
     [Ignore("Not adapted")]
     [TestFixture]

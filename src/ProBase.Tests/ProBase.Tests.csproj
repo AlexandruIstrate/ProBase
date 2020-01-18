@@ -55,14 +55,14 @@
     <Compile Include="Data\DatabaseTest.cs" />
     <Compile Include="Data\DbExtensionsTest.cs" />
     <Compile Include="Data\ProcedureMapperTest.cs" />
-    <Compile Include="Generation\ClassGenerationTest.cs" />
-    <Compile Include="Generation\ConstructorGenerationTest.cs" />
+    <Compile Include="Generation\Class\ClassGenerationTest.cs" />
+    <Compile Include="Generation\Class\ConstructorGenerationTest.cs" />
     <Compile Include="Generation\Converters\DataSetMapperTest.cs" />
     <Compile Include="Generation\Converters\PropertyMapperTest.cs" />
-    <Compile Include="Generation\FieldGenerationTest.cs" />
+    <Compile Include="Generation\Class\FieldGenerationTest.cs" />
     <Compile Include="Generation\GenerationUtils.cs" />
-    <Compile Include="Generation\Operations\ParameterArrayGeneratorTest.cs" />
-    <Compile Include="Generation\Operations\ProcedureCallGeneratorTest.cs" />
+    <Compile Include="Generation\Method\ParameterArrayGeneratorTest.cs" />
+    <Compile Include="Generation\Method\ProcedureCallGeneratorTest.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -70,7 +70,7 @@
     </Compile>
     <Compile Include="Substitutes\FamousWriter.cs" />
     <Compile Include="Substitutes\IGenerationTestInterface.cs" />
-    <Compile Include="Generation\MethodGenerationTest.cs" />
+    <Compile Include="Generation\Class\MethodGenerationTest.cs" />
     <Compile Include="Substitutes\Student.cs" />
     <Compile Include="Substitutes\SubstituteFactory.cs" />
     <Compile Include="Utils\PreconditionsTest.cs" />

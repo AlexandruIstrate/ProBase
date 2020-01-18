@@ -8,7 +8,7 @@ using ProBase.Tests.Substitutes;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace ProBase.Tests.Generation
+namespace ProBase.Tests.Generation.Class
 {
     [Ignore("Not finished")]
     [TestFixture]

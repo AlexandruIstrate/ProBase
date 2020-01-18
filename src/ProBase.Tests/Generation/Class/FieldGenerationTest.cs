@@ -5,7 +5,7 @@ using ProBase.Generation;
 using ProBase.Generation.Class;
 using ProBase.Tests.Substitutes;
 
-namespace ProBase.Tests.Generation
+namespace ProBase.Tests.Generation.Class
 {
     [TestFixture]
     public class FieldGenerationTest

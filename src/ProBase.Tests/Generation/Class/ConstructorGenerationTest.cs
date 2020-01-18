@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace ProBase.Tests.Generation
+namespace ProBase.Tests.Generation.Class
 {
     [TestFixture]
     public class ConstructorGenerationTest

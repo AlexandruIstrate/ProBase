@@ -1,10 +1,9 @@
 ﻿using NUnit.Framework;
-using ProBase.Generation;
 using ProBase.Generation.Class;
 using ProBase.Tests.Substitutes;
 using System;
 
-namespace ProBase.Tests.Generation
+namespace ProBase.Tests.Generation.Class
 {
     [TestFixture]
     public class ClassGenerationTest
