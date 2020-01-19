@@ -24,13 +24,13 @@ namespace ProBase.Generation.Converters
         /// <returns>The mapped object</returns>
         public TEntity Map<TEntity>(DataRow row) where TEntity : class, new()
         {
-            // Step 1 - Get the Column Names
+            // Step 1 - Get the column names
             List<string> columnNames = row.Table.Columns
                                                 .Cast<DataColumn>()
                                                 .Select(c => c.ColumnName)
                                                 .ToList();
 
-            // Step 2 - Get the Properties
+            // Step 2 - Get the properties
             List<PropertyInfo> properties = typeof(TEntity).GetProperties()
                                                            .Where(p => p.GetCustomAttributes(typeof(ColumnAttribute), inherit: true).Any())
                                                            .ToList();
@@ -50,20 +50,9 @@ namespace ProBase.Generation.Converters
         /// <returns>The mapped enumeration</returns>
         public IEnumerable<TEntity> Map<TEntity>(DataTable table) where TEntity : class, new()
         {
-            // Step 1 - Get the Column Names
-            List<string> columnNames = table.Columns
-                                            .Cast<DataColumn>()
-                                            .Select(c => c.ColumnName)
-                                            .ToList();
-
-            // Step 2 - Get the Property Data Names
-            List<PropertyInfo> properties = typeof(TEntity).GetProperties()
-                                                           .Where(p => p.GetCustomAttributes(typeof(ColumnAttribute), inherit: true).Any())
-                                                           .ToList();
-
-            // Step 3 - Map the data
             List<TEntity> entities = new List<TEntity>();
 
+            // Map each DataRow
             foreach (DataRow row in table.Rows)
             {
                 TEntity entity = new TEntity();

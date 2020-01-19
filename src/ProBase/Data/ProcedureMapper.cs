@@ -1,5 +1,4 @@
 ﻿using ProBase.Generation.Converters;
-using ProBase.Utils;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -19,7 +18,7 @@ namespace ProBase.Data
 
         public T ExecuteMappedProcedure<T>(string procedureName, params DbParameter[] parameters) where T : class, new()
         {
-            if (typeof(T).IsType(typeof(IEnumerable<T>)))
+            if (typeof(T) == typeof(IEnumerable<T>))
             {
                 return (T)MapProcedureEnumerable<T>(ExecuteScalarProcedure(procedureName, parameters));
             }
@@ -29,7 +28,7 @@ namespace ProBase.Data
 
         public async Task<T> ExecuteMappedProcedureAsync<T>(string procedureName, params DbParameter[] parameters) where T : class, new()
         {
-            if (typeof(T).IsType(typeof(IEnumerable<T>)))
+            if (typeof(T) == typeof(IEnumerable<T>))
             {
                 return (T)MapProcedureEnumerable<T>(await ExecuteScalarProcedureAsync(procedureName, parameters));
             }
@@ -39,6 +38,7 @@ namespace ProBase.Data
 
         private T MapProcedure<T>(DataSet dataSet) where T : class, new()
         {
+            // If there are no tables, then there is no data
             if (dataSet.Tables.Count == 0)
             {
                 return null;
@@ -51,16 +51,19 @@ namespace ProBase.Data
                 return null;
             }
 
+            // If we expect only one return value, then we can assume that we only care about the first row
             return dataMapper.Map<T>(table.Rows[0]);
         }
         
         private IEnumerable<T> MapProcedureEnumerable<T>(DataSet dataSet) where T : class, new()
         {
+            // If there are no tables, then there is no data
             if (dataSet.Tables.Count == 0)
             {
                 return null;
             }
 
+            // We expect only one data type, so use only the first table
             return dataMapper.Map<T>(dataSet.Tables[0]);
         }
 
