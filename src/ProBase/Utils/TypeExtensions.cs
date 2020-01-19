@@ -17,16 +17,5 @@ namespace ProBase.Utils
         {
             return interfaceType.IsAssignableFrom(type);
         }
-
-        /// <summary>
-        /// Checks if a given type matches another.
-        /// </summary>
-        /// <param name="type">The type to check for</param>
-        /// <param name="testType">The type to match</param>
-        /// <returns>True if the two types match, false otherwise</returns>
-        public static bool IsType(this Type type, Type testType)
-        {
-            return type == testType;
-        }
     }
 }

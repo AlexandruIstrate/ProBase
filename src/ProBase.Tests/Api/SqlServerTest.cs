@@ -35,7 +35,12 @@ namespace ProBase.Tests.Api
         [Test]
         public void CanCreate()
         {
-
+            Assert.DoesNotThrow(() =>
+            {
+                IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
+                testOperations.Create("LastName", "FirstName", gender: 'f', age: 34, grade: 12);
+            },
+            "The create operation must be successful");
         }
 
         [Test]
@@ -54,13 +59,23 @@ namespace ProBase.Tests.Api
         [Test]
         public void CanUpdate()
         {
-
+            Assert.DoesNotThrow(() =>
+            {
+                IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
+                testOperations.Update(id: 0, "LastName", "FirstName", gender: 'm', age: 19, grade: 11);
+            },
+            "The update operation must be successful");
         }
         
         [Test]
         public void CanDelete()
         {
-
+            Assert.DoesNotThrow(() =>
+            {
+                IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
+                testOperations.Delete(id: 0);
+            },
+            "The delete operation must be successful");
         }
 
         private SqlConnection CreateConnection()
