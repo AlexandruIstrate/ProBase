@@ -1,7 +1,9 @@
 ﻿using ProBase.Generation.Converters;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ProBase.Data
@@ -11,26 +13,82 @@ namespace ProBase.Data
     /// </summary>
     internal class ProcedureMapper : Database, IProcedureMapper
     {
+        /// <summary>
+        /// Constructs a new <see cref="ProBase.Data.ProcedureMapper"/> instance.
+        /// </summary>
+        /// <param name="connection">The connection to use for communicating with the database</param>
         public ProcedureMapper(DbConnection connection) : base(connection)
         {
             dataMapper = DataMapperFactory.Create(DataMapperType.DataSet);
         }
 
+        /// <summary>
+        /// Runs the given procedure and maps its result to the type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type to map to</typeparam>
+        /// <param name="procedureName">The name of the procedure to call</param>
+        /// <param name="parameters">The parameters to pass into the procedure</param>
+        /// <returns>The mapped type</returns>
         public T ExecuteMappedProcedure<T>(string procedureName, params DbParameter[] parameters) where T : class, new()
         {
-            if (typeof(T) == typeof(IEnumerable<T>))
+            Type type = typeof(T);
+
+            if (type.IsGenericType)
             {
-                return (T)MapProcedureEnumerable<T>(ExecuteScalarProcedure(procedureName, parameters));
+                // Get the generic type definition of the generic type
+                Type definition = type.GetGenericTypeDefinition();
+
+                // If the definition is that of an IEnumerable<T>, we can call the coresponding map method
+                if (definition == typeof(IEnumerable<>))
+                {
+                    // Execute the procedure
+                    DataSet dataSet = ExecuteScalarProcedure(procedureName, parameters);
+
+                    // Get the IEnumerable<T> map method
+                    MethodInfo mapMethod = typeof(ProcedureMapper).GetMethod(nameof(MapProcedureEnumerable));
+
+                    // Make the method generic with the enumerable's type parameter
+                    MethodInfo genericMethod = mapMethod.MakeGenericMethod(type.GetGenericArguments());
+
+                    // Invoke the generic method passing in the DataSet and casting the result to the IEnumerable<T> we have to return
+                    return (T)genericMethod.Invoke(this, new object[] { dataSet });
+                }
             }
 
             return MapProcedure<T>(ExecuteScalarProcedure(procedureName, parameters));
         }
 
+        /// <summary>
+        /// Asynchronously runs the given procedure and maps its result to the type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type to map to</typeparam>
+        /// <param name="procedureName">The name of the procedure to call</param>
+        /// <param name="parameters">The parameters to pass into the procedure</param>
+        /// <returns>The mapped type</returns>
         public async Task<T> ExecuteMappedProcedureAsync<T>(string procedureName, params DbParameter[] parameters) where T : class, new()
         {
-            if (typeof(T) == typeof(IEnumerable<T>))
+            Type type = typeof(T);
+
+            if (type.IsGenericType)
             {
-                return (T)MapProcedureEnumerable<T>(await ExecuteScalarProcedureAsync(procedureName, parameters));
+                // Get the generic type definition of the generic type
+                Type definition = type.GetGenericTypeDefinition();
+
+                // If the definition is that of an IEnumerable<T>, we can call the coresponding map method
+                if (definition == typeof(IEnumerable<>))
+                {
+                    // Execute the procedure
+                    DataSet dataSet = await ExecuteScalarProcedureAsync(procedureName, parameters);
+
+                    // Get the IEnumerable<T> map method
+                    MethodInfo mapMethod = typeof(ProcedureMapper).GetMethod(nameof(MapProcedureEnumerable));
+
+                    // Make the method generic with the enumerable's type parameter
+                    MethodInfo genericMethod = mapMethod.MakeGenericMethod(type.GetGenericArguments());
+
+                    // Invoke the generic method passing in the DataSet and casting the result to the IEnumerable<T> we have to return
+                    return (T)genericMethod.Invoke(this, new object[] { dataSet });
+                }
             }
 
             return MapProcedure<T>(await ExecuteScalarProcedureAsync(procedureName, parameters));
