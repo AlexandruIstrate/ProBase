@@ -9,13 +9,13 @@ namespace ProBase.Attributes
     public class ParameterAttribute : Attribute
     {
         /// <summary>
-        /// Gets or sets the name the procedure parameter this method parameter maps to
+        /// Gets or sets the name the procedure parameter this method parameter maps to.
         /// </summary>
         public string ParameterName { get; set; }
 
-        public ParameterAttribute(string procedureParameterName)
+        public ParameterAttribute(string parameterName)
         {
-            ParameterName = procedureParameterName;
+            ParameterName = parameterName;
         }
     }
 }

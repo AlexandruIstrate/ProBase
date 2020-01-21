@@ -1,6 +1,10 @@
 ﻿using ProBase.Data;
+using ProBase.Utils;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace ProBase.Generation.Call
@@ -31,16 +35,29 @@ namespace ProBase.Generation.Call
         private void ReturnDataSet(ILGenerator generator)
         {
             // Call the procedure returning a DataSet
-            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetMethod<IProcedureMapper>(ScalarProcedureMethodName));
+            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetMethod<IProcedureMapper>(ScalarProcedureMethod));
         }
 
         private void MapResults(Type mapType, ILGenerator generator)
         {
             // Call the procedure mapping the type
-            generator.Emit(OpCodes.Callvirt, GeneratedClass.GetMethod<IProcedureMapper>(MappedProcedureMethodName).MakeGenericMethod(mapType));
+            generator.Emit(OpCodes.Callvirt, GetMapMethod(mapType));
         }
 
-        private const string ScalarProcedureMethodName = nameof(IProcedureMapper.ExecuteScalarProcedure);
-        private const string MappedProcedureMethodName = nameof(IProcedureMapper.ExecuteMappedProcedure);
+        private MethodInfo GetMapMethod(Type mapType)
+        {
+            if (mapType.IsGenericTypeDefinition(typeof(IEnumerable<>)))
+            {
+                return GeneratedClass.GetMethod<IProcedureMapper>(MappedEnumerableProcedureMethod)
+                                     .MakeGenericMethod(mapType.GetGenericArguments().First());
+            }
+
+            return GeneratedClass.GetMethod<IProcedureMapper>(MappedProcedureMethod).MakeGenericMethod(mapType);
+        }
+
+        private const string ScalarProcedureMethod = nameof(IProcedureMapper.ExecuteScalarProcedure);
+
+        private const string MappedProcedureMethod = nameof(IProcedureMapper.ExecuteMappedProcedure);
+        private const string MappedEnumerableProcedureMethod = nameof(IProcedureMapper.ExecuteEnumerableMappedProcedure);
     }
 }
