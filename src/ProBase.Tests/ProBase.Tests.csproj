@@ -73,6 +73,7 @@
     <Compile Include="Generation\Class\MethodGenerationTest.cs" />
     <Compile Include="Substitutes\Student.cs" />
     <Compile Include="Substitutes\SubstituteFactory.cs" />
+    <Compile Include="Utils\GenericUtilsTest.cs" />
     <Compile Include="Utils\PreconditionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

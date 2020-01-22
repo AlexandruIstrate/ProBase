@@ -46,7 +46,7 @@ namespace ProBase.Generation
         {
             Type type = typeof(T);
 
-            const BindingFlags flags = BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.Instance;
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
 
             // Search class for the method
             MethodInfo classMethod = type.GetMethod(name, flags);

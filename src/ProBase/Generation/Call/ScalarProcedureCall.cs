@@ -48,8 +48,7 @@ namespace ProBase.Generation.Call
         {
             if (mapType.IsGenericTypeDefinition(typeof(IEnumerable<>)))
             {
-                return GeneratedClass.GetMethod<IProcedureMapper>(MappedEnumerableProcedureMethod)
-                                     .MakeGenericMethod(mapType.GetGenericArguments().First());
+                return GeneratedClass.GetMethod<IProcedureMapper>(MappedEnumerableProcedureMethod).MakeGenericMethod(mapType.GetGenericArguments().First());
             }
 
             return GeneratedClass.GetMethod<IProcedureMapper>(MappedProcedureMethod).MakeGenericMethod(mapType);
