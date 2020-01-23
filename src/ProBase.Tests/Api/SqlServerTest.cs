@@ -1,9 +1,7 @@
 ﻿using NUnit.Framework;
 using ProBase.Attributes;
-using ProBase.Tests.Properties;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection;
 
 namespace ProBase.Tests.Api
 {
@@ -14,11 +12,9 @@ namespace ProBase.Tests.Api
         [OneTimeSetUp]
         public void Setup()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                generationContext = new GenerationContext(CreateConnection());
-            },
-            "The creation of the context must be successful");
+            configuration = TestHelper.GetApplicationConfiguration(TestContext.CurrentContext.TestDirectory);
+
+            generationContext = new GenerationContext(CreateConnection());
         }
 
         [Test]
@@ -80,16 +76,16 @@ namespace ProBase.Tests.Api
 
         private SqlConnection CreateConnection()
         {
-            Settings config = Settings.Default;
-
             SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
             {
-                ApplicationName = Assembly.GetExecutingAssembly().GetName().Name,
-                DataSource = config.ServerAddress,
-                InitialCatalog = config.DatabaseName,
-                UserID = config.Username,
-                Password = config.Password
+                ApplicationName = configuration.ApplicationName,
+                DataSource = configuration.ServerAddress,
+                InitialCatalog = configuration.DatabaseName,
+                UserID = configuration.Username,
+                Password = configuration.Password
             };
+
+            TestContext.WriteLine(configuration.ServerAddress);
 
             return new SqlConnection(connectionStringBuilder.ToString());
         }
@@ -118,6 +114,8 @@ namespace ProBase.Tests.Api
             [Procedure("dbo.EleviDelete")]
             void Delete([Parameter("IdElev")] int id);
         }
+
+        private TestConfiguration configuration;
 
         private GenerationContext generationContext;
     }

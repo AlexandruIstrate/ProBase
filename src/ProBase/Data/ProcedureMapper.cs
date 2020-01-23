@@ -1,4 +1,5 @@
-﻿using ProBase.Generation.Converters;
+﻿using ProBase.Generation;
+using ProBase.Generation.Converters;
 using ProBase.Utils;
 using System.Collections.Generic;
 using System.Data;
@@ -57,8 +58,8 @@ namespace ProBase.Data
         {
             DataSet dataSet = ExecuteScalarProcedure(procedureName, parameters);
 
-            MethodInfo mapMethod = typeof(ProcedureMapper).GetMethod(nameof(MapProcedureEnumerable));
-            return (IEnumerable<T>)mapMethod.InvokeGenericMethod(typeof(T).GetGenericArguments(), this, new[] { dataSet });
+            MethodInfo mapMethod = GeneratedClass.GetMethod<ProcedureMapper>(nameof(MapProcedureEnumerable));
+            return (IEnumerable<T>)mapMethod.InvokeGenericMethod(new[] { typeof(T) }, this, new[] { dataSet });
         }
 
         /// <summary>
@@ -72,8 +73,8 @@ namespace ProBase.Data
         {
             DataSet dataSet = await ExecuteScalarProcedureAsync(procedureName, parameters);
 
-            MethodInfo mapMethod = typeof(ProcedureMapper).GetMethod(nameof(MapProcedureEnumerable));
-            return (IEnumerable<T>)mapMethod.InvokeGenericMethod(typeof(T).GetGenericArguments(), this, new[] { dataSet });
+            MethodInfo mapMethod = GeneratedClass.GetMethod<ProcedureMapper>(nameof(MapProcedureEnumerable));
+            return (IEnumerable<T>)mapMethod.InvokeGenericMethod(new[] { typeof(T) }, this, new[] { dataSet });
         }
 
         private T MapProcedure<T>(DataSet dataSet) where T : class, new()
