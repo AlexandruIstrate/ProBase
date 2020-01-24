@@ -99,6 +99,13 @@ namespace ProBase.Generation.Method
             // Load the argument that this parameter gets its value from
             generator.Emit(OpCodes.Ldarg, valueIndex);
 
+            // If the value is of a primitive type, box it
+            if (parameterBuilder.LocalType.IsPrimitive)
+            {
+                // Box the primitive value
+                generator.Emit(OpCodes.Box, parameterBuilder.LocalType);
+            }
+
             // Call the set method on the Value property
             generator.Emit(OpCodes.Callvirt, GeneratedClass.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Value)));
         }
