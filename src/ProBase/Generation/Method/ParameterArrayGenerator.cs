@@ -10,7 +10,7 @@ namespace ProBase.Generation.Method
     /// <summary>
     /// Generates an array of parameters used for calling database procedures.
     /// </summary>
-    internal class ParameterArrayGenerator : IArrayGenerator
+    internal class ParameterArrayGenerator : ICollectionGenerator
     {
         /// <summary>
         /// Creates an instance of this class using the given <see cref="ProBase.Generation.Converters.IParameterConverter"/> for converting the method parameters to database parameters.
@@ -40,7 +40,7 @@ namespace ProBase.Generation.Method
                 SetParameterDirection(parameterBuilder, databaseParameter.Direction, generator);
 
                 // Set the parameter value
-                SetParameterValue(parameterBuilder, valueIndex: i + 1, generator);
+                SetParameterValue(parameterBuilder, valueIndex: i + 1, parameters[i].ParameterType, generator);
             }
 
             // Create the array
@@ -91,7 +91,7 @@ namespace ProBase.Generation.Method
             generator.Emit(OpCodes.Callvirt, GeneratedClass.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Direction)));
         }
 
-        private void SetParameterValue(LocalBuilder parameterBuilder, int valueIndex, ILGenerator generator)
+        private void SetParameterValue(LocalBuilder parameterBuilder, int valueIndex, Type type, ILGenerator generator)
         {
             // Load the local variable associated with this parameter
             generator.Emit(OpCodes.Ldloc, parameterBuilder);
@@ -100,10 +100,10 @@ namespace ProBase.Generation.Method
             generator.Emit(OpCodes.Ldarg, valueIndex);
 
             // If the value is of a primitive type, box it
-            if (parameterBuilder.LocalType.IsPrimitive)
+            if (type.IsPrimitive)
             {
                 // Box the primitive value
-                generator.Emit(OpCodes.Box, parameterBuilder.LocalType);
+                generator.Emit(OpCodes.Box, type);
             }
 
             // Call the set method on the Value property

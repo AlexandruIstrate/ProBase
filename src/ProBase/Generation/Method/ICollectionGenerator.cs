@@ -4,9 +4,9 @@ using System.Reflection.Emit;
 namespace ProBase.Generation.Method
 {
     /// <summary>
-    /// Provides a way of generating an array based on method parameters.
+    /// Provides a way of generating a local collection based on method parameters.
     /// </summary>
-    internal interface IArrayGenerator
+    internal interface ICollectionGenerator
     {
         /// <summary>
         /// Generates an array.

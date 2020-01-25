@@ -18,7 +18,7 @@ namespace ProBase.Generation.Class
         /// Creates an instance using the given <see cref="ProBase.Generation.Operations.IArrayGenerator"/> for generating the parameter array.
         /// </summary>
         /// <param name="arrayGenerator">The array generator to use</param>
-        public DbMethodGenerator(IArrayGenerator arrayGenerator, IMethodCallGenerator procedureCallGenerator)
+        public DbMethodGenerator(ICollectionGenerator arrayGenerator, IMethodCallGenerator procedureCallGenerator)
         {
             this.arrayGenerator = arrayGenerator;
             this.procedureCallGenerator = procedureCallGenerator;
@@ -101,7 +101,7 @@ namespace ProBase.Generation.Class
             return namedField;
         }
 
-        private readonly IArrayGenerator arrayGenerator;
+        private readonly ICollectionGenerator arrayGenerator;
         private readonly IMethodCallGenerator procedureCallGenerator;
     }
 }

@@ -58,7 +58,7 @@ namespace ProBase.Tests.Api
             Assert.DoesNotThrow(() =>
             {
                 IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
-                testOperations.Update(id: 0, "LastName", "FirstName", gender: 'm', age: 19, grade: 11);
+                testOperations.Update(id: 1, "LastName", "FirstName", gender: 'm', age: 19, grade: 11);
             },
             "The update operation must be successful");
         }
@@ -69,7 +69,7 @@ namespace ProBase.Tests.Api
             Assert.DoesNotThrow(() =>
             {
                 IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
-                testOperations.Delete(id: 0);
+                testOperations.Delete(id: 1);
             },
             "The delete operation must be successful");
         }
