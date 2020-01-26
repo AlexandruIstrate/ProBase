@@ -141,10 +141,7 @@ namespace ProBase.Generation.Method
             return localBuilder;
         }
 
-        private MethodInfo GetParameterCreationMethod()
-        {
-            return typeof(DbProviderFactory).GetMethod(nameof(DbProviderFactory.CreateParameter));
-        }
+        private MethodInfo GetParameterCreationMethod() => GeneratedClass.GetMethod<DbProviderFactory>(nameof(DbProviderFactory.CreateParameter));
 
         private ConstructorInfo GetArrayConstructor(Type arrayType) => arrayType.GetConstructor(new[] { typeof(int) });
 

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace ProBase.Data
 {
+    // TODO: Make this internal
     /// <summary>
     /// Provides a way to map a procedure's result to a given data type.
     /// </summary>

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace ProBase.Data
 {
+    // TODO: Make this internal
     /// <summary>
     /// An abstract representation of the operations supported by a database
     /// </summary>
