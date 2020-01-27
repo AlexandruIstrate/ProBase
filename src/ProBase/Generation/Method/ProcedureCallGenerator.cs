@@ -24,6 +24,12 @@ namespace ProBase.Generation.Method
         {
             IProcedureCall procedureCall = ProcedureCallFactory.Create(procedureType, resultType);
             procedureCall.Call(procedureName, resultType, generator);
+
+            // If we don't return a value from this method, pop the result from the stack so we don't run into issues
+            if (resultType == typeof(void))
+            {
+                generator.Emit(OpCodes.Pop);
+            }
         }
     }
 }
