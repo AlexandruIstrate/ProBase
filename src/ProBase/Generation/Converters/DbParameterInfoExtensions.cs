@@ -14,9 +14,9 @@ namespace ProBase.Generation.Converters
         /// </summary>
         /// <param name="parameterInfo">The object to call this method on</param>
         /// <returns>The name of the parameter</returns>
-        public static string GetDbParameterName(this ParameterInfo parameterInfo)
+        public static string GetFullName(this ParameterInfo parameterInfo)
         {
-            return parameterInfo.GetCustomAttribute<ParameterAttribute>()?.ParameterName ?? parameterInfo.Name;
+            return parameterInfo.GetCustomAttribute<ParameterAttribute>()?.Name ?? parameterInfo.Name;
         }
 
         /// <summary>

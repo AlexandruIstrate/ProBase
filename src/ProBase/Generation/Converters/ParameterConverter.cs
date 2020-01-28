@@ -19,7 +19,7 @@ namespace ProBase.Generation.Converters
             Preconditions.CheckNotNull(parameterInfo, nameof(parameterInfo));
 
             DbParameter dbParameter = providerFactory.CreateParameter();
-            dbParameter.ParameterName = parameterInfo.GetDbParameterName();
+            dbParameter.ParameterName = parameterInfo.GetFullName();
             dbParameter.Direction = parameterInfo.GetDbParameterDirection();
             dbParameter.Value = value;
             return dbParameter;

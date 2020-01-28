@@ -85,8 +85,6 @@ namespace ProBase.Tests.Api
                 Password = configuration.Password
             };
 
-            TestContext.WriteLine(configuration.ServerAddress);
-
             return new SqlConnection(connectionStringBuilder.ToString());
         }
 

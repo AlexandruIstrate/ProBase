@@ -2,6 +2,7 @@
 using ProBase.Generation;
 using ProBase.Utils;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ProBase.Tests.Utils
@@ -30,6 +31,7 @@ namespace ProBase.Tests.Utils
             "The call must be successful");
         }
 
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "This method does not provide any functionality")]
         private void GenericMethod<T>(T param)
         {
             

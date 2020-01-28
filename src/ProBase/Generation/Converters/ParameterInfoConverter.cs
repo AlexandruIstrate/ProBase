@@ -20,7 +20,7 @@ namespace ProBase.Generation.Converters
         {
             DbParameterInfo dbParameter = new DbParameterInfo
             {
-                ParameterName = parameterInfo.GetDbParameterName(),
+                ParameterName = parameterInfo.GetFullName(),
                 Direction = parameterInfo.GetDbParameterDirection(),
                 Value = value
             };
