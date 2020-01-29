@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 using ProBase.Attributes;
+using ProBase.Tests.Substitutes;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -13,7 +15,6 @@ namespace ProBase.Tests.Api
         public void Setup()
         {
             configuration = TestHelper.GetApplicationConfiguration(TestContext.CurrentContext.TestDirectory);
-
             generationContext = new GenerationContext(CreateConnection());
         }
 
@@ -74,6 +75,32 @@ namespace ProBase.Tests.Api
             "The delete operation must be successful");
         }
 
+        [Test]
+        public void CanReadMapped()
+        {
+            Assert.DoesNotThrow(() =>
+            {
+                IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
+                Student student = testOperations.ReadMapped(id: 2);
+
+                Assert.IsNotNull(student, "The student returned must not be null");
+            },
+            "The mapped read operation must be successful");
+        }
+        
+        [Test]
+        public void CanReadAllMapped()
+        {
+            Assert.DoesNotThrow(() =>
+            {
+                IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
+                IEnumerable<Student> students = testOperations.ReadAllMapped();
+
+                Assert.IsNotNull(students, "The enumeration returned must not be null");
+            },
+            "The mapped read all operation must be successful");
+        }
+
         private SqlConnection CreateConnection()
         {
             SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
@@ -111,6 +138,12 @@ namespace ProBase.Tests.Api
 
             [Procedure("dbo.EleviDelete")]
             void Delete([Parameter("IdElev")] int id);
+
+            [Procedure("dbo.EleviRead")]
+            Student ReadMapped([Parameter("IdElev")] int id);
+
+            [Procedure("dbo.EleviRead")]
+            IEnumerable<Student> ReadAllMapped();
         }
 
         private TestConfiguration configuration;
