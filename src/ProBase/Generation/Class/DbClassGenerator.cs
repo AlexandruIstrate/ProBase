@@ -17,7 +17,7 @@ namespace ProBase.Generation.Class
         /// <summary>
         /// Gets the name of the assembly the class will generate into.
         /// </summary>
-        public string AssemblyName { get; } = TypeNames.GetAssemblyName();
+        public string AssemblyName { get; } = TypeUtils.GetAssemblyName();
 
         /// <summary>
         /// Gets the name of the module the generated class will use.

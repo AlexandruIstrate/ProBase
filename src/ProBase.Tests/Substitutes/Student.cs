@@ -2,7 +2,6 @@
 
 namespace ProBase.Tests.Substitutes
 {
-    [MappedObject]
     public class Student
     {
         [Column("IdElev")]

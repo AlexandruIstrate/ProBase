@@ -15,7 +15,7 @@ namespace ProBase.Tests.Utils
         {
             Assert.DoesNotThrow(() =>
             {
-                Assert.IsTrue(GenericUtils.IsGenericTypeDefinition(typeof(IEnumerable<string>), typeof(IEnumerable<>)), "The check must return true");
+                Assert.IsTrue(TypeUtils.IsGenericTypeDefinition(typeof(IEnumerable<string>), typeof(IEnumerable<>)), "The check must return true");
             },
             "The check operation must be successful");
         }
@@ -26,7 +26,7 @@ namespace ProBase.Tests.Utils
             Assert.DoesNotThrow(() =>
             {
                 MethodInfo method = GeneratedClass.GetMethod<GenericUtilsTest>(nameof(GenericMethod));
-                GenericUtils.InvokeGenericMethod(method, new[] { typeof(string) }, this, new[] { "Parameter" });
+                TypeUtils.InvokeGenericMethod(method, new[] { typeof(string) }, this, new[] { "Parameter" });
             },
             "The call must be successful");
         }

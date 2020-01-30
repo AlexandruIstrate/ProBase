@@ -12,7 +12,7 @@ namespace ProBase.Generation.Call
     /// <summary>
     /// Generates calls for scalar procedures.
     /// </summary>
-    internal class ScalarProcedureCall : IProcedureCall
+    internal class MappedProcedureCall : IProcedureCall
     {
         /// <summary>
         /// Generates a scalar procedure call.

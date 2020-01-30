@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace ProBase.Utils
 {
     /// <summary>
-    /// Provides utilities for working with generic types.
+    /// Provides utilities for working with types.
     /// </summary>
-    public static class GenericUtils
+    public static class TypeUtils
     {
         /// <summary>
         /// Checks if a generic type matches the type definition of another type.
@@ -22,6 +24,35 @@ namespace ProBase.Utils
             }
 
             return type.GetGenericTypeDefinition() == check;
+        }
+
+        /// <summary>
+        /// Checks whether a given type is a <see cref="System.Threading.Tasks.Task"/> or <see cref="System.Threading.Tasks.Task{TResult}"/>.
+        /// </summary>
+        /// <param name="type">The type to check</param>
+        /// <returns>True if the type is a task, false otherwise</returns>
+        public static bool IsTask(this Type type)
+        {
+            return type.IsGenericTypeDefinition(typeof(Task<>));
+        }
+
+        /// <summary>
+        /// Gets the name of the current assembly.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetAssemblyName()
+        {
+            return Assembly.GetExecutingAssembly().GetName().Name;
+        }
+
+        /// <summary>
+        /// Generates a name for a class prefixing the current assembly's name.
+        /// </summary>
+        /// <param name="className">The name of the class</param>
+        /// <returns>A full class name, including the assembly name</returns>
+        public static string GenerateFullClassName(string className)
+        {
+            return $"{ GetAssemblyName() }.{ className }";
         }
 
         /// <summary>
