@@ -4,7 +4,6 @@ using ProBase.Utils;
 using System;
 using System.Data;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace ProBase.Generation.Call
 {
@@ -28,18 +27,24 @@ namespace ProBase.Generation.Call
                 case ProcedureType.Scalar:
                     return new MappedProcedureCall();
                 case ProcedureType.NonQuery:
-                    return new ProcedureCall(GeneratedClass.GetMethod<IProcedureMapper>(nameof(IProcedureMapper.ExecuteNonQueryProcedure)));
+                    return new ProcedureCall(GetNonQuerryMethod());
                 default:
-                    throw new NotSupportedException("The given procedure type is not supported");
+                    throw new NotSupportedException("This procedure type is not supported");
             }
         }
 
         private static IProcedureCall CreateFromReturnType(Type returnType)
         {
+            // If we have a Task as return type, then we have an async method
+            if (returnType.IsTask())
+            {
+                return new AsyncProcedureCall();
+            }
+
             // For an int, we have an non-query call
             if (returnType == typeof(int))
             {
-                return new ProcedureCall(GeneratedClass.GetMethod<IProcedureMapper>(nameof(IProcedureMapper.ExecuteNonQueryProcedure)));
+                return new ProcedureCall(GetNonQuerryMethod());
             }
 
             // For a DataSet, we have an unmapped scalar call
@@ -51,29 +56,16 @@ namespace ProBase.Generation.Call
             // For void, assume we have a non-query
             if (returnType == typeof(void))
             {
-                return new ProcedureCall(GeneratedClass.GetMethod<IProcedureMapper>(nameof(IProcedureMapper.ExecuteNonQueryProcedure)));
-            }
-
-            if (returnType.IsTask())
-            {
-                return new ProcedureCall(GetAsyncMethod(returnType));
+                return new ProcedureCall(GetNonQuerryMethod());
             }
 
             // If we have any other type, then it must be mapped
             return new MappedProcedureCall();
         }
 
-        private static MethodInfo GetAsyncMethod(Type returnType)
+        private static MethodInfo GetNonQuerryMethod()
         {
-            // The default is a non-query
-            string methodName = nameof(IProcedureMapper.ExecuteNonQueryProcedureAsync);
-
-            if (returnType == typeof(Task<DataSet>))
-            {
-                methodName = nameof(IProcedureMapper.ExecuteScalarProcedureAsync);
-            }
-
-            return GeneratedClass.GetMethod<IProcedureMapper>(methodName);
+            return ClassUtils.GetMethod<IProcedureMapper>(nameof(IProcedureMapper.ExecuteNonQueryProcedure));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace ProBase.Tests.Utils
         {
             Assert.DoesNotThrow(() =>
             {
-                MethodInfo method = GeneratedClass.GetMethod<GenericUtilsTest>(nameof(GenericMethod));
+                MethodInfo method = ClassUtils.GetMethod<GenericUtilsTest>(nameof(GenericMethod));
                 TypeUtils.InvokeGenericMethod(method, new[] { typeof(string) }, this, new[] { "Parameter" });
             },
             "The call must be successful");

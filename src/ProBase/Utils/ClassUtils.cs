@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace ProBase.Generation
+namespace ProBase.Utils
 {
     /// <summary>
     /// Provides operations for working with generated classes.
     /// </summary>
-    internal class GeneratedClass
+    internal class ClassUtils
     {
         /// <summary>
         /// Gets a field with a given type and name from a set of fields.

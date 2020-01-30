@@ -5,6 +5,7 @@ using ProBase.Generation.Class;
 using ProBase.Generation.Converters;
 using ProBase.Generation.Method;
 using ProBase.Tests.Substitutes;
+using ProBase.Utils;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -44,7 +45,7 @@ namespace ProBase.Tests.Generation.Class
 
         private TypeBuilder GetTypeBuilder() => GenerationUtils.GetTypeBuilder(typeof(IGenerationTestInterface));
 
-        private FieldInfo GetDatabaseMapperField(TypeBuilder typeBuilder) => GeneratedClass.GetField<IProcedureMapper>(typeBuilder.GetFields(), GenerationConstants.ProcedureMapperFieldName);
+        private FieldInfo GetDatabaseMapperField(TypeBuilder typeBuilder) => ClassUtils.GetField<IProcedureMapper>(typeBuilder.GetFields(), GenerationConstants.ProcedureMapperFieldName);
 
         private IMethodGenerator methodGenerator;
     }

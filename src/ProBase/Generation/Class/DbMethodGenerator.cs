@@ -1,6 +1,7 @@
 ﻿using ProBase.Attributes;
 using ProBase.Data;
 using ProBase.Generation.Method;
+using ProBase.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,7 +72,7 @@ namespace ProBase.Generation.Class
             generator.Emit(OpCodes.Ldarg_0);
 
             // Load the field we use for calling the database procedure
-            generator.Emit(OpCodes.Ldfld, GeneratedClass.GetField<IProcedureMapper>(fields, GenerationConstants.ProcedureMapperFieldName));
+            generator.Emit(OpCodes.Ldfld, ClassUtils.GetField<IProcedureMapper>(fields, GenerationConstants.ProcedureMapperFieldName));
 
             // Load the procedure name
             generator.Emit(OpCodes.Ldstr, procedureName);

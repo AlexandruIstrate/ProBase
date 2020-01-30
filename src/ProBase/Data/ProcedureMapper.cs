@@ -59,7 +59,7 @@ namespace ProBase.Data
         {
             DataSet dataSet = ExecuteScalarProcedure(procedureName, parameters);
 
-            MethodInfo mapMethod = GeneratedClass.GetMethod<ProcedureMapper>(nameof(MapProcedureEnumerable));
+            MethodInfo mapMethod = ClassUtils.GetMethod<ProcedureMapper>(nameof(MapProcedureEnumerable));
             return (IEnumerable<T>)mapMethod.InvokeGenericMethod(new[] { typeof(T) }, this, new[] { dataSet });
         }
 
@@ -74,7 +74,7 @@ namespace ProBase.Data
         {
             DataSet dataSet = await ExecuteScalarProcedureAsync(procedureName, parameters);
 
-            MethodInfo mapMethod = GeneratedClass.GetMethod<ProcedureMapper>(nameof(MapProcedureEnumerable));
+            MethodInfo mapMethod = ClassUtils.GetMethod<ProcedureMapper>(nameof(MapProcedureEnumerable));
             return (IEnumerable<T>)mapMethod.InvokeGenericMethod(new[] { typeof(T) }, this, new[] { dataSet });
         }
 
