@@ -32,7 +32,7 @@ namespace ProBase.Tests.Generation.Class
 
         private TypeBuilder GetTypeBuilder()
         {
-            return GenerationUtils.GetTypeBuilder(typeof(IGenerationTestInterface));
+            return GenerationUtils.GetTypeBuilder(typeof(IMixedOperations));
         }
 
         private IClassFieldGenerator fieldGenerator;

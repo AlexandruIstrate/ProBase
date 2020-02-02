@@ -30,7 +30,7 @@ namespace ProBase.Tests.Generation.Method
 
         private ILGenerator CreateTestMethod()
         {
-            TypeBuilder typeBuilder = GenerationUtils.GetTypeBuilder(typeof(IGenerationTestInterface));
+            TypeBuilder typeBuilder = GenerationUtils.GetTypeBuilder(typeof(IMixedOperations));
             MethodBuilder methodBuilder = typeBuilder.DefineMethod("TestMethod", MethodAttributes.Public, typeof(void), new Type[0]);
             return methodBuilder.GetILGenerator();
         }

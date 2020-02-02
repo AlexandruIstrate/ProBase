@@ -41,14 +41,14 @@ namespace ProBase.Tests.Generation.Method
 
         private ILGenerator CreateScalarMethod()
         {
-            TypeBuilder typeBuilder = GenerationUtils.GetTypeBuilder(typeof(IGenerationTestInterface));
+            TypeBuilder typeBuilder = GenerationUtils.GetTypeBuilder(typeof(IMixedOperations));
             MethodBuilder methodBuilder = typeBuilder.DefineMethod("ScalarMethod", MethodAttributes.Public, typeof(DataSet), new Type[0]);
             return methodBuilder.GetILGenerator();
         }
 
         private ILGenerator CreateNonQueryMethod()
         {
-            TypeBuilder typeBuilder = GenerationUtils.GetTypeBuilder(typeof(IGenerationTestInterface));
+            TypeBuilder typeBuilder = GenerationUtils.GetTypeBuilder(typeof(IMixedOperations));
             MethodBuilder methodBuilder = typeBuilder.DefineMethod("NonQueryMethod", MethodAttributes.Public, typeof(int), new Type[0]);
             return methodBuilder.GetILGenerator();
         }

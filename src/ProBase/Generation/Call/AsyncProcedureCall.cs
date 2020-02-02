@@ -1,6 +1,7 @@
 ﻿using ProBase.Data;
 using ProBase.Utils;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -43,16 +44,32 @@ namespace ProBase.Generation.Call
             // For a DataSet, we have an unmapped scalar call
             if (returnType == typeof(DataSet))
             {
-                return ClassUtils.GetMethod<IProcedureMapper>(nameof(IProcedureMapper.ExecuteScalarProcedureAsync));
+                return ClassUtils.GetMethod<IProcedureMapper>(ScalarProcedure).MakeGenericMethod(typeof(DataSet));
             }
 
             // If we have any other type, then it must be mapped
-            return ClassUtils.GetMethod<IProcedureMapper>(nameof(IProcedureMapper.ExecuteMappedProcedureAsync));
+            return GetMapMethod(returnType);
         }
 
         private MethodInfo GetNonQuerryMethod()
         {
-            return ClassUtils.GetMethod<IProcedureMapper>(nameof(IProcedureMapper.ExecuteNonQueryProcedureAsync));
+            return ClassUtils.GetMethod<IProcedureMapper>(NonQueryProcedure);
         }
+
+        private MethodInfo GetMapMethod(Type mapType)
+        {
+            if (mapType.IsGenericTypeDefinition(typeof(IEnumerable<>)))
+            {
+                return ClassUtils.GetMethod<IProcedureMapper>(MappedEnumerableProcedure).MakeGenericMethod(mapType.GetGenericArguments().First());
+            }
+
+            return ClassUtils.GetMethod<IProcedureMapper>(MappedProcedure).MakeGenericMethod(mapType);
+        }
+
+        private const string ScalarProcedure = nameof(IProcedureMapper.ExecuteScalarProcedureAsync);
+        private const string NonQueryProcedure = nameof(IProcedureMapper.ExecuteNonQueryProcedureAsync);
+
+        private const string MappedProcedure = nameof(IProcedureMapper.ExecuteMappedProcedureAsync);
+        private const string MappedEnumerableProcedure = nameof(IProcedureMapper.ExecuteEnumerableMappedProcedureAsync);
     }
 }

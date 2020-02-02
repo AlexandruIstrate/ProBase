@@ -27,7 +27,7 @@ namespace ProBase.Tests.Generation.Class
 
             Assert.DoesNotThrow(() =>
             {
-                generatedType = classGenerator.GenerateClassImplementingInterface(typeof(IGenerationTestInterface));
+                generatedType = classGenerator.GenerateClassImplementingInterface(typeof(IMixedOperations));
             },
             "The generation of the concrete type must be successful");
 

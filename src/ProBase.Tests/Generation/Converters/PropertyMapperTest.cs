@@ -18,9 +18,9 @@ namespace ProBase.Tests.Generation.Converters
         {
             Assert.DoesNotThrow(() =>
             {
-                FamousWriter writer = new FamousWriter();
+                Student writer = new Student();
 
-                propertyMapper.Map<FamousWriter>(SubstituteFactory.CreateDataRow(SubstituteFactory.CreateWriter()), writer);
+                propertyMapper.Map<Student>(StudentFactory.CreateDataRow(StudentFactory.CreateStudent()), writer);
 
                 Assert.NotNull(writer.FirstName, "The FirstName property must not be null");
                 Assert.NotNull(writer.LastName, "The LastName property must not be null");

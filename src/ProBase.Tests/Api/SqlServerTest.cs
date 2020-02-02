@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
-using ProBase.Attributes;
 using ProBase.Tests.Substitutes;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace ProBase.Tests.Api
 {
@@ -23,8 +23,8 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
-                Assert.IsNotNull(testOperations, "The DatabaseContext should return an implementation of the given interface");
+                IDataOperations testOperations = CreateOperationsInterface();
+                Assert.IsNotNull(testOperations, "The DatabaseContext must return an implementation of the given interface");
             },
             "The creation calls must be successful");
         }
@@ -34,7 +34,7 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
+                IDataOperations testOperations = CreateOperationsInterface();
                 testOperations.Create("LastName", "FirstName", gender: 'f', age: 34, grade: 12);
             },
             "The create operation must be successful");
@@ -45,7 +45,7 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
+                IDataOperations testOperations = CreateOperationsInterface();
                 DataSet dataSet = testOperations.Read();
 
                 Assert.IsNotNull(dataSet, "The call must return a non-null DataSet");
@@ -58,7 +58,7 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
+                IDataOperations testOperations = CreateOperationsInterface();
                 testOperations.Update(id: 1, "LastName", "FirstName", gender: 'm', age: 19, grade: 11);
             },
             "The update operation must be successful");
@@ -69,7 +69,7 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
+                IDataOperations testOperations = CreateOperationsInterface();
                 testOperations.Delete(id: 1);
             },
             "The delete operation must be successful");
@@ -80,10 +80,10 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
+                IDataOperations testOperations = CreateOperationsInterface();
                 Student student = testOperations.ReadMapped(id: 2);
 
-                Assert.IsNotNull(student, "The student returned must not be null");
+                Assert.IsNotNull(student, "The Student returned must not be null");
             },
             "The mapped read operation must be successful");
         }
@@ -93,9 +93,41 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDatabaseTestOperations testOperations = generationContext.GenerateObject<IDatabaseTestOperations>();
+                IDataOperations testOperations = CreateOperationsInterface();
                 IEnumerable<Student> students = testOperations.ReadAllMapped();
 
+                Assert.IsNotNull(students, "The enumeration returned must not be null");
+            },
+            "The mapped read all operation must be successful");
+        }
+
+        [Test]
+        public void CanReadMappedAsync()
+        {
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                IDataOperations testOperations = CreateOperationsInterface();
+
+                Task<Student> task = testOperations.ReadMappedAsync(id: 2);
+                Assert.IsNotNull(task, "The Task returned must not be null");
+
+                Student student = await task;
+                Assert.IsNotNull(student, "The Student returned must not be null");
+            },
+            "The mapped read operation must be successful");
+        }
+
+        [Test]
+        public void CanReadAllMappedAsync()
+        {
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                IDataOperations testOperations = CreateOperationsInterface();
+
+                Task<IEnumerable<Student>> task = testOperations.ReadAllMappedAsync();
+                Assert.IsNotNull(task, "The Task returned must not be null");
+
+                IEnumerable<Student> students = await task;
                 Assert.IsNotNull(students, "The enumeration returned must not be null");
             },
             "The mapped read all operation must be successful");
@@ -115,39 +147,12 @@ namespace ProBase.Tests.Api
             return new SqlConnection(connectionStringBuilder.ToString());
         }
 
-        [DbInterface]
-        public interface IDatabaseTestOperations
+        private IDataOperations CreateOperationsInterface()
         {
-            [Procedure("dbo.EleviCreate")]
-            void Create([Parameter("Nume")] string lastName,
-                        [Parameter("Prenume")] string firstName,
-                        [Parameter("Sex")] char gender,
-                        [Parameter("Varsta")] int age,
-                        [Parameter("Clasa")] int grade);
-
-            [Procedure("dbo.EleviRead")]
-            DataSet Read();
-
-            [Procedure("dbo.EleviUpdate")]
-            void Update([Parameter("IdElev")] int id,
-                        [Parameter("Nume")] string lastName,
-                        [Parameter("Prenume")] string firstName,
-                        [Parameter("Sex")] char gender,
-                        [Parameter("Varsta")] int age,
-                        [Parameter("Clasa")] int grade);
-
-            [Procedure("dbo.EleviDelete")]
-            void Delete([Parameter("IdElev")] int id);
-
-            [Procedure("dbo.EleviRead")]
-            Student ReadMapped([Parameter("IdElev")] int id);
-
-            [Procedure("dbo.EleviRead")]
-            IEnumerable<Student> ReadAllMapped();
+            return generationContext.GenerateObject<IDataOperations>();
         }
 
         private TestConfiguration configuration;
-
         private GenerationContext generationContext;
     }
 }

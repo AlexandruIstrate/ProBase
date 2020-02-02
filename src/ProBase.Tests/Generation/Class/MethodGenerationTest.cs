@@ -28,7 +28,7 @@ namespace ProBase.Tests.Generation.Class
         [Test]
         public void CanGenerateMethodImplementation()
         {
-            foreach (MethodInfo method in typeof(IGenerationTestInterface).GetMethods())
+            foreach (MethodInfo method in typeof(IMixedOperations).GetMethods())
             {
                 MethodBuilder methodBuilder = null;
 
@@ -43,7 +43,7 @@ namespace ProBase.Tests.Generation.Class
             }
         }
 
-        private TypeBuilder GetTypeBuilder() => GenerationUtils.GetTypeBuilder(typeof(IGenerationTestInterface));
+        private TypeBuilder GetTypeBuilder() => GenerationUtils.GetTypeBuilder(typeof(IMixedOperations));
 
         private FieldInfo GetDatabaseMapperField(TypeBuilder typeBuilder) => ClassUtils.GetField<IProcedureMapper>(typeBuilder.GetFields(), GenerationConstants.ProcedureMapperFieldName);
 

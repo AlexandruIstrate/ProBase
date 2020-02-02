@@ -35,7 +35,7 @@ namespace ProBase.Generation.Call
         private void ReturnDataSet(ILGenerator generator)
         {
             // Call the procedure returning a DataSet
-            generator.Emit(OpCodes.Callvirt, ClassUtils.GetMethod<IProcedureMapper>(ScalarProcedureMethod));
+            generator.Emit(OpCodes.Callvirt, ClassUtils.GetMethod<IProcedureMapper>(ScalarProcedure));
         }
 
         private void MapResults(Type mapType, ILGenerator generator)
@@ -48,15 +48,15 @@ namespace ProBase.Generation.Call
         {
             if (mapType.IsGenericTypeDefinition(typeof(IEnumerable<>)))
             {
-                return ClassUtils.GetMethod<IProcedureMapper>(MappedEnumerableProcedureMethod).MakeGenericMethod(mapType.GetGenericArguments().First());
+                return ClassUtils.GetMethod<IProcedureMapper>(MappedEnumerableProcedure).MakeGenericMethod(mapType.GetGenericArguments().First());
             }
 
-            return ClassUtils.GetMethod<IProcedureMapper>(MappedProcedureMethod).MakeGenericMethod(mapType);
+            return ClassUtils.GetMethod<IProcedureMapper>(MappedProcedure).MakeGenericMethod(mapType);
         }
 
-        private const string ScalarProcedureMethod = nameof(IProcedureMapper.ExecuteScalarProcedure);
+        private const string ScalarProcedure = nameof(IProcedureMapper.ExecuteScalarProcedure);
 
-        private const string MappedProcedureMethod = nameof(IProcedureMapper.ExecuteMappedProcedure);
-        private const string MappedEnumerableProcedureMethod = nameof(IProcedureMapper.ExecuteEnumerableMappedProcedure);
+        private const string MappedProcedure = nameof(IProcedureMapper.ExecuteMappedProcedure);
+        private const string MappedEnumerableProcedure = nameof(IProcedureMapper.ExecuteEnumerableMappedProcedure);
     }
 }

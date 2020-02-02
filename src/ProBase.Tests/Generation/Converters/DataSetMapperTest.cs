@@ -19,20 +19,20 @@ namespace ProBase.Tests.Generation.Converters
         [Test]
         public void CanMapDataRow()
         {
-            DataRow dataRow = SubstituteFactory.CreateDataRow(testWriter);
+            DataRow dataRow = StudentFactory.CreateDataRow(testStudent);
 
             Assert.DoesNotThrow(() =>
             {
-                FamousWriter writer = dataSetMapper.Map<FamousWriter>(dataRow);
+                Student student = dataSetMapper.Map<Student>(dataRow);
 
-                Assert.NotNull(writer, "The mapping must return a non-null value");
+                Assert.NotNull(student, "The mapping must return a non-null value");
 
-                Assert.NotNull(writer.FirstName, "The FirstName must be not-null");
-                Assert.NotNull(writer.LastName, "The LastName must be not-null");
+                Assert.NotNull(student.FirstName, "The FirstName must be not-null");
+                Assert.NotNull(student.LastName, "The LastName must be not-null");
 
-                Assert.AreEqual(testWriter.FirstName, writer.FirstName, "The FirstName must be equal to the row's value");
-                Assert.AreEqual(testWriter.LastName, writer.LastName, "The LastName must be equal to the row's value");
-                Assert.AreEqual(testWriter.Age, writer.Age, "The Age must be equal to the row's value");
+                Assert.AreEqual(testStudent.FirstName, student.FirstName, "The FirstName must be equal to the row's value");
+                Assert.AreEqual(testStudent.LastName, student.LastName, "The LastName must be equal to the row's value");
+                Assert.AreEqual(testStudent.Age, student.Age, "The Age must be equal to the row's value");
             },
             "The map operation on the DataRow must be successful");
         }
@@ -40,16 +40,16 @@ namespace ProBase.Tests.Generation.Converters
         [Test]
         public void CanMapDataTable()
         {
-            DataTable dataTable = SubstituteFactory.CreateDataTable(SubstituteFactory.CreateWriterList());
+            DataTable dataTable = StudentFactory.CreateDataTable(StudentFactory.CreateStudentList());
 
             Assert.DoesNotThrow(() =>
             {
-                IEnumerable<FamousWriter> writers = dataSetMapper.Map<FamousWriter>(dataTable);
+                IEnumerable<Student> writers = dataSetMapper.Map<Student>(dataTable);
 
                 Assert.NotNull(writers, "The mapping must return a non-null value");
                 Assert.Greater(arg1: writers.Count(), arg2: 0, "The mapping must return a non-empty Enumerable");
 
-                foreach (FamousWriter writer in writers)
+                foreach (Student writer in writers)
                 {
                     Assert.NotNull(writer, "The value in the Enumerable must not be null");
 
@@ -60,7 +60,7 @@ namespace ProBase.Tests.Generation.Converters
             "The map operation on the DataTable must be successful");
         }
 
-        private readonly FamousWriter testWriter = SubstituteFactory.CreateWriter();
+        private readonly Student testStudent = StudentFactory.CreateStudent();
 
         private DataSetMapper dataSetMapper;
     }
