@@ -1,9 +1,11 @@
 ﻿using ProBase.Attributes;
 using ProBase.Data;
+using ProBase.Generation.Converters;
 using ProBase.Generation.Method;
 using ProBase.Utils;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -19,10 +21,11 @@ namespace ProBase.Generation.Class
         /// Creates an instance using the given <see cref="ProBase.Generation.Operations.IArrayGenerator"/> for generating the parameter array.
         /// </summary>
         /// <param name="arrayGenerator">The array generator to use</param>
-        public DbMethodGenerator(ICollectionGenerator arrayGenerator, IMethodCallGenerator procedureCallGenerator)
+        public DbMethodGenerator(ICollectionGenerator arrayGenerator, IMethodCallGenerator procedureCallGenerator, IParameterFiller parameterFiller)
         {
             this.arrayGenerator = arrayGenerator;
             this.procedureCallGenerator = procedureCallGenerator;
+            this.parameterFiller = parameterFiller;
         }
 
         /// <summary>
@@ -54,7 +57,26 @@ namespace ProBase.Generation.Class
             // Generate the procedure call
             procedureCallGenerator.Generate(procedureName, returnType, procedureType, arrayBuilder, fields, generator);
 
+            // Fill the out and ref parameters
+            FillParameters(parameters, generator);
+
+            // Return from the method
             ReturnFromMethod(generator);
+        }
+
+        private void FillParameters(ParameterInfo[] parameters, ILGenerator generator)
+        {
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                ParameterInfo parameter = parameters[i];
+
+                if (parameter.GetDbParameterDirection() == ParameterDirection.Input)
+                {
+                    continue;
+                }
+
+                parameterFiller.Fill(parameter, dbParameter: i, generator);
+            }
         }
 
         private static void ReturnFromMethod(ILGenerator generator)
@@ -104,5 +126,6 @@ namespace ProBase.Generation.Class
 
         private readonly ICollectionGenerator arrayGenerator;
         private readonly IMethodCallGenerator procedureCallGenerator;
+        private readonly IParameterFiller parameterFiller;
     }
 }

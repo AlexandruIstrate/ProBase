@@ -42,7 +42,7 @@ namespace ProBase
         }
 
 
-        private IProcedureMapper GetProcedureMapper() => ProcedureMapperFactory.Create(Connection);
+        private IProcedureMapper GetProcedureMapper() => new ProcedureMapper(Connection);
         private DbProviderFactory GetProviderFactory() => Connection.GetProviderFactory();
 
         private readonly IConcreteClassGenerator classGenerator;
