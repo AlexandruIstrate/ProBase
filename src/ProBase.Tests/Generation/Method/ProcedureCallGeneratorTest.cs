@@ -26,7 +26,7 @@ namespace ProBase.Tests.Generation.Method
             {
                 //procedureCallGenerator.Generate(typeof(DataSet), ProcedureType.Automatic, CreateScalarMethod());
             },
-            "The scalar call must be generated successfuly");
+            "The scalar call must be generated successfully");
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace ProBase.Tests.Generation.Method
             {
                 //procedureCallGenerator.Generate(typeof(int), ProcedureType.Automatic, CreateNonQueryMethod());
             },
-            "The non query call must be generated successfuly");
+            "The non query call must be generated successfully");
         }
 
         private ILGenerator CreateScalarMethod()
