@@ -40,8 +40,12 @@ namespace ProBase.Generation.Method
                 // Set the direction for this parameter
                 SetParameterDirection(parameterBuilder, databaseParameter.Direction, generator);
 
-                // Set the parameter value
-                SetParameterValue(parameterBuilder, valueIndex: i + 1, parameters[i].ParameterType, generator);
+                // Don't set a value for out parameters
+                if (databaseParameter.Direction != ParameterDirection.Output)
+                {
+                    // Set the parameter value
+                    SetParameterValue(parameterBuilder, valueIndex: i + 1, parameters[i].ParameterType, generator);
+                }
             }
 
             // Create the array
