@@ -1,4 +1,5 @@
-﻿using ProBase.Generation.Converters;
+﻿using ProBase.Attributes;
+using ProBase.Generation.Converters;
 using ProBase.Utils;
 using System;
 using System.Data;
@@ -46,6 +47,9 @@ namespace ProBase.Generation.Method
                     // Set the parameter value
                     SetParameterValue(parameterBuilder, valueIndex: i + 1, parameters[i].ParameterType, generator);
                 }
+
+                // Set the parameter size parameters
+                SetParameterSize(parameterBuilder, parameters[i], generator);
             }
 
             // Create the array
@@ -115,6 +119,32 @@ namespace ProBase.Generation.Method
             generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Value)));
         }
 
+        private void SetParameterSize(LocalBuilder parameterBuilder, ParameterInfo parameterInfo, ILGenerator generator)
+        {
+            ParameterAttribute attribute = parameterInfo.GetCustomAttribute<ParameterAttribute>();
+
+            // If we don't have a ParameterAttribute, then the size is the default
+            if (attribute == null)
+            {
+                return;
+            }
+
+            // If the size is not set then use the default
+            if (attribute.Size == 0)
+            {
+                return;
+            }
+
+            // Load the local variable associated with this parameter
+            generator.Emit(OpCodes.Ldloc, parameterBuilder);
+
+            // Load the parameter direction
+            generator.Emit(OpCodes.Ldc_I4, attribute.Size);
+
+            // Call the set method on the Value property
+            generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Size)));
+        }
+
         private LocalBuilder CreateArray(Type type, int length, ILGenerator generator)
         {
             LocalBuilder localBuilder = generator.DeclareLocal(type);
@@ -147,7 +177,6 @@ namespace ProBase.Generation.Method
         }
 
         private MethodInfo GetParameterCreationMethod() => ClassUtils.GetMethod<DbProviderFactory>(nameof(DbProviderFactory.CreateParameter));
-
         private ConstructorInfo GetArrayConstructor(Type arrayType) => arrayType.GetConstructor(new[] { typeof(int) });
 
         private readonly IParameterConverter parameterConverter;

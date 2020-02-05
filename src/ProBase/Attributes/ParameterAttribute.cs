@@ -13,6 +13,15 @@ namespace ProBase.Attributes
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the maximum size, in bytes, of the data within the column.
+        /// </summary>
+        public int Size { get; set; }
+
+        /// <summary>
+        /// Creates a new instance of this class with the supplied name.
+        /// </summary>
+        /// <param name="name">The name of the parameter</param>
         public ParameterAttribute(string name)
         {
             Name = name;
