@@ -10,8 +10,17 @@ using System.Reflection.Emit;
 
 namespace ProBase.Generation.Method
 {
+    /// <summary>
+    /// Provides a way of filling method parameters from procedure output parameters.
+    /// </summary>
     internal class ParameterFiller : IParameterFiller
     {
+        /// <summary>
+        /// Fills the given parameter with the value returned by the procedure.
+        /// </summary>
+        /// <param name="parameter">The method parameter</param>
+        /// <param name="dbParameter">The procedure parameter local index</param>
+        /// <param name="generator">The generator used for IL generation</param>
         public void Fill(ParameterInfo parameter, int dbParameter, ILGenerator generator)
         {
             // Load the method parameter
@@ -30,7 +39,7 @@ namespace ProBase.Generation.Method
             StoreValue(parameter, generator);
         }
 
-        private static void StoreValue(ParameterInfo parameter, ILGenerator generator)
+        private void StoreValue(ParameterInfo parameter, ILGenerator generator)
         {
             ParameterDirection direction = parameter.GetDbParameterDirection();
 
@@ -48,17 +57,12 @@ namespace ProBase.Generation.Method
 
         private MethodInfo GetConvertMethod(Type type)
         {
-            //return typeof(Convert).GetMethod($"To{ type.Name }", types: new[] { typeof(object) });
+            IEnumerable<MethodInfo> methods = typeof(Convert).GetMethods()
+                .Where(m => m.Name == $"To{ type.Name }")
+                .Where(m => m.GetParameters().Length == 1)
+                .Where(m => m.GetParameters().First().ParameterType == typeof(object));
 
-            IEnumerable<MethodInfo> methods = typeof(Convert).GetMethods();
-
-            IEnumerable<MethodInfo> namedMethods = methods.Where(m => m.Name == $"To{ type.Name }");
-
-            IEnumerable<MethodInfo> oneParameterMethods = namedMethods.Where(m => m.GetParameters().Length == 1);
-
-            IEnumerable<MethodInfo> methodsWithParameter = oneParameterMethods.Where(m => m.GetParameters().First().ParameterType == typeof(object));
-
-            return methodsWithParameter.First();
+            return methods.First();
         }
     }
 }
