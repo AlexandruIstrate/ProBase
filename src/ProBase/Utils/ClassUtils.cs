@@ -95,5 +95,15 @@ namespace ProBase.Utils
         {
             return typeof(T).GetProperty(propertyName).GetSetMethod();
         }
+
+        public static MethodInfo GetConvertMethod(Type type)
+        {
+            IEnumerable<MethodInfo> methods = typeof(Convert).GetMethods()
+                .Where(m => m.Name == $"To{ type.Name }")
+                .Where(m => m.GetParameters().Length == 1)
+                .Where(m => m.GetParameters().First().ParameterType == typeof(object));
+
+            return methods.First();
+        }
     }
 }

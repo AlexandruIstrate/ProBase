@@ -33,7 +33,7 @@ namespace ProBase.Generation.Method
             generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertyGetMethod<DbParameter>(nameof(DbParameter.Value)));
 
             // Call the Convert method
-            generator.Emit(OpCodes.Call, GetConvertMethod(parameter.ParameterType.GetElementType()));
+            generator.Emit(OpCodes.Call, ClassUtils.GetConvertMethod(parameter.ParameterType.GetElementType()));
 
             // Store the value into the method parameter
             StoreValue(parameter, generator);
@@ -53,16 +53,6 @@ namespace ProBase.Generation.Method
                 // Store the resulting value into the parameter address
                 generator.Emit(OpCodes.Stind_I4);
             }
-        }
-
-        private MethodInfo GetConvertMethod(Type type)
-        {
-            IEnumerable<MethodInfo> methods = typeof(Convert).GetMethods()
-                .Where(m => m.Name == $"To{ type.Name }")
-                .Where(m => m.GetParameters().Length == 1)
-                .Where(m => m.GetParameters().First().ParameterType == typeof(object));
-
-            return methods.First();
         }
     }
 }
