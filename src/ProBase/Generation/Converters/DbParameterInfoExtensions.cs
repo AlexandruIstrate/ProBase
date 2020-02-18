@@ -1,4 +1,5 @@
 ﻿using ProBase.Attributes;
+using ProBase.Utils;
 using System.Data;
 using System.Reflection;
 
@@ -26,7 +27,7 @@ namespace ProBase.Generation.Converters
         /// <returns>The direction of the parameter</returns>
         public static ParameterDirection GetDbParameterDirection(this ParameterInfo parameterInfo)
         {
-            if (parameterInfo.IsOut)
+            if (parameterInfo.IsOut || parameterInfo.ParameterType.IsAsyncOut())
             {
                 return ParameterDirection.Output;
             }

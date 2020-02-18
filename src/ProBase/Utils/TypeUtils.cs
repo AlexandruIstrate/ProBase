@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ProBase.Async;
+using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace ProBase.Utils
@@ -30,7 +30,7 @@ namespace ProBase.Utils
         /// Checks whether a given type is a <see cref="System.Threading.Tasks.Task"/> or <see cref="System.Threading.Tasks.Task{TResult}"/>.
         /// </summary>
         /// <param name="type">The type to check</param>
-        /// <returns>True if the type is a task, false otherwise</returns>
+        /// <returns>True if the type is a Task, false otherwise</returns>
         public static bool IsTask(this Type type)
         {
             if (type == typeof(Task))
@@ -42,9 +42,19 @@ namespace ProBase.Utils
         }
 
         /// <summary>
+        /// Checks whether a type is AsyncOut<>
+        /// </summary>
+        /// <param name="type">The type to check for</param>
+        /// <returns>True if the type is AsyncOut, false otherwise</returns>
+        public static bool IsAsyncOut(this Type type)
+        {
+            return type.GetGenericTypeDefinition() == typeof(AsyncOut<>);
+        }
+
+        /// <summary>
         /// Gets the name of the current assembly.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The name of the current assembly</returns>
         public static string GetAssemblyName()
         {
             return Assembly.GetExecutingAssembly().GetName().Name;
