@@ -44,7 +44,7 @@ namespace ProBase.Generation.Call
             // For a DataSet, we have an unmapped scalar call
             if (returnType == typeof(DataSet))
             {
-                return ClassUtils.GetMethod<IProcedureMapper>(ScalarProcedure).MakeGenericMethod(typeof(DataSet));
+                return ClassUtils.GetMethod<IProcedureMapper>(ScalarProcedure);
             }
 
             // If we have any other type, then it must be mapped

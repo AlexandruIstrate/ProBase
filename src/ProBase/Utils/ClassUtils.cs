@@ -96,6 +96,11 @@ namespace ProBase.Utils
             return typeof(T).GetProperty(propertyName).GetSetMethod();
         }
 
+        /// <summary>
+        /// Gets the convert method from <see cref="System.Convert"/> matching the provided result type.
+        /// </summary>
+        /// <param name="type">The result type</param>
+        /// <returns>The convert method</returns>
         public static MethodInfo GetConvertMethod(Type type)
         {
             IEnumerable<MethodInfo> methods = typeof(Convert).GetMethods()

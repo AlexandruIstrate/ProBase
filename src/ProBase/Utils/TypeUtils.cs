@@ -33,6 +33,11 @@ namespace ProBase.Utils
         /// <returns>True if the type is a task, false otherwise</returns>
         public static bool IsTask(this Type type)
         {
+            if (type == typeof(Task))
+            {
+                return true;
+            }
+
             return type.IsGenericTypeDefinition(typeof(Task<>));
         }
 
