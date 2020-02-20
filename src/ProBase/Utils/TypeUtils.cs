@@ -48,6 +48,11 @@ namespace ProBase.Utils
         /// <returns>True if the type is AsyncOut, false otherwise</returns>
         public static bool IsAsyncOut(this Type type)
         {
+            if (!type.IsGenericType)
+            {
+                return false;
+            }
+
             return type.GetGenericTypeDefinition() == typeof(AsyncOut<>);
         }
 

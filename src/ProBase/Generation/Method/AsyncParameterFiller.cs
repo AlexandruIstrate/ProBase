@@ -28,16 +28,19 @@ namespace ProBase.Generation.Method
             SetTaskValue(parameter, dbParameter, generator);
         }
 
-        private static void CreateAdapter(int dbParameter, ILGenerator generator)
+        private void CreateAdapter(int dbParameter, ILGenerator generator)
         {
             // Load the local DbParameter
             generator.Emit(OpCodes.Ldloc, dbParameter);
+
+            // Create a local for the ParameterAdapter
+            LocalBuilder adapter = generator.DeclareLocal(typeof(ParameterAdapter));
 
             // Create a new ParameterAdapter object
             generator.Emit(OpCodes.Newobj, GetAdapterConstructor());
 
             // Store the new value into the local
-            generator.Emit(OpCodes.Stloc);
+            generator.Emit(OpCodes.Stloc, adapter.LocalIndex);
         }
 
         private void SetTaskValue(ParameterInfo parameter, int dbParameter, ILGenerator generator)
@@ -74,7 +77,7 @@ namespace ProBase.Generation.Method
         {
             Type funcType = typeof(Func<>);
             Type constructed = funcType.MakeGenericType(genericType);
-            return constructed.GetConstructor(new[] { typeof(object), typeof(int) });
+            return constructed.GetConstructor(new[] { typeof(object), typeof(IntPtr) });
         }
 
         private Type GetParameterGenericType(ParameterInfo parameterInfo)
@@ -91,7 +94,7 @@ namespace ProBase.Generation.Method
             return genericType;
         }
 
-        private static ConstructorInfo GetAdapterConstructor()
+        private ConstructorInfo GetAdapterConstructor()
         {
             return typeof(ParameterAdapter).GetConstructor(new[] { typeof(DbParameter) });
         }
@@ -103,7 +106,7 @@ namespace ProBase.Generation.Method
             return taskType.GetConstructor(new[] { funcType });
         }
 
-        private static MethodInfo GetResultTaskSetMethod()
+        private MethodInfo GetResultTaskSetMethod()
         {
             return typeof(AsyncOut<>).GetProperty("ResultTask").GetSetMethod();
         }

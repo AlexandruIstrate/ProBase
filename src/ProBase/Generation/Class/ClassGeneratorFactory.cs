@@ -19,7 +19,7 @@ namespace ProBase.Generation.Class
 
         private static IMethodGenerator GetMethodGenerator()
         {
-            return new DbMethodGenerator(new ParameterArrayGenerator(new ParameterInfoConverter()), new ProcedureCallGenerator(), new ParameterFiller());
+            return new DbMethodGenerator(new ParameterArrayGenerator(new ParameterInfoConverter()), new ProcedureCallGenerator());
         }
     }
 }

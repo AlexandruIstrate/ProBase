@@ -1,5 +1,4 @@
-﻿using ProBase.Async;
-using ProBase.Utils;
+﻿using ProBase.Utils;
 using System.Reflection;
 
 namespace ProBase.Generation.Method
