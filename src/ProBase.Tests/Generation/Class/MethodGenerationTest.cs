@@ -20,7 +20,7 @@ namespace ProBase.Tests.Generation.Class
         {
             Assert.DoesNotThrow(() =>
             {
-                methodGenerator = new DbMethodGenerator(new ParameterArrayGenerator(new ParameterInfoConverter()), new ProcedureCallGenerator(), new ParameterFiller());
+                methodGenerator = new DbMethodGenerator(new ParameterArrayGenerator(new ParameterInfoConverter()), new ProcedureCallGenerator());
             },
             "The creation of the method generator must be successful");
         }

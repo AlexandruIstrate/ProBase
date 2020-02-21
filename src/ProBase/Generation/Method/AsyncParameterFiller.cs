@@ -22,18 +22,18 @@ namespace ProBase.Generation.Method
         public void Fill(ParameterInfo parameter, int dbParameter, ILGenerator generator)
         {
             // Create the ParameterAdapter object
-            CreateAdapter(dbParameter, generator);
+            LocalBuilder adapter = CreateAdapter(dbParameter, generator);
 
             // Set the value of the Task<>
-            SetTaskValue(parameter, dbParameter, generator);
+            SetTaskValue(parameter, adapter, generator);
         }
 
-        private void CreateAdapter(int dbParameter, ILGenerator generator)
+        private LocalBuilder CreateAdapter(int dbParameter, ILGenerator generator)
         {
             // Load the local DbParameter
             generator.Emit(OpCodes.Ldloc, dbParameter);
 
-            // Create a local for the ParameterAdapter
+            // Create a new ParameterAdapter object
             LocalBuilder adapter = generator.DeclareLocal(typeof(ParameterAdapter));
 
             // Create a new ParameterAdapter object
@@ -41,9 +41,11 @@ namespace ProBase.Generation.Method
 
             // Store the new value into the local
             generator.Emit(OpCodes.Stloc, adapter.LocalIndex);
+
+            return adapter;
         }
 
-        private void SetTaskValue(ParameterInfo parameter, int dbParameter, ILGenerator generator)
+        private void SetTaskValue(ParameterInfo parameter, LocalBuilder adapter, ILGenerator generator)
         {
             Type genericType = GetParameterGenericType(parameter);
 
@@ -51,7 +53,7 @@ namespace ProBase.Generation.Method
             generator.Emit(OpCodes.Ldarg, parameter.Position);
 
             // Load the local DbParameter
-            generator.Emit(OpCodes.Ldloc, dbParameter);
+            generator.Emit(OpCodes.Ldloc, adapter);
 
             // Load the FillParameter method for the specified parameter
             generator.Emit(OpCodes.Ldftn, GetAdapterFillMethod(genericType));
