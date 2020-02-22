@@ -33,7 +33,6 @@ namespace ProBase.Generation.Method
             // Load the local DbParameter
             generator.Emit(OpCodes.Ldloc, dbParameter);
 
-            // Create a new ParameterAdapter object
             LocalBuilder adapter = generator.DeclareLocal(typeof(ParameterAdapter));
 
             // Create a new ParameterAdapter object
@@ -50,9 +49,9 @@ namespace ProBase.Generation.Method
             Type genericType = GetParameterGenericType(parameter);
 
             // Load the AsyncOut parameter
-            generator.Emit(OpCodes.Ldarg, parameter.Position);
+            generator.Emit(OpCodes.Ldarg, parameter.Position + 1);
 
-            // Load the local DbParameter
+            // Load the local ParameterAdapter
             generator.Emit(OpCodes.Ldloc, adapter);
 
             // Load the FillParameter method for the specified parameter
@@ -61,11 +60,11 @@ namespace ProBase.Generation.Method
             // Create a new Func<> object
             generator.Emit(OpCodes.Newobj, GetFuncConstructor(genericType));
 
-            // Create a new task
+            // Create a new Task
             generator.Emit(OpCodes.Newobj, GetTaskConstructor(genericType));
 
             // Set the value of the ResultTask property
-            generator.Emit(OpCodes.Callvirt, GetResultTaskSetMethod());
+            generator.Emit(OpCodes.Callvirt, GetResultTaskSetMethod(parameter.ParameterType.GetGenericArguments().First()));
         }
 
         private MethodInfo GetAdapterFillMethod(Type type)
@@ -91,9 +90,7 @@ namespace ProBase.Generation.Method
                 throw new CodeGenerationException("The provided parameter is not generic");
             }
 
-            Type genericType = type.GetGenericArguments().First();
-
-            return genericType;
+            return type.GetGenericArguments().First();
         }
 
         private ConstructorInfo GetAdapterConstructor()
@@ -108,9 +105,9 @@ namespace ProBase.Generation.Method
             return taskType.GetConstructor(new[] { funcType });
         }
 
-        private MethodInfo GetResultTaskSetMethod()
+        private MethodInfo GetResultTaskSetMethod(Type resultType)
         {
-            return typeof(AsyncOut<>).GetProperty("ResultTask").GetSetMethod();
+            return typeof(AsyncOut<>).MakeGenericType(resultType).GetProperty("ResultTask").GetSetMethod();
         }
     }
 }

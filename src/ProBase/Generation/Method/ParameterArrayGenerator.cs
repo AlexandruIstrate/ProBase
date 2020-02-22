@@ -48,7 +48,7 @@ namespace ProBase.Generation.Method
                     SetParameterValue(parameterBuilder, valueIndex: i + 1, parameters[i].ParameterType, generator);
                 }
 
-                // Set the parameter size parameters
+                // Set the parameter size
                 SetParameterSize(parameterBuilder, parameters[i], generator);
             }
 
