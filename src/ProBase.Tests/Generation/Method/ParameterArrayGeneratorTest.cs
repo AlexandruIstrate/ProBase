@@ -8,7 +8,6 @@ using System.Reflection.Emit;
 
 namespace ProBase.Tests.Generation.Method
 {
-    [Ignore("Not finished")]
     [TestFixture]
     public class ParameterArrayGeneratorTest
     {
@@ -19,14 +18,24 @@ namespace ProBase.Tests.Generation.Method
         }
 
         [Test]
-        public void CanGenerate()
+        public void ThrowsIfNoFields()
         {
-            Assert.DoesNotThrow(() =>
+            Assert.Throws<Exception>(() =>
             {
                 arrayGenerator.Generate(new ParameterInfo[0], new FieldInfo[0], CreateTestMethod());
             },
-            "The generation operation must be successful");
+            "An exception should be thrown");
         }
+
+        //[Test]
+        //public void CanGenerate()
+        //{
+        //    Assert.DoesNotThrow(() =>
+        //    {
+        //        arrayGenerator.Generate(new ParameterInfo[0], new FieldInfo[0], CreateTestMethod());
+        //    },
+        //    "The generation operation must be successful");
+        //}
 
         private ILGenerator CreateTestMethod()
         {
