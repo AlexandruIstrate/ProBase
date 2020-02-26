@@ -27,16 +27,6 @@ namespace ProBase.Tests.Generation.Method
             "An exception should be thrown");
         }
 
-        //[Test]
-        //public void CanGenerate()
-        //{
-        //    Assert.DoesNotThrow(() =>
-        //    {
-        //        arrayGenerator.Generate(new ParameterInfo[0], new FieldInfo[0], CreateTestMethod());
-        //    },
-        //    "The generation operation must be successful");
-        //}
-
         private ILGenerator CreateTestMethod()
         {
             TypeBuilder typeBuilder = GenerationUtils.GetTypeBuilder(typeof(IMixedOperations));

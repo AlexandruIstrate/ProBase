@@ -9,7 +9,7 @@ using System.Reflection.Emit;
 
 namespace ProBase.Tests.Generation.Method
 {
-    [Ignore("Not adapted")]
+    //[Ignore("Not adapted")]
     [TestFixture]
     public class ProcedureCallGeneratorTest
     {
@@ -24,7 +24,7 @@ namespace ProBase.Tests.Generation.Method
         {
             Assert.DoesNotThrow(() =>
             {
-                //procedureCallGenerator.Generate(typeof(DataSet), ProcedureType.Automatic, CreateScalarMethod());
+                procedureCallGenerator.Generate("ScalarProcedure", typeof(DataSet), ProcedureType.Scalar, null, new FieldInfo[0], CreateScalarMethod());
             },
             "The scalar call must be generated successfully");
         }
@@ -34,7 +34,7 @@ namespace ProBase.Tests.Generation.Method
         {
             Assert.DoesNotThrow(() =>
             {
-                //procedureCallGenerator.Generate(typeof(int), ProcedureType.Automatic, CreateNonQueryMethod());
+                procedureCallGenerator.Generate("NonQueryProcedure", typeof(DataSet), ProcedureType.NonQuery, null, new FieldInfo[0], CreateScalarMethod());
             },
             "The non query call must be generated successfully");
         }
