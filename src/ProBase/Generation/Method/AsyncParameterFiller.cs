@@ -107,7 +107,9 @@ namespace ProBase.Generation.Method
 
         private MethodInfo GetResultTaskSetMethod(Type resultType)
         {
-            return typeof(AsyncOut<>).MakeGenericType(resultType).GetProperty("ResultTask").GetSetMethod();
+            return typeof(AsyncOut<>).MakeGenericType(resultType).GetProperty(ResultField).GetSetMethod();
         }
+
+        private const string ResultField = "ResultTask";
     }
 }
