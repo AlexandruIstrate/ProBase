@@ -11,6 +11,6 @@ namespace ProBase.Async
         /// <summary>
         /// A <see cref="System.Threading.Tasks.Task{TResult}"/> representing the parameter result.
         /// </summary>
-        public Task<TParameter> ResultTask { get; set; }
+        public TParameter ParameterValue { get; set; }
     }
 }
