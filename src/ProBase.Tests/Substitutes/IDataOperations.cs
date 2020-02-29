@@ -41,6 +41,32 @@ namespace ProBase.Tests.Substitutes
 
         // Async Procedures
 
+        [Procedure("dbo.EleviCreate")]
+        Task CreateAsync([Parameter("Nume")] string lastName,
+                         [Parameter("Prenume")] string firstName,
+                         [Parameter("Sex")] char gender,
+                         [Parameter("Varsta")] int age,
+                         [Parameter("Clasa")] int grade);
+
+        [Procedure("dbo.EleviRead")]
+        Task<DataSet> ReadAsync([Parameter("IdElev")] int id);
+
+        [Procedure("dbo.EleviRead")]
+        Task<DataSet> ReadAllAsync();
+
+        [Procedure("dbo.EleviUpdate")]
+        Task UpdateAsync([Parameter("IdElev")] int id,
+                         [Parameter("Nume")] string lastName,
+                         [Parameter("Prenume")] string firstName,
+                         [Parameter("Sex")] char gender,
+                         [Parameter("Varsta")] int age,
+                         [Parameter("Clasa")] int grade);
+
+        [Procedure("dbo.EleviDelete")]
+        Task DeleteAsync([Parameter("IdElev")] int id);
+
+        // Async Mapped Procedures
+
         [Procedure("dbo.EleviRead")]
         Task<Student> ReadMappedAsync([Parameter("IdElev")] int id);
 
