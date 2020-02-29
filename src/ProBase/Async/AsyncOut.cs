@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using ProBase.Utils;
+using System;
 
 namespace ProBase.Async
 {
@@ -9,8 +10,21 @@ namespace ProBase.Async
     public class AsyncOut<TParameter>
     {
         /// <summary>
-        /// A <see cref="System.Threading.Tasks.Task{TResult}"/> representing the parameter result.
+        /// Gets the result value.
         /// </summary>
-        public TParameter ParameterValue { get; set; }
+        public TParameter OutValue => resultFunc.Invoke();
+
+        /// <summary>
+        /// Sets the Func used for computing the result.
+        /// </summary>
+        public Func<TParameter> ResultFunc
+        {
+            set
+            {
+                resultFunc = Preconditions.CheckNotNull(value, nameof(ResultFunc));
+            }
+        }
+
+        private Func<TParameter> resultFunc;
     }
 }

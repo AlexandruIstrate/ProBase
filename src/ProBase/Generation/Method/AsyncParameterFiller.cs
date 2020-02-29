@@ -25,7 +25,7 @@ namespace ProBase.Generation.Method
             LocalBuilder adapter = CreateAdapter(dbParameter, generator);
 
             // Set the value of the Task<>
-            SetTaskValue(parameter, adapter, generator);
+            SetFuncValue(parameter, adapter, generator);
         }
 
         private LocalBuilder CreateAdapter(int dbParameter, ILGenerator generator)
@@ -33,6 +33,7 @@ namespace ProBase.Generation.Method
             // Load the local DbParameter
             generator.Emit(OpCodes.Ldloc, dbParameter);
 
+            // Declare the ParameterAdapter
             LocalBuilder adapter = generator.DeclareLocal(typeof(ParameterAdapter));
 
             // Create a new ParameterAdapter object
@@ -44,7 +45,7 @@ namespace ProBase.Generation.Method
             return adapter;
         }
 
-        private void SetTaskValue(ParameterInfo parameter, LocalBuilder adapter, ILGenerator generator)
+        private void SetFuncValue(ParameterInfo parameter, LocalBuilder adapter, ILGenerator generator)
         {
             Type genericType = GetParameterGenericType(parameter);
 
@@ -60,17 +61,14 @@ namespace ProBase.Generation.Method
             // Create a new Func<> object
             generator.Emit(OpCodes.Newobj, GetFuncConstructor(genericType));
 
-            // Create a new Task
-            generator.Emit(OpCodes.Newobj, GetTaskConstructor(genericType));
-
-            // Set the value of the ResultTask property
-            generator.Emit(OpCodes.Callvirt, GetResultTaskSetMethod(parameter.ParameterType.GetGenericArguments().First()));
+            // Set the value of the ResultValue property
+            generator.Emit(OpCodes.Callvirt, GetResultFuncSetMethod(parameter.ParameterType.GetGenericArguments().First()));
         }
 
         private MethodInfo GetAdapterFillMethod(Type type)
         {
             Type adapterType = typeof(ParameterAdapter);
-            MethodInfo method = adapterType.GetMethod("FillParameter");
+            MethodInfo method = adapterType.GetMethod(FillMethod);
             return method.MakeGenericMethod(new[] { type });
         }
 
@@ -105,11 +103,12 @@ namespace ProBase.Generation.Method
             return taskType.GetConstructor(new[] { funcType });
         }
 
-        private MethodInfo GetResultTaskSetMethod(Type resultType)
+        private MethodInfo GetResultFuncSetMethod(Type resultType)
         {
-            return typeof(AsyncOut<>).MakeGenericType(resultType).GetProperty(ResultField).GetSetMethod();
+            return typeof(AsyncOut<>).MakeGenericType(resultType).GetProperty(ResultFunc).GetSetMethod();
         }
 
-        private const string ResultField = "ResultTask";
+        private const string FillMethod = nameof(ParameterAdapter.FillParameter);
+        private const string ResultFunc = nameof(AsyncOut<object>.ResultFunc);
     }
 }
