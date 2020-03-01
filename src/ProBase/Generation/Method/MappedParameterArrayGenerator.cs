@@ -1,8 +1,11 @@
-﻿using ProBase.Generation.Converters;
+﻿using ProBase.Attributes;
+using ProBase.Generation.Converters;
 using ProBase.Utils;
+using System;
 using System.Data.Common;
 using System.Reflection;
 using System.Reflection.Emit;
+using static ProBase.Generation.Converters.ParameterInfoConverter;
 
 namespace ProBase.Generation.Method
 {
@@ -34,16 +37,37 @@ namespace ProBase.Generation.Method
                     SetParameterDirection(parameterBuilder, dbParameter.Direction, generator);
 
                     // Set the parameter value
-                    // TODO: Fix
-                    SetParameterValue(parameterBuilder, valueIndex: i + 1, null, generator);
+                    SetParameterValue(parameterBuilder, valueIndex: i + 1, (dbParameter as DbParameterInfo).Type, dbParameter.ParameterName, generator);
 
                     // Set the parameter size
-                    SetParameterSize(parameterBuilder, parameters[i], generator); 
+                    SetParameterSize(parameterBuilder, parameters[i], generator);
                 }
             }
 
             // Create the array
             return CreateArray(typeof(DbParameter[]), parameters.Length, generator);
+        }
+
+        private void SetParameterValue(LocalBuilder parameterBuilder, int valueIndex, Type type, string propertyName, ILGenerator generator)
+        {
+            // Load the local variable associated with this parameter
+            generator.Emit(OpCodes.Ldloc, parameterBuilder);
+
+            // Load the argument that this parameter gets its value from
+            generator.Emit(OpCodes.Ldarg, valueIndex);
+
+            // Call the get method of the property
+            generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertyGetMethod(type, propertyName));
+
+            // If the value is of a primitive type, box it
+            if (type.IsPrimitive)
+            {
+                // Box the primitive value
+                generator.Emit(OpCodes.Box, type);
+            }
+
+            // Call the set method on the Value property
+            generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Value)));
         }
 
         private readonly IParameterConverter<DbParameter[]> parameterConverter;

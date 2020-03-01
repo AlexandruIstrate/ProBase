@@ -26,6 +26,7 @@ namespace ProBase.Generation.Converters
             {
                 ParameterName = property.Name,
                 Direction = ParameterDirection.Input,
+                Type = property.PropertyType
             };
         }
     }
