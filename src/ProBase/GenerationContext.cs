@@ -1,6 +1,6 @@
 ﻿using ProBase.Data;
-using ProBase.Generation;
 using ProBase.Generation.Class;
+using ProBase.Generation.Converters;
 using ProBase.Utils;
 using System;
 using System.Data.Common;
@@ -42,7 +42,7 @@ namespace ProBase
         }
 
 
-        private IProcedureMapper GetProcedureMapper() => new ProcedureMapper(Connection);
+        private IProcedureMapper GetProcedureMapper() => new ProcedureMapper(Connection, new DataSetMapper(new PropertyMapper()));
         private DbProviderFactory GetProviderFactory() => Connection.GetProviderFactory();
 
         private readonly IConcreteClassGenerator classGenerator;

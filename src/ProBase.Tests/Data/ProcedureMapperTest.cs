@@ -2,6 +2,7 @@
 using System.Data.Common;
 using NUnit.Framework;
 using ProBase.Data;
+using ProBase.Generation.Converters;
 
 namespace ProBase.Tests.Data
 {
@@ -12,7 +13,7 @@ namespace ProBase.Tests.Data
         [OneTimeSetUp]
         public void Setup()
         {
-            procedureMapper = new ProcedureMapper(GetConnection());
+            procedureMapper = new ProcedureMapper(GetConnection(), new DataSetMapper(new PropertyMapper()));
         }
 
         [OneTimeTearDown]

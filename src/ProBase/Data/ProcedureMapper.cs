@@ -1,7 +1,5 @@
-﻿using ProBase.Generation;
-using ProBase.Generation.Converters;
+﻿using ProBase.Generation.Converters;
 using ProBase.Utils;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -19,9 +17,9 @@ namespace ProBase.Data
         /// Constructs a new <see cref="ProBase.Data.ProcedureMapper"/> instance.
         /// </summary>
         /// <param name="connection">The connection to use for communicating with the database</param>
-        public ProcedureMapper(DbConnection connection) : base(connection)
+        public ProcedureMapper(DbConnection connection, IDataMapper dataMapper) : base(connection)
         {
-            dataMapper = DataMapperFactory.Create(DataMapperType.DataSet);
+            this.dataMapper = dataMapper;
         }
 
         /// <summary>

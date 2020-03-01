@@ -18,12 +18,12 @@ namespace ProBase.Generation.Method
         /// Creates an instance of this class using the given <see cref="ProBase.Generation.Converters.IParameterConverter"/> for converting the method parameters to database parameters.
         /// </summary>
         /// <param name="parameterConverter">The converter used for converting method parameters</param>
-        public ParameterArrayGenerator(IParameterConverter parameterConverter)
+        public ParameterArrayGenerator(IParameterConverter<DbParameter> parameterConverter)
         {
             this.parameterConverter = parameterConverter;
         }
 
-        public LocalBuilder Generate(ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
+        public virtual LocalBuilder Generate(ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
         {
             // Get the provider factory field
             FieldInfo providerFactory = ClassUtils.GetField<DbProviderFactory>(fields, GenerationConstants.ProviderFactoryFieldName);
@@ -56,7 +56,7 @@ namespace ProBase.Generation.Method
             return CreateArray(typeof(DbParameter[]), parameters.Length, generator);
         }
 
-        private LocalBuilder CreateParameter(FieldInfo providerFactory, ILGenerator generator)
+        protected virtual LocalBuilder CreateParameter(FieldInfo providerFactory, ILGenerator generator)
         {
             // Declare the variable
             LocalBuilder localBuilder = generator.DeclareLocal(typeof(DbParameter));
@@ -76,7 +76,7 @@ namespace ProBase.Generation.Method
             return localBuilder;
         }
 
-        private void SetParameterName(LocalBuilder parameterBuilder, string name, ILGenerator generator)
+        protected virtual void SetParameterName(LocalBuilder parameterBuilder, string name, ILGenerator generator)
         {
             // Load the variable at the given index
             generator.Emit(OpCodes.Ldloc, parameterBuilder);
@@ -88,7 +88,7 @@ namespace ProBase.Generation.Method
             generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.ParameterName)));
         }
 
-        private void SetParameterDirection(LocalBuilder parameterBuilder, ParameterDirection parameterDirection, ILGenerator generator)
+        protected virtual void SetParameterDirection(LocalBuilder parameterBuilder, ParameterDirection parameterDirection, ILGenerator generator)
         {
             // Load the local variable associated with this parameter
             generator.Emit(OpCodes.Ldloc, parameterBuilder);
@@ -100,7 +100,7 @@ namespace ProBase.Generation.Method
             generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Direction)));
         }
 
-        private void SetParameterValue(LocalBuilder parameterBuilder, int valueIndex, Type type, ILGenerator generator)
+        protected virtual void SetParameterValue(LocalBuilder parameterBuilder, int valueIndex, Type type, ILGenerator generator)
         {
             // Load the local variable associated with this parameter
             generator.Emit(OpCodes.Ldloc, parameterBuilder);
@@ -119,7 +119,7 @@ namespace ProBase.Generation.Method
             generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Value)));
         }
 
-        private void SetParameterSize(LocalBuilder parameterBuilder, ParameterInfo parameterInfo, ILGenerator generator)
+        protected virtual void SetParameterSize(LocalBuilder parameterBuilder, ParameterInfo parameterInfo, ILGenerator generator)
         {
             ParameterAttribute attribute = parameterInfo.GetCustomAttribute<ParameterAttribute>();
 
@@ -145,7 +145,7 @@ namespace ProBase.Generation.Method
             generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Size)));
         }
 
-        private LocalBuilder CreateArray(Type type, int length, ILGenerator generator)
+        protected virtual LocalBuilder CreateArray(Type type, int length, ILGenerator generator)
         {
             LocalBuilder localBuilder = generator.DeclareLocal(type);
 
@@ -179,6 +179,6 @@ namespace ProBase.Generation.Method
         private MethodInfo GetParameterCreationMethod() => ClassUtils.GetMethod<DbProviderFactory>(nameof(DbProviderFactory.CreateParameter));
         private ConstructorInfo GetArrayConstructor(Type arrayType) => arrayType.GetConstructor(new[] { typeof(int) });
 
-        private readonly IParameterConverter parameterConverter;
+        private readonly IParameterConverter<DbParameter> parameterConverter;
     }
 }

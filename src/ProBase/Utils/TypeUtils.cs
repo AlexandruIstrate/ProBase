@@ -42,7 +42,7 @@ namespace ProBase.Utils
         }
 
         /// <summary>
-        /// Checks whether a type is AsyncOut<>
+        /// Checks whether a type is AsyncOut<>.
         /// </summary>
         /// <param name="type">The type to check for</param>
         /// <returns>True if the type is AsyncOut, false otherwise</returns>
@@ -54,6 +54,26 @@ namespace ProBase.Utils
             }
 
             return type.GetGenericTypeDefinition() == typeof(AsyncOut<>);
+        }
+
+        /// <summary>
+        /// Checks whether a type is user defined.
+        /// </summary>
+        /// <param name="type">The type to check for</param>
+        /// <returns>True if the type is user defined</returns>
+        public static bool IsUserDefined(this Type type)
+        {
+            if (type.IsPrimitive)
+            {
+                return false;
+            }
+
+            if (type == typeof(string))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

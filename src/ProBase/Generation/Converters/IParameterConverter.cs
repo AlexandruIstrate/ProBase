@@ -6,7 +6,7 @@ namespace ProBase.Generation.Converters
     /// <summary>
     /// Provides an operation for converting between a method parameter and a database parameter.
     /// </summary>
-    internal interface IParameterConverter
+    internal interface IParameterConverter<out TResult>
     {
         /// <summary>
         /// Converts a method parameter to a <see cref="System.Data.Common.DbParameter"/>.
@@ -14,6 +14,6 @@ namespace ProBase.Generation.Converters
         /// <param name="parameterInfo">A reflection method parameter</param>
         /// <param name="value">The value of the parameter</param>
         /// <returns>A database parameter</returns>
-        DbParameter ConvertParameter(ParameterInfo parameterInfo, object value);
+        TResult ConvertParameter(ParameterInfo parameterInfo, object value);
     }
 }

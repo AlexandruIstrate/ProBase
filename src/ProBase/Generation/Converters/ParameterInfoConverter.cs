@@ -8,7 +8,7 @@ namespace ProBase.Generation.Converters
     /// <summary>
     /// Provides an operation for converting between a method parameter and an information-only representation of that parameter.
     /// </summary>
-    internal class ParameterInfoConverter : IParameterConverter
+    internal class ParameterInfoConverter : IParameterConverter<DbParameter>
     {
         /// <summary>
         /// Converts a method parameter to a <see cref="System.Data.Common.DbParameter"/>.
@@ -30,7 +30,7 @@ namespace ProBase.Generation.Converters
         /// <summary>
         /// An implementation of <see cref="System.Data.Common.DbParameter"/> that only provides properties and no operations.
         /// </summary>
-        private class DbParameterInfo : DbParameter
+        internal class DbParameterInfo : DbParameter
         {
             public override DbType DbType { get; set; }
             public override ParameterDirection Direction { get; set; }

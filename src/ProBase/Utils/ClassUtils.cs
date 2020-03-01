@@ -77,12 +77,34 @@ namespace ProBase.Utils
         /// <summary>
         /// Gets the get method for a property of a class by name.
         /// </summary>
+        /// <param name="type">The type to get the property get method from</param>
+        /// <param name="propertyName">The name of the property</param>
+        /// <returns>The info for the get method</returns>
+        public static MethodInfo GetPropertyGetMethod(Type type, string propertyName)
+        {
+            return type.GetProperty(propertyName).GetGetMethod();
+        }
+
+        /// <summary>
+        /// Gets the get method for a property of a class by name.
+        /// </summary>
         /// <typeparam name="T">The class type</typeparam>
         /// <param name="propertyName">The name of the property</param>
         /// <returns>The info for the get method</returns>
         public static MethodInfo GetPropertyGetMethod<T>(string propertyName)
         {
             return typeof(T).GetProperty(propertyName).GetGetMethod();
+        }
+
+        /// <summary>
+        /// Gets the set method for a property of a class by name.
+        /// </summary>
+        /// <param name="type">The type to get the property set method from</param>
+        /// <param name="propertyName">The name of the property</param>
+        /// <returns>The info for the set method</returns>
+        public static MethodInfo GetPropertySetMethod(Type type, string propertyName)
+        {
+            return type.GetProperty(propertyName).GetSetMethod();
         }
 
         /// <summary>

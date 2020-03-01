@@ -25,6 +25,15 @@ namespace ProBase.Async
             }
         }
 
+        /// <summary>
+        /// Returns a string that represents the out value of this object.
+        /// </summary>
+        /// <returns>A string that represents the out value</returns>
+        public override string ToString()
+        {
+            return OutValue.ToString();
+        }
+
         private Func<TParameter> resultFunc;
     }
 }

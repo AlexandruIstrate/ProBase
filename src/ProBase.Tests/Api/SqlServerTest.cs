@@ -81,7 +81,7 @@ namespace ProBase.Tests.Api
             Assert.DoesNotThrow(() =>
             {
                 IDataOperations testOperations = CreateOperationsInterface();
-                Student student = testOperations.ReadMapped(id: 2);
+                Student student = testOperations.ReadMapped(id: 69);
 
                 Assert.IsNotNull(student, "The Student returned must not be null");
             },
@@ -185,7 +185,7 @@ namespace ProBase.Tests.Api
             {
                 IDataOperations testOperations = CreateOperationsInterface();
 
-                Task<Student> task = testOperations.ReadMappedAsync(id: 2);
+                Task<Student> task = testOperations.ReadMappedAsync(id: 69);
                 Assert.IsNotNull(task, "The Task returned must not be null");
 
                 Student student = await task;

@@ -7,7 +7,7 @@ namespace ProBase.Generation.Method
     /// <summary>
     /// Fills Task results from parameter values.
     /// </summary>
-    internal class ParameterAdapter
+    public class ParameterAdapter
     {
         /// <summary>
         /// Gets or sets the parameter.

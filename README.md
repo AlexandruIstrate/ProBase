@@ -14,7 +14,7 @@ Firstly, you need to define a type that maps each method to its database procedu
 interface IDatabaseOperations
 {
     [Procedure("CreateItem")]
-    void Create(string item);
+    void Create(object item);
 
     [Procedure("ReadItem")]
     object Read(int id);
@@ -27,7 +27,7 @@ interface IDatabaseOperations
 }
 ```
 
-In the snippet above, you can see that there are a bunch of attributes declared. The one applied to the interface (```DbInterface```) specifies that the interface is to be used for interfacing with a database. This is a required attribute and must be present on any interface you want to use with ProBase. The attributes applied to each method are ```Procedure``` attributes which specify how a certain method maps to a procedure. In the example above you can see that the argument passed into the attribute constructor is the name of the procedure this method maps to.
+In the snippet above, you can see that we have a bunch of attributes applied. The one applied to the interface (```DbInterface```) specifies that the interface is to be used for interfacing with a database. This is a required attribute and must be present on any interface you want to use with ProBase. The attributes applied to each method are ```Procedure``` attributes which specify how a certain method maps to a procedure. In the example above you can see that the argument passed into the attribute constructor is the name of the procedure this method maps to.
 
 Once we have our mappings set up, we can create an instance of this interface on which we can call the actual methods. For this we need to create a ```GenerationContext``` object passing in a ```DbConnection``` to the constructor. With the object created, we can invoke the ```GenerateObject``` method that takes in the type of the operations class and returns an instance of that class with all of the database access logic implemented for us:
 
@@ -57,7 +57,7 @@ ProBase is currently in early development, however new features are added at a s
 ## Building From Source
 In order to build ProBase you need:
 - Visual Studio
-- .NET Framework 4.8 or .NET Core 2.2
+- .NET Framework 4.8 or .NET Core 3.1
 
 ## Disclaimer
 - The main image is made using [WordArt.com](https://wordart.com)

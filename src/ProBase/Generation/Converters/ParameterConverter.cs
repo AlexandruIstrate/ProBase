@@ -7,7 +7,7 @@ namespace ProBase.Generation.Converters
     /// <summary>
     /// Represents a database procedure parameter converter that uses language information to generate database parameters from method parameters.
     /// </summary>
-    internal class ParameterConverter : IParameterConverter
+    internal class ParameterConverter : IParameterConverter<DbParameter>
     {
         public ParameterConverter(DbProviderFactory providerFactory)
         {
