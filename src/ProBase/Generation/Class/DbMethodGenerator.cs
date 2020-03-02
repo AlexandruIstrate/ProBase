@@ -4,7 +4,6 @@ using ProBase.Generation.Converters;
 using ProBase.Generation.Method;
 using ProBase.Utils;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -103,25 +102,6 @@ namespace ProBase.Generation.Class
             generator.Emit(OpCodes.Ldloc, arrayBuilder);
 
             return arrayBuilder;
-        }
-
-        private FieldInfo GetField<T>(string fieldName, IEnumerable<FieldInfo> fields)
-        {
-            IEnumerable<FieldInfo> typedFields = fields.Where(field => field.FieldType == typeof(T));
-
-            if (typedFields.Count() == 0)
-            {
-                throw new CodeGenerationException($"The generated class does not contain any fields of type { nameof(T) }");
-            }
-
-            FieldInfo namedField = typedFields.ToList().Find(field => field.Name == fieldName);
-
-            if (namedField == null)
-            {
-                throw new CodeGenerationException($"Could not find a field with name { fieldName }");
-            }
-
-            return namedField;
         }
 
         private readonly ICollectionGenerator arrayGenerator;

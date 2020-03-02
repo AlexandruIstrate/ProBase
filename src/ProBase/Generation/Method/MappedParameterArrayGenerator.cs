@@ -1,11 +1,9 @@
-﻿using ProBase.Attributes;
-using ProBase.Generation.Converters;
+﻿using ProBase.Generation.Converters;
 using ProBase.Utils;
 using System;
 using System.Data.Common;
 using System.Reflection;
 using System.Reflection.Emit;
-using static ProBase.Generation.Converters.ParameterInfoConverter;
 
 namespace ProBase.Generation.Method
 {
@@ -21,6 +19,8 @@ namespace ProBase.Generation.Method
             // Get the provider factory field
             FieldInfo providerFactory = ClassUtils.GetField<DbProviderFactory>(fields, GenerationConstants.ProviderFactoryFieldName);
 
+            int parameterCount = 0;
+
             for (int i = 0; i < parameters.Length; i++)
             {
                 DbParameter[] mappedParameters = parameterConverter.ConvertParameter(parameters[i], value: null);
@@ -31,21 +31,20 @@ namespace ProBase.Generation.Method
                     LocalBuilder parameterBuilder = CreateParameter(providerFactory, generator);
 
                     // Set the name for this parameter
-                    SetParameterName(parameterBuilder, dbParameter.ParameterName, generator);
+                    SetParameterName(parameterBuilder, dbParameter.SourceColumn, generator);
 
                     // Set the direction for this parameter
                     SetParameterDirection(parameterBuilder, dbParameter.Direction, generator);
 
                     // Set the parameter value
-                    SetParameterValue(parameterBuilder, valueIndex: i + 1, (dbParameter as DbParameterInfo).Type, dbParameter.ParameterName, generator);
-
-                    // Set the parameter size
-                    SetParameterSize(parameterBuilder, parameters[i], generator);
+                    SetParameterValue(parameterBuilder, valueIndex: i + 1, parameters[i].ParameterType, dbParameter.ParameterName, generator);
                 }
+
+                parameterCount += mappedParameters.Length;
             }
 
             // Create the array
-            return CreateArray(typeof(DbParameter[]), parameters.Length, generator);
+            return CreateArray(typeof(DbParameter[]), parameterCount, generator);
         }
 
         private void SetParameterValue(LocalBuilder parameterBuilder, int valueIndex, Type type, string propertyName, ILGenerator generator)
@@ -56,14 +55,17 @@ namespace ProBase.Generation.Method
             // Load the argument that this parameter gets its value from
             generator.Emit(OpCodes.Ldarg, valueIndex);
 
+            // Get the property
+            PropertyInfo prop = type.GetProperty(propertyName);
+
             // Call the get method of the property
-            generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertyGetMethod(type, propertyName));
+            generator.Emit(OpCodes.Callvirt, prop.GetGetMethod());
 
             // If the value is of a primitive type, box it
-            if (type.IsPrimitive)
+            if (prop.PropertyType.IsPrimitive)
             {
                 // Box the primitive value
-                generator.Emit(OpCodes.Box, type);
+                generator.Emit(OpCodes.Box, prop.PropertyType);
             }
 
             // Call the set method on the Value property

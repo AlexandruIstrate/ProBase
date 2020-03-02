@@ -41,8 +41,6 @@ namespace ProBase.Generation.Converters
             public override bool SourceColumnNullMapping { get; set; }
             public override object Value { get; set; }
 
-            public Type Type { get; set; }
-
             public override void ResetDbType() => throw new NotSupportedException("This type only provides parameter information");
         }
     }

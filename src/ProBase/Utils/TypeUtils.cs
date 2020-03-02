@@ -63,6 +63,16 @@ namespace ProBase.Utils
         /// <returns>True if the type is user defined</returns>
         public static bool IsUserDefined(this Type type)
         {
+            if (type.IsByRef)
+            {
+                return type.GetElementType().IsUserDefined();
+            }
+
+            if (type.IsAsyncOut())
+            {
+                return false;
+            }
+
             if (type.IsPrimitive)
             {
                 return false;

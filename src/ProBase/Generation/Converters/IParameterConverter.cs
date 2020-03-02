@@ -1,11 +1,11 @@
-﻿using System.Data.Common;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace ProBase.Generation.Converters
 {
     /// <summary>
     /// Provides an operation for converting between a method parameter and a database parameter.
     /// </summary>
+    /// <typeparam name="TResult">The type of the conversion result</typeparam>
     internal interface IParameterConverter<out TResult>
     {
         /// <summary>
