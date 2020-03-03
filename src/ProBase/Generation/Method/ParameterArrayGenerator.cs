@@ -1,8 +1,5 @@
-﻿using ProBase.Attributes;
-using ProBase.Generation.Converters;
-using ProBase.Utils;
+﻿using ProBase.Utils;
 using System;
-using System.Data;
 using System.Data.Common;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -18,9 +15,10 @@ namespace ProBase.Generation.Method
         /// Creates an instance of this class using the given <see cref="ProBase.Generation.Converters.IParameterConverter"/> for converting the method parameters to database parameters.
         /// </summary>
         /// <param name="parameterConverter">The converter used for converting method parameters</param>
-        public ParameterArrayGenerator(IParameterConverter<DbParameter> parameterConverter)
+        public ParameterArrayGenerator(IParameterGenerator defaultGenerator, IParameterGenerator compoundTypeGenerator)
         {
-            this.parameterConverter = parameterConverter;
+            this.defaultGenerator = defaultGenerator;
+            this.compoundTypeGenerator = compoundTypeGenerator;
         }
 
         public virtual LocalBuilder Generate(ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
@@ -28,121 +26,15 @@ namespace ProBase.Generation.Method
             // Get the provider factory field
             FieldInfo providerFactory = ClassUtils.GetField<DbProviderFactory>(fields, GenerationConstants.ProviderFactoryFieldName);
 
-            for (int i = 0; i < parameters.Length; i++)
+            int parameterCount = 0;
+
+            foreach (ParameterInfo parameter in parameters)
             {
-                DbParameter databaseParameter = parameterConverter.ConvertParameter(parameters[i], value: null);
-
-                // Create the parameter
-                LocalBuilder parameterBuilder = CreateParameter(providerFactory, generator);
-
-                // Set the name for this parameter
-                SetParameterName(parameterBuilder, databaseParameter.ParameterName, generator);
-
-                // Set the direction for this parameter
-                SetParameterDirection(parameterBuilder, databaseParameter.Direction, generator);
-
-                // Don't set a value for out parameters
-                if (databaseParameter.Direction != ParameterDirection.Output)
-                {
-                    // Set the parameter value
-                    SetParameterValue(parameterBuilder, valueIndex: i + 1, parameters[i].ParameterType, generator);
-                }
-
-                // Set the parameter size
-                SetParameterSize(parameterBuilder, parameters[i], generator);
+                LocalBuilder[] localParams = GetGenerator(parameter.ParameterType).Generate(parameter, providerFactory, generator);
+                parameterCount += localParams.Length;
             }
 
-            // Create the array
-            return CreateArray(typeof(DbParameter[]), parameters.Length, generator);
-        }
-
-        protected virtual LocalBuilder CreateParameter(FieldInfo providerFactory, ILGenerator generator)
-        {
-            // Declare the variable
-            LocalBuilder localBuilder = generator.DeclareLocal(typeof(DbParameter));
-
-            // Load this object to the stack
-            generator.Emit(OpCodes.Ldarg_0);
-
-            // Loads the field used for creating the parameter onto the stack
-            generator.Emit(OpCodes.Ldfld, providerFactory);
-
-            // Calls the creation method on the field
-            generator.Emit(OpCodes.Callvirt, GetParameterCreationMethod());
-
-            // Unload this object from the stack
-            generator.Emit(OpCodes.Stloc, localBuilder);
-
-            return localBuilder;
-        }
-
-        protected virtual void SetParameterName(LocalBuilder parameterBuilder, string name, ILGenerator generator)
-        {
-            // Load the variable at the given index
-            generator.Emit(OpCodes.Ldloc, parameterBuilder);
-
-            // Load the parameter name
-            generator.Emit(OpCodes.Ldstr, name);
-
-            // Call the setter for the name
-            generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.ParameterName)));
-        }
-
-        protected virtual void SetParameterDirection(LocalBuilder parameterBuilder, ParameterDirection parameterDirection, ILGenerator generator)
-        {
-            // Load the local variable associated with this parameter
-            generator.Emit(OpCodes.Ldloc, parameterBuilder);
-
-            // Load the parameter direction
-            generator.Emit(OpCodes.Ldc_I4, (int)parameterDirection);
-
-            // Call the setter for the direction
-            generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Direction)));
-        }
-
-        protected virtual void SetParameterValue(LocalBuilder parameterBuilder, int valueIndex, Type type, ILGenerator generator)
-        {
-            // Load the local variable associated with this parameter
-            generator.Emit(OpCodes.Ldloc, parameterBuilder);
-
-            // Load the argument that this parameter gets its value from
-            generator.Emit(OpCodes.Ldarg, valueIndex);
-
-            // If the value is of a primitive type, box it
-            if (type.IsPrimitive)
-            {
-                // Box the primitive value
-                generator.Emit(OpCodes.Box, type);
-            }
-
-            // Call the set method on the Value property
-            generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Value)));
-        }
-
-        protected virtual void SetParameterSize(LocalBuilder parameterBuilder, ParameterInfo parameterInfo, ILGenerator generator)
-        {
-            ParameterAttribute attribute = parameterInfo.GetCustomAttribute<ParameterAttribute>();
-
-            // If we don't have a ParameterAttribute, then the size is the default
-            if (attribute == null)
-            {
-                return;
-            }
-
-            // If the size is not set then use the default
-            if (attribute.Size == 0)
-            {
-                return;
-            }
-
-            // Load the local variable associated with this parameter
-            generator.Emit(OpCodes.Ldloc, parameterBuilder);
-
-            // Load the parameter direction
-            generator.Emit(OpCodes.Ldc_I4, attribute.Size);
-
-            // Call the set method on the Value property
-            generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Size)));
+            return CreateArray(typeof(DbParameter[]), parameterCount, generator);
         }
 
         protected virtual LocalBuilder CreateArray(Type type, int length, ILGenerator generator)
@@ -176,9 +68,23 @@ namespace ProBase.Generation.Method
             return localBuilder;
         }
 
-        private MethodInfo GetParameterCreationMethod() => ClassUtils.GetMethod<DbProviderFactory>(nameof(DbProviderFactory.CreateParameter));
-        private ConstructorInfo GetArrayConstructor(Type arrayType) => arrayType.GetConstructor(new[] { typeof(int) });
+        // TODO: Refactor this to a factory!!!
+        private IParameterGenerator GetGenerator(Type type)
+        {
+            if (type.IsUserDefined())
+            {
+                return compoundTypeGenerator;
+            }
 
-        private readonly IParameterConverter<DbParameter> parameterConverter;
+            return defaultGenerator;
+        }
+
+        private ConstructorInfo GetArrayConstructor(Type arrayType)
+        {
+            return arrayType.GetConstructor(new[] { typeof(int) });
+        }
+
+        private readonly IParameterGenerator defaultGenerator;
+        private readonly IParameterGenerator compoundTypeGenerator;
     }
 }

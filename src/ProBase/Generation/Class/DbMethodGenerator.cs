@@ -86,6 +86,8 @@ namespace ProBase.Generation.Class
 
         private LocalBuilder PrepareParameters(string procedureName, ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
         {
+            bool hasCompoundParams = parameters.Any(p => p.ParameterType.IsUserDefined());
+
             // Generate the parameter array
             LocalBuilder arrayBuilder = arrayGenerator.Generate(parameters, fields, generator);
 

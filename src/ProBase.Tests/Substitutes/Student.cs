@@ -4,7 +4,7 @@ namespace ProBase.Tests.Substitutes
 {
     public class Student
     {
-        [Column("IdElev")]
+        [Column("IdElev", Serialization = SerializationBehavior.None)]
         public int Id { get; set; }
 
         [Column("Prenume")]

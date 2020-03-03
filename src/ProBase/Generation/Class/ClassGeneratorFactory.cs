@@ -1,5 +1,4 @@
-﻿using ProBase.Generation.Converters;
-using ProBase.Generation.Method;
+﻿using ProBase.Generation.Method;
 
 namespace ProBase.Generation.Class
 {
@@ -19,7 +18,7 @@ namespace ProBase.Generation.Class
 
         private static IMethodGenerator GetMethodGenerator()
         {
-            return new DbMethodGenerator(new ParameterArrayGenerator(new ParameterInfoConverter()), new ProcedureCallGenerator());
+            return new DbMethodGenerator(new ParameterArrayGenerator(new ParameterGenerator(), new MappedParameterGenerator()), new ProcedureCallGenerator());
         }
     }
 }

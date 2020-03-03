@@ -39,6 +39,14 @@ namespace ProBase.Tests.Substitutes
         [Procedure("dbo.EleviRead")]
         IEnumerable<Student> ReadAllMapped();
 
+        // Mapped Parameters
+
+        [Procedure("dbo.EleviCreate")]
+        void Create(Student student);
+
+        [Procedure("dbo.EleviUpdate")]
+        void Update([Parameter("IdElev")] int id, Student student);
+
         // Async Procedures
 
         [Procedure("dbo.EleviCreate")]

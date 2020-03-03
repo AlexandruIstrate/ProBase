@@ -19,6 +19,11 @@ namespace ProBase.Attributes
         public bool CaseSensitive { get; set; }
 
         /// <summary>
+        /// Specifies how a column should be serialized.
+        /// </summary>
+        public SerializationBehavior Serialization { get; set; } = SerializationBehavior.Serialize | SerializationBehavior.Unserialize;
+
+        /// <summary>
         /// Initializes an instance of this class with the given column name;
         /// </summary>
         /// <param name="columnName">The column name</param>
@@ -26,5 +31,16 @@ namespace ProBase.Attributes
         {
             ColumnName = columnName;
         }
+    }
+
+    /// <summary>
+    /// Provides a set of values that specify how a column should be serialized.
+    /// </summary>
+    [Flags]
+    public enum SerializationBehavior
+    {
+        None = 0,
+        Serialize = 1,
+        Unserialize = 2
     }
 }

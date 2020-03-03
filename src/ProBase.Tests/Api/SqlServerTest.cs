@@ -102,6 +102,42 @@ namespace ProBase.Tests.Api
         }
 
         [Test]
+        public void CanCreateWithMappedParameters()
+        {
+            Assert.DoesNotThrow(() =>
+            {
+                IDataOperations testOperations = CreateOperationsInterface();
+                testOperations.Create(new Student
+                {
+                    FirstName = "CompoundTypeTest",
+                    LastName = "LastName",
+                    Age = 28,
+                    Gender = "M",
+                    Grade = 12
+                });
+            },
+            "The create operation with mapped parameters must be successful");
+        }
+
+        [Test]
+        public void CanUpdateWithMappedParameters()
+        {
+            Assert.DoesNotThrow(() =>
+            {
+                IDataOperations testOperations = CreateOperationsInterface();
+                testOperations.Update(id: 15, new Student
+                {
+                    FirstName = "CompoundTypeTest - Updated",
+                    LastName = "LastName - Updated",
+                    Age = 29,
+                    Gender = "F",
+                    Grade = 11
+                });
+            },
+            "The update operation with mapped parameters must be successful");
+        }
+
+        [Test]
         public void CanCreateAsync()
         {
             Assert.DoesNotThrowAsync(async () =>

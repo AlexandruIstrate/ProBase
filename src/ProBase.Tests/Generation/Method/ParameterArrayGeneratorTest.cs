@@ -14,7 +14,7 @@ namespace ProBase.Tests.Generation.Method
         [OneTimeSetUp]
         public void Setup()
         {
-            arrayGenerator = new ParameterArrayGenerator(new ParameterInfoConverter());
+            arrayGenerator = new ParameterArrayGenerator(new ParameterGenerator(), new MappedParameterGenerator());
         }
 
         [Test]
