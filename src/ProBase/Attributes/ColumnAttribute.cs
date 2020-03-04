@@ -39,8 +39,19 @@ namespace ProBase.Attributes
     [Flags]
     public enum SerializationBehavior
     {
+        /// <summary>
+        /// Indicates that the property is to be ignored.
+        /// </summary>
         None = 0,
+
+        /// <summary>
+        /// Indicates that the property is to be serialized.
+        /// </summary>
         Serialize = 1,
+
+        /// <summary>
+        /// Indicates that the property is to be unserialized.
+        /// </summary>
         Unserialize = 2
     }
 }

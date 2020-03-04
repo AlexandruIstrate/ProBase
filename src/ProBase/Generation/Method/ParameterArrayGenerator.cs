@@ -1,6 +1,7 @@
 ﻿using ProBase.Utils;
 using System;
 using System.Data.Common;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -21,20 +22,29 @@ namespace ProBase.Generation.Method
             this.compoundTypeGenerator = compoundTypeGenerator;
         }
 
-        public virtual LocalBuilder Generate(ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
+        public virtual ParameterCollection Generate(ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
         {
-            // Get the provider factory field
-            FieldInfo providerFactory = ClassUtils.GetField<DbProviderFactory>(fields, GenerationConstants.ProviderFactoryFieldName);
+            ParameterCollection collection = new ParameterCollection();
 
             int parameterCount = 0;
+
+            // Get the provider factory field
+            FieldInfo providerFactory = ClassUtils.GetField<DbProviderFactory>(fields, GenerationConstants.ProviderFactoryFieldName);
 
             foreach (ParameterInfo parameter in parameters)
             {
                 LocalBuilder[] localParams = GetGenerator(parameter.ParameterType).Generate(parameter, providerFactory, generator);
                 parameterCount += localParams.Length;
+
+                if (localParams.Length > 0)
+                {
+                    collection[parameter] = localParams.First();
+                }
             }
 
-            return CreateArray(typeof(DbParameter[]), parameterCount, generator);
+            collection.CollectionLocal = CreateArray(typeof(DbParameter[]), parameterCount, generator);
+
+            return collection;
         }
 
         protected virtual LocalBuilder CreateArray(Type type, int length, ILGenerator generator)

@@ -1,4 +1,5 @@
 ﻿using ProBase.Attributes;
+using ProBase.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -53,10 +54,8 @@ namespace ProBase.Generation.Converters
             // The value in the DataRow is DBNull, meaning no value
             if (value.GetType() == typeof(DBNull))
             {
-                // Set the value of the property to null
-                property.SetValue(entity, null);
-
-                return;
+                // Set the value to null
+                value = null;
             }
 
             property.SetValue(entity, value);
@@ -64,14 +63,21 @@ namespace ProBase.Generation.Converters
 
         private void HandleMissingValue<T>(PropertyInfo property, object entity)
         {
-            if (property.GetType().IsValueType)
+            object value = null;
+
+            if (property.PropertyType.IsValueType)
             {
-                property.SetValue(entity, value: null);
+                // If we have a value type, the use the default value
+                value = default(T);
+
+                if (property.PropertyType.IsGenericTypeDefinition(typeof(Nullable<>)))
+                {
+                    // For Nullable value types use a null value
+                    value = null;
+                }
             }
-            else
-            {
-                property.SetValue(entity, default(T));
-            }
+
+            property.SetValue(entity, value);
         }
 
         private StringComparison GetComparisonType(bool caseSensitive) => caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;

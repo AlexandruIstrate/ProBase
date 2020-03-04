@@ -50,19 +50,19 @@ namespace ProBase.Generation.Class
 
         private void GenerateMethodBody(string procedureName, ParameterInfo[] parameters, Type returnType, ProcedureType procedureType, FieldInfo[] fields, ILGenerator generator)
         {
-            LocalBuilder arrayBuilder = PrepareParameters(procedureName, parameters, fields, generator);
+            ParameterCollection collection = PrepareParameters(procedureName, parameters, fields, generator);
 
             // Generate the procedure call
-            procedureCallGenerator.Generate(procedureName, returnType, procedureType, arrayBuilder, fields, generator);
+            procedureCallGenerator.Generate(procedureName, returnType, procedureType, collection.CollectionLocal, fields, generator);
 
             // Fill the out and ref parameters
-            FillParameters(parameters, generator);
+            FillParameters(parameters, collection, generator);
 
             // Return from the method
             ReturnFromMethod(generator);
         }
 
-        private void FillParameters(ParameterInfo[] parameters, ILGenerator generator)
+        private void FillParameters(ParameterInfo[] parameters, ParameterCollection collection, ILGenerator generator)
         {
             for (int i = 0; i < parameters.Length; i++)
             {
@@ -73,8 +73,10 @@ namespace ProBase.Generation.Class
                     continue;
                 }
 
+                LocalBuilder local = collection[parameter];
+
                 IParameterFiller parameterFiller = ParameterFillerFactory.Create(parameter);
-                parameterFiller.Fill(parameter, dbParameter: i, generator);
+                parameterFiller.Fill(parameter, dbParameter: local.LocalIndex, generator);
             }
         }
 
@@ -84,12 +86,10 @@ namespace ProBase.Generation.Class
             generator.Emit(OpCodes.Ret);
         }
 
-        private LocalBuilder PrepareParameters(string procedureName, ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
+        private ParameterCollection PrepareParameters(string procedureName, ParameterInfo[] parameters, FieldInfo[] fields, ILGenerator generator)
         {
-            bool hasCompoundParams = parameters.Any(p => p.ParameterType.IsUserDefined());
-
             // Generate the parameter array
-            LocalBuilder arrayBuilder = arrayGenerator.Generate(parameters, fields, generator);
+            ParameterCollection collection = arrayGenerator.Generate(parameters, fields, generator);
 
             // Load this object
             generator.Emit(OpCodes.Ldarg_0);
@@ -101,9 +101,9 @@ namespace ProBase.Generation.Class
             generator.Emit(OpCodes.Ldstr, procedureName);
 
             // Load the parameter array as a local
-            generator.Emit(OpCodes.Ldloc, arrayBuilder);
+            generator.Emit(OpCodes.Ldloc, collection.CollectionLocal);
 
-            return arrayBuilder;
+            return collection;
         }
 
         private readonly ICollectionGenerator arrayGenerator;
