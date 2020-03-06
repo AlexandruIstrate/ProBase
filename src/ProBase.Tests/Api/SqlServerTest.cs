@@ -16,6 +16,8 @@ namespace ProBase.Tests.Api
         {
             configuration = TestHelper.GetApplicationConfiguration(TestContext.CurrentContext.TestDirectory);
             generationContext = new GenerationContext(CreateConnection());
+
+            testOperations = CreateOperationsInterface();
         }
 
         [Test]
@@ -23,7 +25,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
                 Assert.IsNotNull(testOperations, "The DatabaseContext must return an implementation of the given interface");
             },
             "The creation calls must be successful");
@@ -34,7 +35,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
                 testOperations.Create("LastName", "FirstName", gender: 'f', age: 34, grade: 12);
             },
             "The create operation must be successful");
@@ -45,7 +45,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
                 DataSet dataSet = testOperations.Read();
 
                 Assert.IsNotNull(dataSet, "The call must return a non-null DataSet");
@@ -58,7 +57,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
                 testOperations.Update(id: 1, "LastName", "FirstName", gender: 'm', age: 19, grade: 11);
             },
             "The update operation must be successful");
@@ -69,7 +67,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
                 testOperations.Delete(id: 1);
             },
             "The delete operation must be successful");
@@ -80,7 +77,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
                 Student student = testOperations.ReadMapped(id: 69);
 
                 Assert.IsNotNull(student, "The Student returned must not be null");
@@ -93,7 +89,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
                 IEnumerable<Student> students = testOperations.ReadAllMapped();
 
                 Assert.IsNotNull(students, "The enumeration returned must not be null");
@@ -106,7 +101,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
                 testOperations.Create(new Student
                 {
                     FirstName = "CompoundTypeTest",
@@ -124,7 +118,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrow(() =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
                 testOperations.Update(id: 55, new Student
                 {
                     FirstName = "CompoundTypeTest - Updated",
@@ -142,8 +135,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrowAsync(async () =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
-
                 Task task = testOperations.CreateAsync("LastName", "FirstName", gender: 'm', age: 19, grade: 11);
                 Assert.IsNotNull(task, "The Task returned must not be null");
 
@@ -157,8 +148,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrowAsync(async () =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
-
                 Task<DataSet> task = testOperations.ReadAsync(id: 33);
                 Assert.IsNotNull(task, "The Task returned must not be null");
 
@@ -173,8 +162,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrowAsync(async () =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
-
                 Task<DataSet> task = testOperations.ReadAllAsync();
                 Assert.IsNotNull(task, "The Task returned must not be null");
 
@@ -189,8 +176,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrowAsync(async () =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
-
                 Task task = testOperations.UpdateAsync(id: 1, "LastName", "FirstName", gender: 'm', age: 19, grade: 11);
                 Assert.IsNotNull(task, "The Task returned must not be null");
 
@@ -204,8 +189,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrowAsync(async () =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
-
                 Task task = testOperations.DeleteAsync(id: 35);
                 Assert.IsNotNull(task, "The Task returned must not be null");
 
@@ -219,8 +202,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrowAsync(async () =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
-
                 Task<Student> task = testOperations.ReadMappedAsync(id: 69);
                 Assert.IsNotNull(task, "The Task returned must not be null");
 
@@ -235,8 +216,6 @@ namespace ProBase.Tests.Api
         {
             Assert.DoesNotThrowAsync(async () =>
             {
-                IDataOperations testOperations = CreateOperationsInterface();
-
                 Task<IEnumerable<Student>> task = testOperations.ReadAllMappedAsync();
                 Assert.IsNotNull(task, "The Task returned must not be null");
 
@@ -267,5 +246,7 @@ namespace ProBase.Tests.Api
 
         private TestConfiguration configuration;
         private GenerationContext generationContext;
+
+        private IDataOperations testOperations;
     }
 }
