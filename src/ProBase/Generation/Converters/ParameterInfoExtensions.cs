@@ -1,5 +1,4 @@
-﻿using ProBase.Attributes;
-using ProBase.Utils;
+﻿using ProBase.Utils;
 using System.Data;
 using System.Reflection;
 
@@ -8,18 +7,8 @@ namespace ProBase.Generation.Converters
     /// <summary>
     /// Provides extensions for working with method parameters that are used as database parameters.
     /// </summary>
-    internal static class DbParameterInfoExtensions
+    internal static class ParameterInfoExtensions
     {
-        /// <summary>
-        /// Gets the name of this parameter.
-        /// </summary>
-        /// <param name="parameterInfo">The object to call this method on</param>
-        /// <returns>The name of the parameter</returns>
-        public static string GetFullName(this ParameterInfo parameterInfo)
-        {
-            return parameterInfo.GetCustomAttribute<ParameterAttribute>()?.Name ?? parameterInfo.Name;
-        }
-
         /// <summary>
         /// Gets the direction of this parameter.
         /// </summary>
@@ -32,7 +21,7 @@ namespace ProBase.Generation.Converters
                 return ParameterDirection.Output;
             }
 
-            if (parameterInfo.ParameterType.IsByRef)
+            if (parameterInfo.ParameterType.IsByRef || parameterInfo.ParameterType.IsAsyncInOut())
             {
                 return ParameterDirection.InputOutput;
             }

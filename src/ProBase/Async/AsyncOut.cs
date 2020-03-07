@@ -6,7 +6,7 @@ namespace ProBase.Async
     /// <summary>
     /// Represents a parameter that can be used as an async out value.
     /// </summary>
-    /// <typeparam name="TParameter"></typeparam>
+    /// <typeparam name="TParameter">The type of the parameter</typeparam>
     public class AsyncOut<TParameter>
     {
         /// <summary>

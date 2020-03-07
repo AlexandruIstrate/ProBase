@@ -57,6 +57,21 @@ namespace ProBase.Utils
         }
 
         /// <summary>
+        /// Checks whether a type is AsyncInOut<>.
+        /// </summary>
+        /// <param name="type">The type to check for</param>
+        /// <returns>True if the type is AsyncInOut, false otherwise</returns>
+        public static bool IsAsyncInOut(this Type type)
+        {
+            if (!type.IsGenericType)
+            {
+                return false;
+            }
+
+            return type.GetGenericTypeDefinition() == typeof(AsyncInOut<>);
+        }
+
+        /// <summary>
         /// Checks whether a type is user defined.
         /// </summary>
         /// <param name="type">The type to check for</param>
