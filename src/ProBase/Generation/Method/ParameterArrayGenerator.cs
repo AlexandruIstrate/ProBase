@@ -26,6 +26,7 @@ namespace ProBase.Generation.Method
         {
             ParameterCollection collection = new ParameterCollection();
 
+            // The number of effective parameters after unmapping
             int parameterCount = 0;
 
             // Get the provider factory field
@@ -38,10 +39,12 @@ namespace ProBase.Generation.Method
 
                 if (localParams.Length > 0)
                 {
+                    // Set the local for the given parameter
                     collection[parameter] = localParams.First();
                 }
             }
 
+            // Set the local to the array
             collection.CollectionLocal = CreateArray(typeof(DbParameter[]), parameterCount, generator);
 
             return collection;
