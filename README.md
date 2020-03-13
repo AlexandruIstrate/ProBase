@@ -45,9 +45,6 @@ operations.Create("Hello, World!");
 operations.Read(id: 5);
 ```
 
-## Development Status
-ProBase is currently in early development, however new features are added at a steady pace.
-
 ## Built With
 - C#
 - .NET Standard
@@ -57,7 +54,7 @@ ProBase is currently in early development, however new features are added at a s
 ## Building From Source
 In order to build ProBase you need:
 - Visual Studio
-- .NET Framework 4.8 or .NET Core 3.1
+- .NET Framework 4.8 or .NET Core 3.2
 
 ## Disclaimer
 - The main image is made using [WordArt.com](https://wordart.com)
