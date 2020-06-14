@@ -84,9 +84,10 @@ namespace ProBase.Generation.Method
 
         private IEnumerable<PropertyInfo> GetProperties(ParameterInfo parameter)
         {
+            // Check if we have a user defined type
             if (!parameter.GetType().IsUserDefined())
             {
-                throw new CodeGenerationException("The type provided cannot be broken up into properties");
+                throw new CodeGenerationException("The type provided cannot be mapped");
             }
 
             return parameter.ParameterType.GetProperties();
