@@ -28,7 +28,7 @@ namespace ProBase
         /// </summary>
         /// <typeparam name="T">The polymorphic type to generate</typeparam>
         /// <returns>An instance implementing the passed in interface type</returns>
-        public T GenerateObject<T>()
+        public T GenerateOperations<T>()
         {
             try
             {

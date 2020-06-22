@@ -33,7 +33,7 @@ namespace ProBase.Tests.Api
 
         protected IDataOperations CreateOperationsInterface()
         {
-            return Context.GenerateObject<IDataOperations>();
+            return Context.GenerateOperations<IDataOperations>();
         }
     }
 }

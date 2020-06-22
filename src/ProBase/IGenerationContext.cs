@@ -10,6 +10,6 @@
         /// </summary>
         /// <typeparam name="T">The polymorphic type to generate</typeparam>
         /// <returns>An instance implementing the passed in interface type</returns>
-        T GenerateObject<T>();
+        T GenerateOperations<T>();
     }
 }
