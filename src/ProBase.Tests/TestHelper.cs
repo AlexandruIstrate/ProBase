@@ -5,7 +5,7 @@ namespace ProBase.Tests
     public class TestHelper
     {
         private const string SettingsFile = "appsettings.json";
-        private const string DevelopmentSettingsFile = "appsettings.Develop.json";
+        private const string RootSection = "ProBase";
 
         private const string UserSecretsId = "34072567-7db0-4da4-8615-eca57bbc7bb8";
 
@@ -24,7 +24,7 @@ namespace ProBase.Tests
             TestConfiguration configuration = new TestConfiguration();
 
             IConfigurationRoot configurationRoot = GetConfigurationRoot(outputPath);
-            configurationRoot.GetSection("ProBase").Bind(configuration);
+            configurationRoot.GetSection(RootSection).Bind(configuration);
 
             return configuration;
         }
