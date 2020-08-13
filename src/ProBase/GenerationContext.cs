@@ -41,9 +41,15 @@ namespace ProBase
             }
         }
 
+        private IProcedureMapper GetProcedureMapper()
+        {
+            return new ProcedureMapper(Connection, new DataSetMapper(new PropertyMapper()));
+        }
 
-        private IProcedureMapper GetProcedureMapper() => new ProcedureMapper(Connection, new DataSetMapper(new PropertyMapper()));
-        private DbProviderFactory GetProviderFactory() => Connection.GetProviderFactory();
+        private DbProviderFactory GetProviderFactory()
+        {
+            return Connection.GetProviderFactory();
+        }
 
         private readonly IConcreteClassGenerator classGenerator;
     }
