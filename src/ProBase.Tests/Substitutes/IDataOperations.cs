@@ -1,4 +1,5 @@
 ﻿using ProBase.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -80,5 +81,9 @@ namespace ProBase.Tests.Substitutes
 
         [Procedure("dbo.EleviRead")]
         Task<IEnumerable<Student>> ReadAllMappedAsync();
+
+
+        [Procedure("dbo.ProcTest")]
+        Task<DataSet> CallDateProc([Parameter("TimeStamp")] DateTimeOffset offset);
     }
 }

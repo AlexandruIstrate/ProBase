@@ -24,6 +24,10 @@ namespace ProBase.Data
             }
         }
 
+        /// <summary>
+        /// Creates a new <see cref="ProBase.Data.Database"/> object.
+        /// </summary>
+        /// <param name="connection">The connection to use for the database</param>
         public Database(DbConnection connection)
         {
             Connection = connection;

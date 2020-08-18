@@ -94,8 +94,8 @@ namespace ProBase.Generation.Method
             // Load the argument that this parameter gets its value from
             generator.Emit(OpCodes.Ldarg, valueIndex);
 
-            // If the value is of a primitive type, box it
-            if (type.IsPrimitive)
+            // If the value is of a value type, box it
+            if (type.IsValueType)
             {
                 // Box the primitive value
                 generator.Emit(OpCodes.Box, type);
