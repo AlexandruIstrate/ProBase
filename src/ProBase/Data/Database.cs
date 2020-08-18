@@ -16,10 +16,10 @@ namespace ProBase.Data
         /// </summary>
         public DbConnection Connection
         {
-            get => connection;
+            get => connectionTemplate;
             set
             {
-                connection = Preconditions.CheckNotNull(value, nameof(Connection));
+                connectionTemplate = Preconditions.CheckNotNull(value, nameof(Connection));
                 providerFactory = value.GetProviderFactory();
             }
         }
@@ -37,12 +37,15 @@ namespace ProBase.Data
         /// <returns>The number of rows affected</returns>
         public int ExecuteNonQueryProcedure(string procedureName, params DbParameter[] parameters)
         {
+            DbConnection connection = providerFactory.CreateConnection();
+            connection.ConnectionString = connectionTemplate.ConnectionString;
+
             try
             {
-                Connection.Open();
+                connection.Open();
 
                 DbCommand command = providerFactory.CreateCommand();
-                command.Connection = Connection;
+                command.Connection = connection;
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = procedureName;
                 command.Parameters.AddRange(parameters);
@@ -54,7 +57,7 @@ namespace ProBase.Data
             }
             finally
             {
-                Connection.Close();
+                connection.Close();
             }
         }
 
@@ -66,12 +69,15 @@ namespace ProBase.Data
         /// <returns>The number of rows affected</returns>
         public async Task<int> ExecuteNonQueryProcedureAsync(string procedureName, params DbParameter[] parameters)
         {
+            DbConnection connection = providerFactory.CreateConnection();
+            connection.ConnectionString = connectionTemplate.ConnectionString;
+
             try
             {
-                await Connection.OpenAsync();
+                await connection.OpenAsync();
 
                 DbCommand command = providerFactory.CreateCommand();
-                command.Connection = Connection;
+                command.Connection = connection;
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = procedureName;
                 command.Parameters.AddRange(parameters);
@@ -83,7 +89,7 @@ namespace ProBase.Data
             }
             finally
             {
-                Connection.Close();
+                connection.Close();
             }
         }
 
@@ -95,13 +101,16 @@ namespace ProBase.Data
         /// <returns>A <see cref="System.Data.DataSet"/> containing the data returned from the database</returns>
         public DataSet ExecuteScalarProcedure(string procedureName, params DbParameter[] parameters)
         {
+            DbConnection connection = providerFactory.CreateConnection();
+            connection.ConnectionString = connectionTemplate.ConnectionString;
+
             try
             {
-                Connection.Open();
+                connection.Open();
 
                 using (DbCommand command = providerFactory.CreateCommand())
                 {
-                    command.Connection = Connection;
+                    command.Connection = connection;
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = procedureName;
                     command.Parameters.AddRange(parameters);
@@ -123,7 +132,7 @@ namespace ProBase.Data
             }
             finally
             {
-                Connection.Close();
+                connection.Close();
             }
         }
 
@@ -135,13 +144,16 @@ namespace ProBase.Data
         /// <returns>A <see cref="System.Data.DataSet"/> containing the data returned from the database</returns>
         public async Task<DataSet> ExecuteScalarProcedureAsync(string procedureName, params DbParameter[] parameters)
         {
+            DbConnection connection = providerFactory.CreateConnection();
+            connection.ConnectionString = connectionTemplate.ConnectionString;
+
             try
             {
-                await Connection.OpenAsync();
+                await connection.OpenAsync();
 
                 using (DbCommand command = providerFactory.CreateCommand())
                 {
-                    command.Connection = Connection;
+                    command.Connection = connection;
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = procedureName;
                     command.Parameters.AddRange(parameters);
@@ -163,7 +175,7 @@ namespace ProBase.Data
             }
             finally
             {
-                Connection.Close();
+                connection.Close();
             }
         }
 
@@ -172,10 +184,10 @@ namespace ProBase.Data
         /// </summary>
         public void Dispose()
         {
-            connection.Dispose();
+            connectionTemplate.Dispose();
         }
 
-        private DbConnection connection;
+        private DbConnection connectionTemplate;
         private DbProviderFactory providerFactory;
     }
 }

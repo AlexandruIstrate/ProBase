@@ -11,5 +11,8 @@ namespace ProBase.Tests.Substitutes
 
         [Procedure("DateTest")]
         void DateTest([Parameter("Date")] DateTime date);
+
+        [Procedure("EnumTest")]
+        void EnumTest([Parameter("comparison")] StringComparison comparison);
     }
 }
