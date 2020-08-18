@@ -98,6 +98,11 @@ namespace ProBase.Utils
                 return false;
             }
 
+            if (type == typeof(DateTime) || type == typeof(DateTimeOffset))
+            {
+                return false;
+            }
+
             return true;
         }
 

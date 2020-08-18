@@ -1,4 +1,5 @@
 ﻿using ProBase.Attributes;
+using System;
 
 namespace ProBase.Tests.Substitutes
 {
@@ -7,5 +8,8 @@ namespace ProBase.Tests.Substitutes
     {
         [Procedure("TestProcedure")]
         void TestMethod(string param1, int param2);
+
+        [Procedure("DateTest")]
+        void DateTest([Parameter("Date")] DateTime date);
     }
 }
