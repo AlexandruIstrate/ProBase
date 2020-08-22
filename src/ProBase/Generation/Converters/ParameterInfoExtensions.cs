@@ -28,5 +28,15 @@ namespace ProBase.Generation.Converters
 
             return ParameterDirection.Input;
         }
+
+        /// <summary>
+        /// Gets the <see cref="System.Data.DbType"/> of this parameter.
+        /// </summary>
+        /// <param name="parameterInfo">The parameter to get the type for</param>
+        /// <returns>The parameter type</returns>
+        public static DbType GetDbType(this ParameterInfo parameterInfo)
+        {
+            return TypeUtils.ConvertTypeToDbType(parameterInfo.ParameterType);
+        }
     }
 }

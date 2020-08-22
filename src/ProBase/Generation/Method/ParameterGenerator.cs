@@ -1,9 +1,11 @@
-﻿using ProBase.Attributes;
+﻿using ProBase.Async;
+using ProBase.Attributes;
 using ProBase.Generation.Converters;
 using ProBase.Utils;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -27,6 +29,18 @@ namespace ProBase.Generation.Method
 
             // Set the direction of the parameter
             SetParameterDirection(parameterBuilder, parameter.GetDbParameterDirection(), generator);
+
+            // Set the ADO.NET type for this parameter
+            if (parameter.ParameterType.IsGenericTypeDefinition(typeof(AsyncOut<>)))
+            {
+                // If the parameter is AsyncOut<>, use the base type for deducing the real type
+                SetParameterType(parameterBuilder, TypeUtils.ConvertTypeToDbType(parameter.ParameterType.GetGenericArguments().First()), generator);
+            }
+            else
+            {
+                // If the parameter is normal, use the extension method to get its type
+                SetParameterType(parameterBuilder, parameter.GetDbType(), generator);
+            }
 
             // Don't set a value for out parameters
             if (parameter.GetDbParameterDirection() != ParameterDirection.Output)
@@ -84,6 +98,18 @@ namespace ProBase.Generation.Method
 
             // Call the setter for the direction
             generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.Direction)));
+        }
+
+        private void SetParameterType(LocalBuilder parameterBuilder, DbType dbType, ILGenerator generator)
+        {
+            // Load the local variable associated with this parameter
+            generator.Emit(OpCodes.Ldloc, parameterBuilder);
+
+            // Load the parameter direction
+            generator.Emit(OpCodes.Ldc_I4, (int)dbType);
+
+            // Call the setter for the direction
+            generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.DbType)));
         }
 
         protected virtual void SetParameterValue(LocalBuilder parameterBuilder, int valueIndex, Type type, ILGenerator generator)

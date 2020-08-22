@@ -1,5 +1,7 @@
 ﻿using ProBase.Async;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -138,6 +140,59 @@ namespace ProBase.Utils
             MethodInfo definition = methodInfo.GetGenericMethodDefinition();
             MethodInfo genericMethod = definition.MakeGenericMethod(genericTypes);
             return genericMethod.Invoke(instance, parameters);
+        }
+
+        /// <summary>
+        /// Converts a <see cref="System.Type"/> to a <see cref="System.Data.DbType"/>.
+        /// </summary>
+        /// <param name="type">The type to convert</param>
+        /// <returns>The converted type</returns>
+        public static DbType ConvertTypeToDbType(Type type)
+        {
+            // This has been copied from the StackExchange/Dapper GitHub repository
+            // https://github.com/StackExchange/Dapper/blob/4fb1ea29d490d13251b0135658ecc337aeb60cdb/Dapper/SqlMapper.cs#L169
+            var typeMap = new Dictionary<Type, DbType>(37)
+            {
+                [typeof(byte)] = DbType.Byte,
+                [typeof(sbyte)] = DbType.SByte,
+                [typeof(short)] = DbType.Int16,
+                [typeof(ushort)] = DbType.UInt16,
+                [typeof(int)] = DbType.Int32,
+                [typeof(uint)] = DbType.UInt32,
+                [typeof(long)] = DbType.Int64,
+                [typeof(ulong)] = DbType.UInt64,
+                [typeof(float)] = DbType.Single,
+                [typeof(double)] = DbType.Double,
+                [typeof(decimal)] = DbType.Decimal,
+                [typeof(bool)] = DbType.Boolean,
+                [typeof(string)] = DbType.String,
+                [typeof(char)] = DbType.StringFixedLength,
+                [typeof(Guid)] = DbType.Guid,
+                [typeof(DateTime)] = DbType.DateTime,
+                [typeof(DateTimeOffset)] = DbType.DateTimeOffset,
+                [typeof(TimeSpan)] = DbType.Time,
+                [typeof(byte[])] = DbType.Binary,
+                [typeof(byte?)] = DbType.Byte,
+                [typeof(sbyte?)] = DbType.SByte,
+                [typeof(short?)] = DbType.Int16,
+                [typeof(ushort?)] = DbType.UInt16,
+                [typeof(int?)] = DbType.Int32,
+                [typeof(uint?)] = DbType.UInt32,
+                [typeof(long?)] = DbType.Int64,
+                [typeof(ulong?)] = DbType.UInt64,
+                [typeof(float?)] = DbType.Single,
+                [typeof(double?)] = DbType.Double,
+                [typeof(decimal?)] = DbType.Decimal,
+                [typeof(bool?)] = DbType.Boolean,
+                [typeof(char?)] = DbType.StringFixedLength,
+                [typeof(Guid?)] = DbType.Guid,
+                [typeof(DateTime?)] = DbType.DateTime,
+                [typeof(DateTimeOffset?)] = DbType.DateTimeOffset,
+                [typeof(TimeSpan?)] = DbType.Time,
+                [typeof(object)] = DbType.Object
+            };
+
+            return typeMap[type];
         }
     }
 }
