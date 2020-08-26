@@ -105,10 +105,10 @@ namespace ProBase.Generation.Method
             // Load the local variable associated with this parameter
             generator.Emit(OpCodes.Ldloc, parameterBuilder);
 
-            // Load the parameter direction
+            // Load the parameter type
             generator.Emit(OpCodes.Ldc_I4, (int)dbType);
 
-            // Call the setter for the direction
+            // Call the setter for the type
             generator.Emit(OpCodes.Callvirt, ClassUtils.GetPropertySetMethod<DbParameter>(nameof(DbParameter.DbType)));
         }
 

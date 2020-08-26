@@ -58,6 +58,15 @@ namespace ProBase.Generation.Converters
                 value = null;
             }
 
+            // Check if the property we're assigning to is an enum
+            if (property.PropertyType.IsEnum)
+            {
+                // Handle the enum value of the property
+                HandleEnumValue(property, entity, value, ignoreCase: !columnAttribute?.CaseSensitive ?? true);
+
+                return;
+            }
+
             property.SetValue(entity, value);
         }
 
@@ -78,6 +87,30 @@ namespace ProBase.Generation.Converters
             }
 
             property.SetValue(entity, value);
+        }
+
+        private void HandleEnumValue(PropertyInfo propertyInfo, object entity, object value, bool ignoreCase = true)
+        {
+            object enumValue = null;
+
+            // Check if the enum value that we have is stored as an int
+            if (value.GetType() == typeof(int))
+            {
+                enumValue = Enum.ToObject(propertyInfo.PropertyType, value);
+            }
+
+            // Check if the enum value that we have is stored as a string representation of the enum value
+            if (value.GetType() == typeof(string))
+            {
+                enumValue = Enum.Parse(propertyInfo.PropertyType, (string)value, ignoreCase);
+            }
+
+            if (enumValue == null)
+            {
+                throw new CodeGenerationException("The value of the field cannot be converted to an enum");
+            }
+
+            propertyInfo.SetValue(entity, enumValue);
         }
 
         private StringComparison GetComparisonType(bool caseSensitive) => caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
