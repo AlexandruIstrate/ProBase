@@ -31,6 +31,12 @@ namespace ProBase.Generation.Converters
 
         private void SetPropertyValue<T>(PropertyInfo property, DataRow row, object entity)
         {
+            // Only handle properties that can be set
+            if (property.GetSetMethod() == null)
+            {
+                return;
+            }
+
             ColumnAttribute columnAttribute = property.GetCustomAttribute<ColumnAttribute>();
 
             string propertyName = columnAttribute?.ColumnName ?? property.Name;
@@ -51,11 +57,19 @@ namespace ProBase.Generation.Converters
 
             object value = row[columns.First()];
 
+            // If the value is null, then don't handle it
+            if (value == null)
+            {
+                return;
+            }
+
             // The value in the DataRow is DBNull, meaning no value
             if (value.GetType() == typeof(DBNull))
             {
                 // Set the value to null
-                value = null;
+                property.SetValue(entity, null);
+
+                return;
             }
 
             // Check if the property we're assigning to is an enum
@@ -63,6 +77,15 @@ namespace ProBase.Generation.Converters
             {
                 // Handle the enum value of the property
                 HandleEnumValue(property, entity, value, ignoreCase: !columnAttribute?.CaseSensitive ?? true);
+
+                return;
+            }
+
+            // If the values don't match, use a conversion
+            if (property.PropertyType != value.GetType())
+            {
+                // Convert the value
+                HandleConvertibleType(property, entity, value, property.PropertyType);
 
                 return;
             }
@@ -87,6 +110,14 @@ namespace ProBase.Generation.Converters
             }
 
             property.SetValue(entity, value);
+        }
+
+        private void HandleConvertibleType(PropertyInfo propertyInfo, object entity, object value, Type targetType)
+        {
+            MethodInfo convertMethod = ClassUtils.GetConvertMethod(targetType);
+            object convertedValue = convertMethod.Invoke(null, new[] { value });
+
+            propertyInfo.SetValue(entity, convertedValue);
         }
 
         private void HandleEnumValue(PropertyInfo propertyInfo, object entity, object value, bool ignoreCase = true)

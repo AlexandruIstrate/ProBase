@@ -130,7 +130,7 @@ namespace ProBase.Utils
                 .Where(m => m.GetParameters().Length == 1)
                 .Where(m => m.GetParameters().First().ParameterType == typeof(object));
 
-            return methods.First();
+            return methods.FirstOrDefault();
         }
     }
 }

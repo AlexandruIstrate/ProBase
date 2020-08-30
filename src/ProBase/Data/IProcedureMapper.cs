@@ -4,11 +4,13 @@ using System.Threading.Tasks;
 
 namespace ProBase.Data
 {
-    // TODO: Make this internal
     /// <summary>
     /// Provides a way to map a procedure's result to a given data type.
     /// </summary>
-    public /*internal*/ interface IProcedureMapper : IDatabase
+    /// <remarks>
+    /// This must be public since the generated code calls methods on it.
+    /// </remarks>
+    public interface IProcedureMapper : IDatabase
     {
         /// <summary>
         /// Runs the given procedure and maps its result to an object of type <typeparamref name="T"/>.
