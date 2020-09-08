@@ -52,7 +52,7 @@ operations.Read(id: 5);
 - NUnit
 
 ## Releases
-This package is available on NuGet.
+This package is available on NuGet and can be installed from Visual Studio.
 
 ## Building From Source
 In order to build ProBase you need:
