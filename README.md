@@ -51,6 +51,9 @@ operations.Read(id: 5);
 - ADO.NET
 - NUnit
 
+## Releases
+This package is available on NuGet.
+
 ## Building From Source
 In order to build ProBase you need:
 - Visual Studio
