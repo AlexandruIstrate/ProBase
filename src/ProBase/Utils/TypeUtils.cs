@@ -44,7 +44,7 @@ namespace ProBase.Utils
         }
 
         /// <summary>
-        /// Checks whether a type is AsyncOut<>.
+        /// Checks whether a type is <see cref="ProBase.Async.AsyncOut{TParameter}"/>.
         /// </summary>
         /// <param name="type">The type to check for</param>
         /// <returns>True if the type is AsyncOut, false otherwise</returns>
@@ -59,7 +59,7 @@ namespace ProBase.Utils
         }
 
         /// <summary>
-        /// Checks whether a type is AsyncInOut<>.
+        /// Checks whether a type is <see cref="ProBase.Async.AsyncInOut{TParameter}"/>.
         /// </summary>
         /// <param name="type">The type to check for</param>
         /// <returns>True if the type is AsyncInOut, false otherwise</returns>

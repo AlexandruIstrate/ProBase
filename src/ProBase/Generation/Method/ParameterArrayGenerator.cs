@@ -13,9 +13,10 @@ namespace ProBase.Generation.Method
     internal class ParameterArrayGenerator : ICollectionGenerator
     {
         /// <summary>
-        /// Creates an instance of this class using the given <see cref="ProBase.Generation.Converters.IParameterConverter"/> for converting the method parameters to database parameters.
+        /// Creates an instance of this class.
         /// </summary>
-        /// <param name="parameterConverter">The converter used for converting method parameters</param>
+        /// <param name="defaultGenerator">The generator used for default parameter generation</param>
+        /// <param name="compoundTypeGenerator">The generator used for generating compound types</param>
         public ParameterArrayGenerator(IParameterGenerator defaultGenerator, IParameterGenerator compoundTypeGenerator)
         {
             this.defaultGenerator = defaultGenerator;

@@ -17,6 +17,7 @@ namespace ProBase.Data
         /// Constructs a new <see cref="ProBase.Data.ProcedureMapper"/> instance.
         /// </summary>
         /// <param name="connection">The connection to use for communicating with the database</param>
+        /// <param name="dataMapper">The mapper used for mapping operations</param>
         public ProcedureMapper(DbConnection connection, IDataMapper dataMapper) : base(connection)
         {
             this.dataMapper = dataMapper;
