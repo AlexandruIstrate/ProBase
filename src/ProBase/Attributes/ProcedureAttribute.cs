@@ -23,6 +23,10 @@ namespace ProBase.Attributes
         /// </summary>
         public ProcedureType ProcedureType { get; set; }
 
+        /// <summary>
+        /// Creates a new instance of this class.
+        /// </summary>
+        /// <param name="procedureName">The name of the procedure</param>
         public ProcedureAttribute(string procedureName)
         {
             ProcedureName = procedureName;

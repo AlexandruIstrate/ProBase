@@ -17,6 +17,10 @@ namespace ProBase
         /// </summary>
         public DbConnection Connection { get; set; }
 
+        /// <summary>
+        /// Creates a new instance of this class.
+        /// </summary>
+        /// <param name="connection">The connection used for communication with the database</param>
         public GenerationContext(DbConnection connection)
         {
             Connection = Preconditions.CheckNotNull(connection, nameof(connection));
