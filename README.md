@@ -57,7 +57,7 @@ In order to build ProBase you need:
 - .NET Framework 4.8 or .NET Core 3.1
 
 ## Releases
-ProBase can be downloaded from Visual Studio, through the NuGet Package Manager
+ProBase can be downloaded from Visual Studio, through the NuGet Package Manager.
 
 ## Disclaimer
 - The main image is made using [WordArt.com](https://wordart.com)
