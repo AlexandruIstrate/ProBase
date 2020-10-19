@@ -6,7 +6,7 @@ namespace ProBase.Attributes
     /// Specifies how a method parameter maps to a procedure parameter.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-    public class ParameterAttribute : Attribute
+    public sealed class ParameterAttribute : Attribute
     {
         /// <summary>
         /// Gets or sets the name the procedure parameter this method parameter maps to.

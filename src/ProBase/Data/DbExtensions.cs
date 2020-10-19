@@ -9,10 +9,11 @@ namespace ProBase.Data
     internal static class DbExtensions
     {
         /// <summary>
-        /// Gets the <see cref="System.Data.Common.DbProviderFactory"/> from a <see cref="System.Data.Common.DbConnection"/>.
+        /// Gets the <see cref="DbProviderFactory"/> from a <see cref="DbConnection"/>.
         /// </summary>
         /// <param name="connection">The connection to use</param>
-        /// <returns>An instace of <see cref="System.Data.Common.DbProviderFactory"/></returns>
+        /// <returns>An instace of <see cref="DbProviderFactory"/></returns>
+        /// <remarks>This is a hack since <see cref="DbConnection"/> does not expose the DbProviderFactory property directly</remarks>
         public static DbProviderFactory GetProviderFactory(this DbConnection connection)
         {
             PropertyInfo factoryField = connection.GetType().GetProperty("DbProviderFactory", BindingFlags.NonPublic | BindingFlags.Instance);

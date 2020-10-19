@@ -4,12 +4,12 @@ using System.Reflection;
 namespace ProBase.Generation.Method
 {
     /// <summary>
-    /// Aids in the creation of <see cref="ProBase.Generation.Method.IParameterFiller"/> objects.
+    /// Aids in the creation of <see cref="IParameterFiller"/> objects.
     /// </summary>
     internal class ParameterFillerFactory
     {
         /// <summary>
-        /// Creates an <see cref="ProBase.Generation.Method.IParameterFiller"/> object based on the <see cref="System.Reflection.ParameterInfo"/> parameter passed.
+        /// Creates an <see cref="IParameterFiller"/> object based on the <see cref="ParameterInfo"/> parameter passed.
         /// </summary>
         /// <param name="parameter">The parameter</param>
         /// <returns>A new object</returns>
