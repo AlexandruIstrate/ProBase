@@ -14,7 +14,7 @@ namespace ProBase.Generation.Method
     internal class AsyncParameterFiller : IParameterFiller
     {
         /// <summary>
-        /// Fills the given <see cref="ProBase.Async.AsyncOut{TParameter}"/>> parameter with the value returned by the procedure.
+        /// Fills the given <see cref="AsyncOut{TParameter}"/>> parameter with the value returned by the procedure.
         /// </summary>
         /// <param name="parameter">The method parameter</param>
         /// <param name="dbParameter">The procedure parameter local index</param>
