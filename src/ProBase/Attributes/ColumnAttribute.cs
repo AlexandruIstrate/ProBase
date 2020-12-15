@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ProBase.Attributes
 {
@@ -21,6 +22,9 @@ namespace ProBase.Attributes
         /// <summary>
         /// Specifies how a column should be serialized.
         /// </summary>
+        /// <remarks>
+        /// The default behavior is <see cref="SerializationBehavior.Serialize"/> | <see cref="SerializationBehavior.Unserialize"/>
+        /// </remarks>
         public SerializationBehavior Serialization { get; set; } = SerializationBehavior.Serialize | SerializationBehavior.Unserialize;
 
         /// <summary>
