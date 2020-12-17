@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using ProBase.Generation;
 using ProBase.Generation.Class;
 using ProBase.Tests.Substitutes;
 using System;
@@ -37,12 +36,12 @@ namespace ProBase.Tests.Generation.Class
         {
             Assert.DoesNotThrow(() =>
             {
-                constructorGenerator.GenerateDependencyConstructor(new FieldInfo[] { }, GetTypeBuilder());
+                constructorGenerator.GenerateDependencyConstructor(Array.Empty<FieldInfo>(), GetTypeBuilder());
             },
             "The generation of the dependency constructor must be successful");
         }
 
-        private TypeBuilder GetTypeBuilder()
+        private static TypeBuilder GetTypeBuilder()
         {
             return GenerationUtils.GetTypeBuilder(typeof(IMixedOperations));
         }

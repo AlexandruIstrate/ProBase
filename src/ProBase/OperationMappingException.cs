@@ -10,19 +10,25 @@ namespace ProBase
         /// <summary>
         /// Creates a new instance of this class.
         /// </summary>
-        public OperationMappingException() : base() { }
+        public OperationMappingException() : base()
+        {
+        }
 
         /// <summary>
         /// Creates a new instance of this class with the supplied message.
         /// </summary>
         /// <param name="message">The error message</param>
-        public OperationMappingException(string message) : base(message) { }
+        public OperationMappingException(string message) : base(message)
+        {
+        }
 
         /// <summary>
         /// Creates a new instance of this class with the supplied message and inner exception.
         /// </summary>
         /// <param name="message">The error message</param>
         /// <param name="innerException">The inner exception</param>
-        public OperationMappingException(string message, Exception innerException) : base(message, innerException) { }
+        public OperationMappingException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

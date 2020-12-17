@@ -66,7 +66,7 @@ namespace ProBase.Generation.Class
             // Load the reference to this object
             generator.Emit(OpCodes.Ldarg_0);
 
-            ConstructorInfo defaultConstructor = baseType.GetConstructor(new Type[] { });
+            ConstructorInfo defaultConstructor = baseType.GetConstructor(Array.Empty<Type>());
 
             if (defaultConstructor == null)
             {

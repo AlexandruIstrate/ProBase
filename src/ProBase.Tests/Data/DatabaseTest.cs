@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using ProBase.Data;
+using System;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -21,7 +22,7 @@ namespace ProBase.Tests.Data
         {
             Assert.DoesNotThrow(() =>
             {
-                database.ExecuteNonQueryProcedure("", new DbParameter[] { });
+                database.ExecuteNonQueryProcedure("", Array.Empty<DbParameter>());
             },
             "The procedure call must be successful");
         }
@@ -31,7 +32,7 @@ namespace ProBase.Tests.Data
         {
             Assert.DoesNotThrowAsync(async () =>
             {
-                await database.ExecuteNonQueryProcedureAsync("", new DbParameter[] { });
+                await database.ExecuteNonQueryProcedureAsync("", Array.Empty<DbParameter>());
             },
             "The procedure call must be successful");
         }
@@ -43,7 +44,7 @@ namespace ProBase.Tests.Data
 
             Assert.DoesNotThrow(() =>
             {
-                dataSet = database.ExecuteScalarProcedure("", new DbParameter[] { });
+                dataSet = database.ExecuteScalarProcedure("", Array.Empty<DbParameter>());
             },
             "The procedure call must be successful");
 
@@ -57,7 +58,7 @@ namespace ProBase.Tests.Data
 
             Assert.DoesNotThrowAsync(async () =>
             {
-                dataSet = await database.ExecuteScalarProcedureAsync("", new DbParameter[] { });
+                dataSet = await database.ExecuteScalarProcedureAsync("", Array.Empty<DbParameter>());
             },
             "The procedure call must be successful");
 
@@ -70,7 +71,7 @@ namespace ProBase.Tests.Data
             database.Dispose();
         }
 
-        private SqlConnection CreateConnection()
+        private static SqlConnection CreateConnection()
         {
             SqlConnectionStringBuilder connectionBuilder = new SqlConnectionStringBuilder();
             return new SqlConnection(connectionBuilder.ToString());
